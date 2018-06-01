@@ -1,5 +1,6 @@
-import {Parada} from './parada.model';
-import {Contacto} from './contacto.model';
+import  {Parada } from './parada.model';
+import { Contacto } from './contacto.model';
+import { ContratoTipoServicio } from './contrato.tiposervicio.model'
 
 export class Servicio {
     IdServicio: number;
@@ -10,7 +11,7 @@ export class Servicio {
     NumeroContrato:string;
     Nit : string;
     Telefono : string;
-    Tipo : any;
+    Tipo : ContratoTipoServicio;
     Responsable : string;
     FechaServicio: Date;
     Hora: Date;
@@ -38,4 +39,9 @@ export class Servicio {
     ValorParadaCliente : number;
     ValorParadas : number;
     DetallePlantillaId : 0 
+
+    constructor(){
+        this.Tipo = new ContratoTipoServicio();
+        this.Contactos = [];
+    }
 }

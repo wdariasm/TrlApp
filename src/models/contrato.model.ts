@@ -7,5 +7,7 @@ export class Contrato {
     Estado : string;
     Nombre: string;
     FormaPago : any;
+
+    constructor (){}
 }
 

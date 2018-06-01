@@ -5,4 +5,6 @@ export class Parada {
     prValor : number;
     prFecha : string;
     prValorCliente : number;
+
+    constructor (){}
 }
