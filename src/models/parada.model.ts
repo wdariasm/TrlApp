@@ -3,8 +3,14 @@ export class Parada {
     prLatiud : string;
     prLongitud : string;
     prValor : number;
-    prFecha : string;
+    prFecha : Date;
     prValorCliente : number;
 
-    constructor (){}
+    constructor (){
+        this.prDireccion = "";
+        this.prLatiud = "";
+        this.prLongitud = "";
+        this.prValor = 0;
+        this.prValorCliente = 0;
+    }
 }

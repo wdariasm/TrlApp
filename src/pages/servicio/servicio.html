@@ -47,19 +47,14 @@
 
       <ion-item>
         <ion-label floating>Contrato *</ion-label>
-        <ion-select>
-          <ion-option value="nes">NES</ion-option>
-          <ion-option value="n64">Nintendo64</ion-option>
-          <ion-option value="ps">PlayStation</ion-option>
-          <ion-option value="genesis">Sega Genesis</ion-option>
-          <ion-option value="saturn">Sega Saturn</ion-option>
-          <ion-option value="snes">SNES</ion-option>
+        <ion-select [(ngModel)]="contratoSelect" name="cboContrato" required="true">
+          <ion-option *ngFor="let cto of contratos" [value]="cto">{{cto.ctNumeroContrato}}</ion-option>
         </ion-select>
       </ion-item>
 
       <ion-item>
         <ion-label floating>Nombre Completo *</ion-label>
-        <ion-input type="text" value="" aria-required="true"></ion-input>
+        <ion-input type="text" required="true" disabled></ion-input>
       </ion-item>
 
 
@@ -141,7 +136,7 @@
       </ion-item>
 
       <ion-item>
-        <ion-label floating>Nota Servicio / C.Costo *</ion-label>
+        <ion-label floating>Nota Servicio / C.Costo </ion-label>
         <ion-textarea [(ngModel)]="contacto.scNota" name="txtNota" maxlength="200"></ion-textarea>
       </ion-item>
 
@@ -151,25 +146,42 @@
       </ion-item>
 
       <ion-list>
-          <ion-item *ngFor="let item of servicio.Contactos">
-            <h2>{{item.scNombre}}</h2>
+          <ion-item *ngFor="let item of servicio.Contactos; let idx = index">
+            <h2>Resp. {{item.scNombre}}</h2>
             <h3>Tel. {{item.scTelefono}}</h3>
-            <p>{{item.scNota}}</p>
+            <button color="danger" clear ion-button icon-only  item-end icon-left (click)="quitarContacto(idx)">
+              <ion-icon name="trash"></ion-icon>
+            </button>
+            <p>Nota. {{item.scNota}}</p>
+            
           </ion-item>
         </ion-list>
 
       <ion-item>
         <ion-label floating>Dirección de parada </ion-label>
-        <ion-input type="text" [(ngModel)]="parada.prDireccion" name="txtParada" maxlength="15"></ion-input>
+        <ion-input type="text" [(ngModel)]="parada.prDireccion" name="txtParada" maxlength="250"></ion-input>
       </ion-item>
 
       <ion-item>
-        <button id="btnAgregarParada" ion-button color="secondary" outline>
+        <button id="btnAgregarParada" ion-button color="secondary" outline (click)="agregarParada()">
           <ion-icon name="add"></ion-icon>Agregar</button>
       </ion-item>
 
+      <ion-list>
+        <ion-item *ngFor="let item of servicio.Paradas; let idx1 = index">
+          <h2>Dir. {{item.prDireccion}}</h2>
+          <p>Valor. ${{item.prValorCliente | number}}</p>
+          <button color="danger" clear ion-button icon-only  item-end icon-left (click)="quitarParada(idx1)">
+            <ion-icon name="trash"></ion-icon>
+          </button>
+        </ion-item>
+        <ion-item>
+          <h3>SubTotal: <span color="danger"> ${{subTotal | number }}</span></h3>
+        </ion-item>
+      </ion-list>
+
       <ion-item>
-        <ion-label floating>Tipo de Vehículo *</ion-label>
+        <ion-label floating>Forma de Pago *</ion-label>
         <ion-select [(ngModel)]="servicio.FormaPago" name="cboPago" required="true">
 
         </ion-select>

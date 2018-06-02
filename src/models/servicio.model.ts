@@ -43,5 +43,9 @@ export class Servicio {
     constructor(){
         this.Tipo = new ContratoTipoServicio();
         this.Contactos = [];
+        this.ValorParadaCliente =0;
+        this.ValorParadaProveedor = 0;
+        this.FechaServicio = new Date();
+        this.Paradas = [];
     }
 }
