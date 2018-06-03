@@ -8,6 +8,7 @@ import { Traslado } from '../../models/traslado.model';
 import { TipoVehiculo } from '../../models/tipo.vehiculo.model';
 import { Contacto } from '../../models/contacto.model';
 import { Parada } from '../../models/parada.model';
+import { ContratoServicio } from '../../models/contrato.servicio.model';
 import { Contrato } from '../../models/contrato.model';
 
 import { ContratoProvider } from '../../providers/contrato/contrato';
@@ -31,6 +32,8 @@ export class ServicioPage {
   subTotal : number = 0;
   contratos : Contrato[] = [];
   contratoSelect : Contrato;
+  contrato : ContratoServicio;
+  editar : boolean;
   
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public toastCtrl: ToastController, public contratoProvider: ContratoProvider) {
@@ -46,7 +49,7 @@ export class ServicioPage {
     this.servicio.ValorParadaCliente = 4000;
     this.servicio.ValorParadaProveedor = 3000;
     this.servicio.ClienteId = 1;
-    console.log("Cargando .. ")
+    this.contrato = new ContratoServicio();
 
   }
   
@@ -70,6 +73,68 @@ export class ServicioPage {
           this.contratos= result;
       },
       error => {
+        console.log(<any>error);
+      }
+    );
+  }
+
+  buscarContrato(opcion:string, modifarServicio:boolean ): void {
+    if (modifarServicio){
+      this.servicio.ContratoId = 0;
+    }
+
+    let numero = "";
+
+    if(opcion ==="COMBO"){
+      numero = this.contratoSelect.ctNumeroContrato;
+    }else {
+      if (this.servicio.NumeroContrato == ""){
+        this.mostrarToast("Estimado usuario(a), por favor ingrese el número de contrato.");
+        return;
+      }
+      numero = this.servicio.NumeroContrato;
+    }
+
+    this.mostrarToast("Consultando información... ");
+
+    this.contratoProvider.getByNumeroContrato(numero).subscribe(
+      result => {      
+        console.log(result); 
+        if (result != null){
+          
+          this.contrato.Nombre = result.ctContratante;            
+          this.contrato.FormaPago = JSON.parse(result.ctFormaPago) 
+        console.log(this.contrato.FormaPago);
+          this.contrato.TipoServicio = result.TipoServicio;
+          this.contrato.Plantilla = result.Plantilla;  
+          
+          if(this.contrato.TipoServicio.length === 0){
+            this.mostrarToast('No se encontraron servicios asociados a este contrato.');
+          }
+
+          if(this.editar){ 
+            //setDatosServicio(); 
+          }
+
+          if(modifarServicio){
+            
+            this.servicio.ContratoId = result.IdContrato;
+            this.servicio.Nit = result.ctNitCliente;
+            this.servicio.Telefono =  result.ctTelefono;
+            this.servicio.NumeroContrato = this.contratoSelect.ctNumeroContrato;
+            this.servicio.Responsable = this.contrato.Nombre;
+            /*if( parseInt(this.$parent.Login.TipoAcceso) === 5){
+                this.Servicio.Responsable = this.$parent.Login.Nombre;
+            }       */            
+          }
+          
+        }  else {
+          this.mostrarToast("Número de contrato no existe.");
+        }
+         
+      },
+      error => {
+        this.mostrarToast(error);
         console.log(<any>error);
       }
     );

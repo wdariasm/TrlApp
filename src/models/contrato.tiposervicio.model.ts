@@ -6,5 +6,8 @@ export class ContratoTipoServicio{
     csPlantilla : string;
     csValor : number;
     
-    constructor (){}
+    constructor (){
+        this.csValor = 0;
+        this.csPlantilla = "NO";
+    }
 }

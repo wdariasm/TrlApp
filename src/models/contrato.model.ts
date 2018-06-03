@@ -1,13 +1,20 @@
 export class Contrato {
-    TipoServicio : any;
-    Plantilla: any;
-    TipoVehiculo : any;
-    FechaInicio : string;
-    FechaFin : string;
-    Estado : string;
-    Nombre: string;
-    FormaPago : any;
-
+    IdContrato: number;
+    ctClienteId : number;
+    ctNitCliente : string;
+    ctContratante: string;
+    ctTelefono : string;
+    ctFechaInicio : Date;
+    ctFechaFinal : Date;
+    ctObjeto : string;
+    ctNumeroContrato : string;
+    ctRecorridos : string;
+    ctDuracion : string;
+    ctNumVehiculos : string;
+    ctUsuarReg : string;
+    ctFechaReg : Date;
+    ctTipoContrato : string;
+    ctEstado : string;
+    ctFormaPago : string;
     constructor (){}
 }
-

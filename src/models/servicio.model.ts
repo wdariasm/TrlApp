@@ -47,5 +47,6 @@ export class Servicio {
         this.ValorParadaProveedor = 0;
         this.FechaServicio = new Date();
         this.Paradas = [];
+        this.NumeroContrato = "";
     }
 }

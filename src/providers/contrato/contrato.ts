@@ -27,4 +27,8 @@ export class ContratoProvider {
     return this.http.get(this.uri+'/cliente/'+ id + '/contratos/' + estado);
   };
 
+  getByNumeroContrato(numeroContrato: string): Observable<any>{
+    return this.http.get(this.uri+ '/contrato/' + numeroContrato + '/tiposervicio');
+  }
+
 }

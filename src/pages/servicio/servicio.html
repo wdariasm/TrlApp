@@ -47,21 +47,21 @@
 
       <ion-item>
         <ion-label floating>Contrato *</ion-label>
-        <ion-select [(ngModel)]="contratoSelect" name="cboContrato" required="true">
+        <ion-select [(ngModel)]="contratoSelect" name="cboContrato" required="true" (ionChange)="buscarContrato('COMBO', true)" okText="Ok" cancelText="Cancelar">
           <ion-option *ngFor="let cto of contratos" [value]="cto">{{cto.ctNumeroContrato}}</ion-option>
         </ion-select>
       </ion-item>
 
       <ion-item>
         <ion-label floating>Nombre Completo *</ion-label>
-        <ion-input type="text" required="true" disabled></ion-input>
+        <ion-input type="text" [(ngModel)]="contrato.Nombre" required="true" disabled name="txtNombre"></ion-input>
       </ion-item>
 
 
       <ion-item>
         <ion-label floating>Tipo Servicio *</ion-label>
         <ion-select [(ngModel)]="servicio.Tipo" name="cboTipoServicio">
-
+          <ion-option *ngFor="let ctipo of contrato.TipoServicio" [value]="ctipo">{{ctipo.csDescripcion}}</ion-option>
         </ion-select>
       </ion-item>
 
@@ -183,10 +183,9 @@
       <ion-item>
         <ion-label floating>Forma de Pago *</ion-label>
         <ion-select [(ngModel)]="servicio.FormaPago" name="cboPago" required="true">
-
+          <ion-option *ngFor="let fpago of contrato.FormaPago" [value]="fpago">{{fpago}}</ion-option>
         </ion-select>
       </ion-item>
-
 
     </div>
 
