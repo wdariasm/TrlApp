@@ -38,7 +38,8 @@ export class Servicio {
     ValorParadaProveedor : number;
     ValorParadaCliente : number;
     ValorParadas : number;
-    DetallePlantillaId : 0 
+    DetallePlantillaId : 0;
+    TipoVehiculoId : number;
 
     constructor(){
         this.Tipo = new ContratoTipoServicio();

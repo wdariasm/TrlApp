@@ -60,8 +60,8 @@
 
       <ion-item>
         <ion-label floating>Tipo Servicio *</ion-label>
-        <ion-select [(ngModel)]="servicio.Tipo" name="cboTipoServicio">
-          <ion-option *ngFor="let ctipo of contrato.TipoServicio" [value]="ctipo">{{ctipo.csDescripcion}}</ion-option>
+        <ion-select [(ngModel)]="servicio.Tipo" name="cboTipoServicio" (ionChange)="tipoServicioCheck()">
+          <ion-option *ngFor="let ctipo of contrato.TipoServicio" [value]="ctipo" >{{ctipo.csDescripcion}}</ion-option>
         </ion-select>
       </ion-item>
 
@@ -102,6 +102,10 @@
           <ion-radio value="doble"></ion-radio>
         </ion-item>
       </ion-list>
+
+      <div id="dvMapaServicio">
+
+      </div>
 
       <!--Datos de tipo de servicio traslado-->
       <div *ngIf="servicio.Tipo.csTipoServicioId == 4">

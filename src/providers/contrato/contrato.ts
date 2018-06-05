@@ -31,4 +31,16 @@ export class ContratoProvider {
     return this.http.get(this.uri+ '/contrato/' + numeroContrato + '/tiposervicio');
   }
 
+  getValorParada = function (idPlantilla:number) : Observable<any> {
+    return this.http.get(this.uri+ '/plantilla/' + idPlantilla + '/parada');
+  };
+
+  getTipoVehiculo = function (id:number,tipo: number) {
+    return this.http.get(this.uri+'/plantilla/' + id + '/tiposervicio/'+tipo+'/tipovehiculo');
+  };
+
+  getTiposVehiculos = function () : Observable<any> {
+    return this.http.get(this.uri + '/tipoVehiculo');
+  };
+
 }

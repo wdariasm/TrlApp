@@ -1,4 +1,5 @@
 import { ContratoTipoServicio } from '../models/contrato.tiposervicio.model'
+import { TipoVehiculo } from '../models/tipo.vehiculo.model';
 
 export class ContratoPlantilla{
     pcCodigo : number;
@@ -6,12 +7,14 @@ export class ContratoPlantilla{
     pcPlantillaId : number;
     pcTipoServicio : string;
     pcEstado: string;
+    plCodigo : number;
+    plDescripcion : string;
 }
 
 export class ContratoServicio {
     TipoServicio : ContratoTipoServicio[];
     Plantilla: ContratoPlantilla[];
-    TipoVehiculo : any;
+    TipoVehiculo : TipoVehiculo[];
     FechaInicio : Date;
     FechaFin : Date;
     Estado : string;
@@ -24,6 +27,7 @@ export class ContratoServicio {
         this.Estado = "";
         this.Plantilla = [];
         this.TipoServicio = [];
+        this.TipoVehiculo = [];
     }
 }
 

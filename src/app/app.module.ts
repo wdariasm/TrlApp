@@ -12,6 +12,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ContratoProvider } from '../providers/contrato/contrato';
 import { ConfiguracionProvider } from '../providers/configuracion/configuracion';
+import { FuncionesComunesProvider } from '../providers/funciones-comunes/funciones-comunes';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { ConfiguracionProvider } from '../providers/configuracion/configuracion'
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ContratoProvider,
     ConfiguracionProvider,
-    ContratoProvider
+    ContratoProvider,
+    FuncionesComunesProvider
   ]
 })
 export class AppModule {}
