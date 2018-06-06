@@ -1,10 +1,11 @@
 export class Traslado {
-    tlCodigo : number;
+    tlCodigo: number;
     tlNombre : string;
     tlTipoVehiculo : number;
     tlValor : number;
-    tlValorCliente : number;
-    tlPlantilla: number;
+    tlValorCliente: number;
+    tlEstado : string;
+    tlPlantilla : number;
     muNombre : string;
 
     constructor(){}     

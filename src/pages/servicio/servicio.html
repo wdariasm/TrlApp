@@ -108,24 +108,40 @@
       </div>
 
       <!--Datos de tipo de servicio traslado-->
-      <div *ngIf="servicio.Tipo.csTipoServicioId == 4">
+      <div *ngIf="servicio.Tipo.csTipoServicioId == 3">
         <ion-item>
-          <ion-label floating>Seleccionar traslado *</ion-label>
-          <ion-select [(ngModel)]="trasladoSelect" name="cboRutas">
-
+          <ion-label floating>Seleccionar ruta *</ion-label>
+          <ion-select [(ngModel)]="rutaSelect" name="cboRutas" [disabled]="editar" (ionChange)="cambiarPrecioRuta()">
+            <ion-option *ngFor="let itemRuta of lstRutas" [value]="itemRuta">{{itemRuta.rtNombre}}</ion-option>
           </ion-select>
         </ion-item>
 
         <ion-item>
-          <ion-label floating>Description</ion-label>
-          <ion-textarea [(ngModel)]="trasladoSelect.muNombre" name="txtDescripcion"></ion-textarea>
+          <ion-label floating>Descripción Ruta </ion-label>
+          <ion-textarea [(ngModel)]="rutaSelect.rtDescripcion" name="txtDescripcion" disabled="true"></ion-textarea>
+        </ion-item>
+      </div>
+
+
+      <!--Datos de tipo de servicio traslado-->
+      <div *ngIf="servicio.Tipo.csTipoServicioId == 4">
+        <ion-item>
+          <ion-label floating>Seleccionar traslado *</ion-label>
+          <ion-select [(ngModel)]="trasladoSelect" name="cboTraslado" [disabled]="editar" (ionChange)="cambiarPrecioTraslado()">
+            <ion-option *ngFor="let itemTraslado of lstTraslados" [value]="itemTraslado">{{itemTraslado.tlNombre}}</ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label floating>Descripción Traslado </ion-label>
+          <ion-textarea [(ngModel)]="trasladoSelect.muNombre" name="txtDescripcion"  disabled="true"></ion-textarea>
         </ion-item>
       </div>
 
       <ion-item>
         <ion-label floating>Tipo de Vehículo *</ion-label>
-        <ion-select [(ngModel)]="tipoSelect" name="cboTipoVehiculo" required="true">
-
+        <ion-select [(ngModel)]="tipoSelect" name="cboTipoVehiculo" required="true" [disabled]="editTipoVehiculo">
+          <ion-option *ngFor="let tipo of contrato.TipoVehiculo" [value]="tipo">{{tipo.tvDescripcion}}</ion-option>
         </ion-select>
       </ion-item>
 

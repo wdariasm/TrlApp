@@ -10,6 +10,7 @@ import { Contacto } from '../../models/contacto.model';
 import { Parada } from '../../models/parada.model';
 import { ContratoServicio, ContratoPlantilla } from '../../models/contrato.servicio.model';
 import { Contrato } from '../../models/contrato.model';
+import { Ruta } from '../../models/ruta.model';
 
 import { ContratoProvider } from '../../providers/contrato/contrato';
 import { FuncionesComunesProvider } from '../../providers/funciones-comunes/funciones-comunes';
@@ -39,6 +40,9 @@ export class ServicioPage {
   editModoServicio :boolean;
   editTipoVehiculo : boolean;
   plantilla : ContratoPlantilla;
+  lstRutas : Ruta [];
+  rutaSelect : Ruta;
+  lstTraslados : Traslado [];
   
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public toastCtrl: ToastController, public contratoProvider: ContratoProvider,
@@ -55,12 +59,13 @@ export class ServicioPage {
     this.servicio.ModoServicio = "PROGRAMADO";
     this.servicio.ClienteId = 1;
     this.contrato = new ContratoServicio();
-
+    this.lstRutas = [];
+    this.lstTraslados = [];
+    this.rutaSelect = new Ruta();
   }
   
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ServicioPage');
     this.getContratos();
   }
 
@@ -134,6 +139,47 @@ export class ServicioPage {
     );
 }
 
+getRutas(idPlantilla): void  {
+
+  this.contratoProvider.getRutas(idPlantilla).subscribe(
+    result => {   
+      this.lstRutas= result;
+      if(this.editar){
+        var pos1 = this.funcionesProvider.arrayObjectIndexOf(this.lstRutas, this.servicio.DetallePlantillaId, 'rtCodigo');        
+        if(pos1 >=0){                            
+            this.rutaSelect = this.lstRutas[pos1];                    
+            if( this.servicio.ValorCliente >  this.rutaSelect.rtValorCliente ){
+                this.asignacion.Ruta = "doble";
+            }
+        }                                                                
+      }
+    },
+    error => {
+      console.log(<any>error);
+      this.mostrarToast("Error al cargar rutas.");
+    }
+  );
+}
+
+getTraslados(idPlantilla: number): void {
+
+  this.contratoProvider.getTraslados(idPlantilla).subscribe(
+    result => {        
+      this.lstTraslados= result;
+      if(this.editar){                                
+        var pos1 = this.funcionesProvider.arrayObjectIndexOf(this.lstTraslados, this.servicio.DetallePlantillaId, 'tlCodigo');        
+        if(pos1 >=0){                            
+           this.trasladoSelect = this.lstTraslados[pos1];                    
+        }                                                                
+      }
+    },
+    error => {
+      this.mostrarToast("Error al cargar traslados.");
+      console.log(<any>error);
+    }
+  );
+}
+
   getContratos(): void {
     this.contratoProvider.getByCliente(this.servicio.ClienteId, 'ACTIVO').subscribe(
       result => {        
@@ -166,12 +212,10 @@ export class ServicioPage {
 
     this.contratoProvider.getByNumeroContrato(numero).subscribe(
       result => {      
-        console.log(result); 
+        
         if (result != null){
-          
           this.contrato.Nombre = result.ctContratante;            
           this.contrato.FormaPago = JSON.parse(result.ctFormaPago) 
-        console.log(this.contrato.FormaPago);
           this.contrato.TipoServicio = result.TipoServicio;
           this.contrato.Plantilla = result.Plantilla;  
           
@@ -222,7 +266,7 @@ export class ServicioPage {
   }
 
   var pos = this.funcionesProvider.arrayObjectIndexOf(this.contrato.Plantilla,this.servicio.Tipo.csTipoServicioId, 'pcTipoServicio');
-  console.log("posicion ", pos);
+
   if(pos >=0){
       this.editModoServicio = true;
       this.editTipoVehiculo = true;
@@ -238,10 +282,10 @@ export class ServicioPage {
           this.editTipoVehiculo = false;
           this.editModoServicio = false;
       } else if(this.servicio.Tipo.csTipoServicioId == 3){ //ruta                                
-          //getRutas(this.plantilla.plCodigo);
+          this.getRutas(this.plantilla.plCodigo);
           this.getTiposVehiculos();
       }else { //traslado                
-          //getTraslados(this.plantilla.plCodigo);
+          this.getTraslados(this.plantilla.plCodigo);
           this.getTiposVehiculos();
       }
     }       
@@ -311,7 +355,46 @@ export class ServicioPage {
     this.servicio.ValorTotal =  this.subTotal + this.servicio.ValorCliente;
   }
 
-  
+  cambiarPrecioRuta() : void{
+    if(this.rutaSelect == null){
+        return;
+    }
+    
+    this.servicio.ValorCliente = this.rutaSelect.rtValorCliente;
+    this.servicio.Valor = this.rutaSelect.rtValor;
+    this.servicio.DetallePlantillaId = this.rutaSelect.rtCodigo;
+    this.servicio.DireccionOrigen = this.rutaSelect.rtNombre;
+    this.servicio.DireccionDestino = this.rutaSelect.rtDescripcion;
+    
+    if(this.asignacion.Ruta =="doble"){
+        this.servicio.ValorCliente += this.servicio.ValorCliente;
+        this.servicio.Valor += this.servicio.Valor;
+    };
+    
+    this.mostrarToast("Valor del Servicio. $ " + this.servicio.ValorCliente);
+    
+    var pos = this.funcionesProvider.arrayObjectIndexOf(this.contrato.TipoVehiculo, this.rutaSelect.rtTipoVehiculo, 'tvCodigo');        
+    if(pos >=0){                            
+        this.tipoSelect = this.contrato.TipoVehiculo[pos];
+    }  
+  };   
+
+  cambiarPrecioTraslado =  function (){
+    if(this.TrasladoSelect == null){
+        return;
+    }
+    
+    this.servicio.ValorCliente = parseFloat(this.TrasladoSelect.tlValorCliente);
+    this.servicio.Valor = parseFloat(this.TrasladoSelect.tlValor);
+    this.servicio.DetallePlantillaId = this.TrasladoSelect.tlCodigo;
+    
+    this.mostrarToast("Valor del Servicio. $ "+ this.servicio.ValorCliente);
+    
+    var pos = this.funcionesProvider.arrayObjectIndexOf(this.contrato.TipoVehiculo, this.trasladoSelect.tlTipoVehiculo, 'tvCodigo');
+    if(pos >=0){                            
+        this.tipoSelect = this.contrato.TipoVehiculo[pos];
+    }  
+  };   
 
 }
 
