@@ -1,8 +1,8 @@
 export class TipoVehiculo {
-    tvCodigo : string;
+    tvCodigo : number;
     tvDescripcion : string;
     tvEstado : string;
-    tvNumPasajero : string;
+    tvNumPasajero : number;
     tvRuta: string;
     
     constructor () {}

@@ -13,6 +13,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { ContratoProvider } from '../providers/contrato/contrato';
 import { ConfiguracionProvider } from '../providers/configuracion/configuracion';
 import { FuncionesComunesProvider } from '../providers/funciones-comunes/funciones-comunes';
+import { ServicioProvider } from '../providers/servicio/servicio';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { FuncionesComunesProvider } from '../providers/funciones-comunes/funcion
     ContratoProvider,
     ConfiguracionProvider,
     ContratoProvider,
-    FuncionesComunesProvider
+    FuncionesComunesProvider,
+    ServicioProvider
   ]
 })
 export class AppModule {}

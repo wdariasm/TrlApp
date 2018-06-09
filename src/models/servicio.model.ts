@@ -18,9 +18,9 @@ export class Servicio {
     Valor : number;
     ValorCliente : number;
     NumHoras : number;
-    NumPasajeros : string;
-    ZonaOrigen :string;
-    ZonaDestino : string;
+    NumPasajeros : number;
+    ZonaOrigen :number;
+    ZonaDestino : number;
     LatOrigen :string;
     LngOrigen: string;
     LatDestino : string;
@@ -40,14 +40,24 @@ export class Servicio {
     ValorParadas : number;
     DetallePlantillaId : number;
     TipoVehiculoId : number;
+    TipoServicidoId : number;
+    Codigo : number;
+    DescVehiculo : string;
+    PlantillaId : number;
 
     constructor(){
         this.Tipo = new ContratoTipoServicio();
         this.Contactos = [];
         this.ValorParadaCliente =0;
         this.ValorParadaProveedor = 0;
+        this.NumPasajeros = 0;
         this.FechaServicio = new Date();
         this.Paradas = [];
         this.NumeroContrato = "";
+        this.LatOrigen = "";
+        this.LngOrigen = "";
+        this.DireccionOrigen = "";
+        this.LatDestino = "";
+        this.LngDestino = "";
     }
 }

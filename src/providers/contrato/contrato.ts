@@ -23,32 +23,46 @@ export class ContratoProvider {
     this.uri = configProvider.URL_API;
   }
 
-  getByCliente(id:number , estado: string): Observable<any> { 
-    return this.http.get(this.uri+'/cliente/'+ id + '/contratos/' + estado);
+  get = function (id:number) {
+    var req = this.http.get(this.uri+'/contrato/' + id);
+    return req;
   };
 
   getByNumeroContrato(numeroContrato: string): Observable<any>{
     return this.http.get(this.uri+ '/contrato/' + numeroContrato + '/tiposervicio');
   }
 
-  getValorParada = function (idPlantilla:number) : Observable<any> {
-    return this.http.get(this.uri+ '/plantilla/' + idPlantilla + '/parada');
+  getByCliente(id:number , estado: string): Observable<any> { 
+    return this.http.get(this.uri+'/cliente/'+ id + '/contratos/' + estado);
   };
 
   getTipoVehiculo = function (id:number,tipo: number) {
     return this.http.get(this.uri+'/plantilla/' + id + '/tiposervicio/'+tipo+'/tipovehiculo');
   };
 
-  getTiposVehiculos = function () : Observable<any> {
-    return this.http.get(this.uri + '/tipoVehiculo');
+  getTransfert = function (plantilla:number, tipo:number, origen:number, destino:number): Observable<any>{
+    var req = this.get(this.uri+'/transfert/' + plantilla + '/' + tipo + '/' + origen + '/'+destino);
+    return req;
+  };
+
+  getValorParada = function (idPlantilla:number) : Observable<any> {
+    return this.http.get(this.uri+ '/plantilla/' + idPlantilla + '/parada');
   };
 
   getRutas = function (idPlantilla: number) : Observable<any> {
     return  this.http.get(this.uri+'/plantilla/' + idPlantilla + '/ruta');
   };
 
-  getTraslados = function (idPlantilla: number) {
-    return  this.http.get(this.uri+'/plantilla/' + idPlantilla + '/traslado');
+  getTiposVehiculos = function () : Observable<any> {
+    return this.http.get(this.uri + '/tipoVehiculo');
   };
+
+  getDisponibilidad = function (plantilla:number, tipo:number): Observable<any> {
+    return this.http.get(this.uri+'/disponibilidad/plantilla/' + plantilla + '/tipo/' + tipo );
+  };
+
+  getTraslados = function (idPlantilla: number): Observable<any> {
+    return  this.http.get(this.uri+'/plantilla/' + idPlantilla + '/traslado');
+  }; 
 
 }

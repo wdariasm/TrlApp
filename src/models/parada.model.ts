@@ -1,10 +1,12 @@
 export class Parada {
+    IdParada : number;
     prDireccion : string;
     prLatiud : string;
     prLongitud : string;
     prValor : number;
     prFecha : Date;
     prValorCliente : number;
+    prServicio : number;
 
     constructor (){
         this.prDireccion = "";

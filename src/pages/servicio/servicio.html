@@ -140,9 +140,15 @@
 
       <ion-item>
         <ion-label floating>Tipo de Vehículo *</ion-label>
-        <ion-select [(ngModel)]="tipoSelect" name="cboTipoVehiculo" required="true" [disabled]="editTipoVehiculo">
+        <ion-select [(ngModel)]="tipoSelect" name="cboTipoVehiculo" required="true" [disabled]="editTipoVehiculo" (ionChange)="cambiarPrecio()">
           <ion-option *ngFor="let tipo of contrato.TipoVehiculo" [value]="tipo">{{tipo.tvDescripcion}}</ion-option>
         </ion-select>
+      </ion-item>
+
+      <ion-item *ngIf="servicio.Tipo.csTipoServicioId == 1 || servicio.Tipo.csTipoServicioId == 2">
+        <button id="btnConsultarValor" ion-button color="secondary" outline (click)="consultarPrecio()">
+          <ion-icon name="logo-usd"></ion-icon>&nbsp; Consultar
+        </button>
       </ion-item>
 
       <ion-item>
@@ -162,7 +168,8 @@
 
       <ion-item>
         <button id="btnAgregarResponsable" ion-button color="secondary" outline (click)="agregarContacto()">
-          <ion-icon name="add"></ion-icon>Agregar</button>
+          <ion-icon name="add"></ion-icon>&nbsp;Agregar
+        </button>
       </ion-item>
 
       <ion-list>
@@ -184,14 +191,18 @@
 
       <ion-item>
         <button id="btnAgregarParada" ion-button color="secondary" outline (click)="agregarParada()">
-          <ion-icon name="add"></ion-icon>Agregar</button>
+          <ion-icon name="add"></ion-icon>&nbsp;Agregar
+        </button>
       </ion-item>
 
       <ion-list>
         <ion-item *ngFor="let item of servicio.Paradas; let idx1 = index">
           <h2>Dir. {{item.prDireccion}}</h2>
           <p>Valor. ${{item.prValorCliente | number}}</p>
-          <button color="danger" clear ion-button icon-only  item-end icon-left (click)="quitarParada(idx1)">
+          <button *ngIf="!editar" color="danger" clear ion-button icon-only  item-end icon-left (click)="quitarParada(idx1)">
+            <ion-icon name="trash"></ion-icon>
+          </button>
+          <button *ngIf="editar" color="danger" clear ion-button icon-only  item-end icon-left (click)="eliminarParada(item)">
             <ion-icon name="trash"></ion-icon>
           </button>
         </ion-item>
@@ -205,6 +216,12 @@
         <ion-select [(ngModel)]="servicio.FormaPago" name="cboPago" required="true">
           <ion-option *ngFor="let fpago of contrato.FormaPago" [value]="fpago">{{fpago}}</ion-option>
         </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <button id="btnValidar" ion-button color="secondary" outline (click)="validarServicio()">
+          <ion-icon name="logo-usd"></ion-icon>&nbsp; Guardar
+        </button>
       </ion-item>
 
     </div>
