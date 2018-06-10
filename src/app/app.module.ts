@@ -3,6 +3,18 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { HttpClientModule } from '@angular/common/http';
 
+import {
+  GoogleMaps,
+  GoogleMap,
+  GoogleMapsEvent,
+  GoogleMapOptions,
+  CameraPosition,
+  MarkerOptions,
+  Marker
+} from '@ionic-native/google-maps';
+
+import { Geolocation } from '@ionic-native/geolocation';
+
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
@@ -42,7 +54,9 @@ import { ServicioProvider } from '../providers/servicio/servicio';
     ConfiguracionProvider,
     ContratoProvider,
     FuncionesComunesProvider,
-    ServicioProvider
+    ServicioProvider,
+    GoogleMaps,
+    Geolocation
   ]
 })
 export class AppModule {}

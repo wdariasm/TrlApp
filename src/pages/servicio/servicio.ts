@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
+import { Geolocation } from '@ionic-native/geolocation';
 
 import { Servicio  } from '../../models/servicio.model';
 import { Asignacion }  from '../../models/asignacion.model'; 
@@ -49,7 +50,7 @@ export class ServicioPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public toastCtrl: ToastController, public contratoProvider: ContratoProvider,
               public funcionesProvider: FuncionesComunesProvider, 
-              public servicioProvider : ServicioProvider) {
+              public servicioProvider : ServicioProvider, private geolocation: Geolocation) {
     
     this.initDatos();
   }
@@ -79,6 +80,30 @@ export class ServicioPage {
     this.editar = false;
     this.editTipoVehiculo =true;
     this.editModoServicio = true;
+
+    this.ubicacionAutomatica();
+  }
+
+  // FUNCIONES DE MAPAS 
+  ubicacionAutomatica(): void {
+    this.geolocation.getCurrentPosition().then((resp) => {
+      console.log(resp.coords.latitude);
+      console.log(resp.coords.longitude);
+      this.servicio.LatOrigen = resp.coords.latitude.toString();
+      this.servicio.LngOrigen = resp.coords.longitude.toString();
+     }).catch((error) => {
+       let msjError = "Error al obtener ubicación. ";
+       
+       if (error.code == 1){
+          msjError = "Estimado Usuario(a) para el correcto funcionamiento de la aplicación, " +
+          " se requiere el permiso para acceder a su ubicación. "
+       } else {
+         msjError = msjError + error.message;
+       }
+
+       this.mostrarToast(msjError, 7000);
+       console.log('Error getting location', error);
+     });
   }
 
   mostrarToast(mensaje : string, duracion: number = 3000) {
