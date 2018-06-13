@@ -1,5 +1,6 @@
-import {Parada} from './parada.model';
-import {Contacto} from './contacto.model';
+import  {Parada } from './parada.model';
+import { Contacto } from './contacto.model';
+import { ContratoTipoServicio } from './contrato.tiposervicio.model'
 
 export class Servicio {
     IdServicio: number;
@@ -10,16 +11,16 @@ export class Servicio {
     NumeroContrato:string;
     Nit : string;
     Telefono : string;
-    Tipo : any;
+    Tipo : ContratoTipoServicio;
     Responsable : string;
     FechaServicio: Date;
     Hora: Date;
     Valor : number;
     ValorCliente : number;
     NumHoras : number;
-    NumPasajeros : string;
-    ZonaOrigen :string;
-    ZonaDestino : string;
+    NumPasajeros : number;
+    ZonaOrigen :number;
+    ZonaDestino : number;
     LatOrigen :string;
     LngOrigen: string;
     LatDestino : string;
@@ -37,5 +38,35 @@ export class Servicio {
     ValorParadaProveedor : number;
     ValorParadaCliente : number;
     ValorParadas : number;
-    DetallePlantillaId : 0 
+    DetallePlantillaId : number;
+    TipoVehiculoId : number;
+    TipoServicidoId : number;
+    Codigo : number;
+    DescVehiculo : string;
+    PlantillaId : number;
+
+    constructor(){
+        this.Tipo = new ContratoTipoServicio();
+        this.Contactos = [];
+        this.ValorParadaCliente =0;
+        this.ValorParadaProveedor = 0;
+        this.NumPasajeros = 0;
+        this.FechaServicio = new Date();
+        this.Paradas = [];
+        this.NumeroContrato = "";
+        this.LatOrigen = "";
+        this.LngOrigen = "";
+        this.DireccionOrigen = "";
+        this.LatDestino = "";
+        this.LngDestino = "";
+    }
+}
+
+export class Coordenada {
+    Latitud : number;
+    Longitud : number;
+    constructor () {
+        this.Latitud = 4.7081865;
+        this.Longitud = -74.0949768;
+    }
 }
