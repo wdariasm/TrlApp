@@ -61,3 +61,12 @@ export class Servicio {
         this.LngDestino = "";
     }
 }
+
+export class Coordenada {
+    Latitud : number;
+    Longitud : number;
+    constructor () {
+        this.Latitud = 4.7081865;
+        this.Longitud = -74.0949768;
+    }
+}

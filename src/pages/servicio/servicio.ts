@@ -2,8 +2,11 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
+import { GoogleMaps,   GoogleMap,   GoogleMapsEvent,
+         GoogleMapOptions,   CameraPosition,   MarkerOptions,   Marker
+} from '@ionic-native/google-maps';
 
-import { Servicio  } from '../../models/servicio.model';
+import { Servicio, Coordenada  } from '../../models/servicio.model';
 import { Asignacion }  from '../../models/asignacion.model'; 
 import { Traslado } from '../../models/traslado.model';
 import { TipoVehiculo } from '../../models/tipo.vehiculo.model';
@@ -47,6 +50,8 @@ export class ServicioPage {
   aceptarCondicion : boolean;
   enviandoInformacion : boolean;
   usuario : Usuario;  
+  posicion : Coordenada;
+  map: GoogleMap;
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public toastCtrl: ToastController, public contratoProvider: ContratoProvider,
               public funcionesProvider: FuncionesComunesProvider, 
@@ -69,6 +74,7 @@ export class ServicioPage {
     this.parada = new Parada();
     this.plantilla = new ContratoPlantilla();
     this.usuario = new Usuario();
+    this.posicion = new Coordenada();
     
     this.servicio.ModoServicio = "PROGRAMADO";
     this.servicio.ClienteId = this.usuario.ClienteId;
@@ -81,16 +87,24 @@ export class ServicioPage {
     this.editTipoVehiculo =true;
     this.editModoServicio = true;
 
-    this.ubicacionAutomatica();
+    this.ubicacionAutomatica(true);
+    this.iniciarMapaZ();
   }
 
   // FUNCIONES DE MAPAS 
-  ubicacionAutomatica(): void {
+  ubicacionAutomatica(load: boolean): void {
     this.geolocation.getCurrentPosition().then((resp) => {
       console.log(resp.coords.latitude);
       console.log(resp.coords.longitude);
-      this.servicio.LatOrigen = resp.coords.latitude.toString();
-      this.servicio.LngOrigen = resp.coords.longitude.toString();
+      
+      if (load){
+        this.posicion.Latitud = resp.coords.latitude;
+        this.posicion.Longitud = resp.coords.longitude;
+      } else {
+        this.servicio.LatOrigen = resp.coords.latitude.toString();
+        this.servicio.LngOrigen = resp.coords.longitude.toString();
+      }
+      
      }).catch((error) => {
        let msjError = "Error al obtener ubicación. ";
        
@@ -115,6 +129,22 @@ export class ServicioPage {
   }
 
   iniciarMapaZ(): void {
+
+    let mapOptions: GoogleMapOptions = {
+      camera: {
+         target: {
+           lat: this.posicion.Latitud,
+           lng: this.posicion.Longitud
+         },
+         zoom: 16,
+         tilt: 30
+       }
+    };
+
+    this.map = GoogleMaps.create('mapaServicio', mapOptions);
+   
+    
+
     console.log("Iniciando mapa");
   }
 

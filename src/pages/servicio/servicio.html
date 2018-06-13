@@ -122,7 +122,7 @@
         </ion-item>
       </div>
 
-
+     
       <!--Datos de tipo de servicio traslado-->
       <div *ngIf="servicio.Tipo.csTipoServicioId == 4">
         <ion-item>
@@ -143,6 +143,10 @@
         <ion-select [(ngModel)]="tipoSelect" name="cboTipoVehiculo" required="true" [disabled]="editTipoVehiculo" (ionChange)="cambiarPrecio()">
           <ion-option *ngFor="let tipo of contrato.TipoVehiculo" [value]="tipo">{{tipo.tvDescripcion}}</ion-option>
         </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <div id="mapaServicio"></div>
       </ion-item>
 
       <ion-item *ngIf="servicio.Tipo.csTipoServicioId == 1 || servicio.Tipo.csTipoServicioId == 2">
