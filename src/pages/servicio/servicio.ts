@@ -6,6 +6,8 @@ import { GoogleMaps,   GoogleMap,   GoogleMapsEvent,
          GoogleMapOptions,   CameraPosition,   MarkerOptions,   Marker
 } from '@ionic-native/google-maps';
 
+import { Platform } from 'ionic-angular';
+
 import { Servicio, Coordenada  } from '../../models/servicio.model';
 import { Asignacion }  from '../../models/asignacion.model'; 
 import { Traslado } from '../../models/traslado.model';
@@ -54,7 +56,7 @@ export class ServicioPage {
   map: GoogleMap;
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public toastCtrl: ToastController, public contratoProvider: ContratoProvider,
-              public funcionesProvider: FuncionesComunesProvider, 
+              public funcionesProvider: FuncionesComunesProvider, public platform: Platform,
               public servicioProvider : ServicioProvider, private geolocation: Geolocation) {
     
     this.initDatos();
@@ -62,7 +64,12 @@ export class ServicioPage {
   
 
   ionViewDidLoad() {
+    //this.ubicacionAutomatica(true);
     this.getContratos();
+    this.platform.ready().then(() => {
+        this.ubicacionAutomatica(true);
+        this.iniciarMapaZ();
+    });
   }
 
   initDatos(){
@@ -87,13 +94,13 @@ export class ServicioPage {
     this.editTipoVehiculo =true;
     this.editModoServicio = true;
 
-    this.ubicacionAutomatica(true);
-    this.iniciarMapaZ();
+    
+    
   }
 
   // FUNCIONES DE MAPAS 
   ubicacionAutomatica(load: boolean): void {
-    this.geolocation.getCurrentPosition().then((resp) => {
+    this.geolocation.getCurrentPosition({enableHighAccuracy:true}).then((resp) => {
       console.log(resp.coords.latitude);
       console.log(resp.coords.longitude);
       
@@ -107,7 +114,7 @@ export class ServicioPage {
       
      }).catch((error) => {
        let msjError = "Error al obtener ubicación. ";
-       
+       console.log(error.message);
        if (error.code == 1){
           msjError = "Estimado Usuario(a) para el correcto funcionamiento de la aplicación, " +
           " se requiere el permiso para acceder a su ubicación. "
@@ -116,7 +123,7 @@ export class ServicioPage {
        }
 
        this.mostrarToast(msjError, 7000);
-       console.log('Error getting location', error);
+       console.log('Error getting location', JSON.stringify(error));
      });
   }
 
@@ -141,7 +148,7 @@ export class ServicioPage {
        }
     };
 
-    this.map = GoogleMaps.create('mapaServicio', mapOptions);
+    this.map = GoogleMaps.create('dvMapaServicio');
    
     
 
