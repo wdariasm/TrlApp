@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { HttpClientModule } from '@angular/common/http';
-import {  GoogleMaps } from '@ionic-native/google-maps';
 import { Geolocation } from '@ionic-native/geolocation';
 
 import { MyApp } from './app.component';
@@ -17,6 +16,7 @@ import { ConfiguracionProvider } from '../providers/configuracion/configuracion'
 import { FuncionesComunesProvider } from '../providers/funciones-comunes/funciones-comunes';
 import { ServicioProvider } from '../providers/servicio/servicio';
 import { ZonaProvider } from '../providers/zona/zona';
+import { ConnectivityProvider } from '../providers/connectivity/connectivity';
 
 @NgModule({
   declarations: [
@@ -45,10 +45,10 @@ import { ZonaProvider } from '../providers/zona/zona';
     ContratoProvider,
     FuncionesComunesProvider,
     ServicioProvider, 
-    GoogleMaps,
     Geolocation,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    ZonaProvider
+    ZonaProvider,
+    ConnectivityProvider
   ]
 })
 export class AppModule {}

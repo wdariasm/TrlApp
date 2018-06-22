@@ -19,10 +19,23 @@
 <ion-content padding>
 
     <ion-item>
-        <ion-label>Asignación Manual</ion-label>
-        <ion-toggle [(ngModel)]="asignacion.Manual" name="chkAsignacion" ></ion-toggle>
+      <ion-label>Asignación Manual</ion-label>
+      <ion-toggle [(ngModel)]="asignacion.Manual" name="chkAsignacion" ></ion-toggle>
+    </ion-item> 
+
+    <div *ngIf="!asignacion.Manual">
+      <ion-item>
+        <ion-label floating>Dirección de origen *</ion-label>
+        <ion-input type="text" [(ngModel)]="servicio.DireccionOrigen"  name="txtOrigen" id="txtOrigen" ></ion-input>
       </ion-item>
 
+      <ion-item *ngIf="servicio.Tipo.csTipoServicioId == 4 || servicio.Tipo.csTipoServicioId == 1">
+        <ion-label floating>Dirección de origen *</ion-label>
+        <ion-input type="text" [(ngModel)]="servicio.DireccionDestino"  name="txtDestino" id="txtDestino" ></ion-input>
+      </ion-item>
+    </div>
+
+    <div *ngIf="asignacion.Manual">
       <ion-list radio-group [(ngModel)]="asignacion.Marcador" name="rdAsignacionMarcador" *ngIf="servicio.Tipo.csTipoServicioId != 3">
         <ion-list-header>
           Establecer posición
@@ -39,8 +52,9 @@
         </ion-item>
         
       </ion-list>
+    </div>
 
-    <div id="map_canvas"  style="height: 400px; width: 100%" class="hidden">
+    <div id="map_canvas"  style="height: 400px; width: 100%; top: 2%" class="visible">
       
     </div>
 

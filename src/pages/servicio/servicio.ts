@@ -1,12 +1,3 @@
-import {
-  GoogleMaps,
-  GoogleMap,
-  GoogleMapsEvent,
-  GoogleMapOptions,
-  CameraPosition,
-  Marker,
-  GoogleMapsAnimation
-} from '@ionic-native/google-maps';
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
@@ -29,6 +20,7 @@ import { FuncionesComunesProvider } from '../../providers/funciones-comunes/func
 import { ServicioProvider } from '../../providers/servicio/servicio';
 import { ZonaProvider } from '../../providers/zona/zona';
 
+declare var google;
 
 @Component({
   selector: 'page-servicio',
@@ -61,10 +53,17 @@ export class ServicioPage {
 
   // Variables para el servicio de mapas
   posicion : Coordenada;
-  map: GoogleMap;
+  mapa : any;
   mapElement;
-  markerOrigen : Marker = null; 
-  markerDestino : Marker = null;
+  markerOrigen; 
+  markerDestino;
+  autocompleteDestino;
+
+  origenPlaceId = null;
+  destinoPlaceId = null;
+  travelMode : any;
+  directionsService : any;
+  directionsDisplay: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public toastCtrl: ToastController, public contratoProvider: ContratoProvider,
@@ -75,14 +74,18 @@ export class ServicioPage {
             ) 
   {
     this.platform.ready().then(() => {
-     
+      //this.iniciarMapaZ();
+      this.travelMode = google.maps.TravelMode.DRIVING;
+      this.directionsService = new google.maps.DirectionsService;
+      this.directionsDisplay = new google.maps.DirectionsRenderer;
+      this.initMapa();
     });
     this.initDatos();
   }
   
 
   ionViewDidLoad() {
-    this.ubicacionAutomatica(true);
+    //this.ubicacionAutomatica(true);
     this.getContratos();
     /*this.platform.ready().then(() => {
         //this.ubicacionAutomatica(true);
@@ -119,7 +122,8 @@ export class ServicioPage {
 
   // FUNCIONES DE MAPAS 
   ubicacionAutomatica(load: boolean): void {
-    this.geolocation.getCurrentPosition({enableHighAccuracy:true, maximumAge: 30000, timeout:7000}).then((resp) => {
+    this.geolocation.getCurrentPosition({enableHighAccuracy:true, maximumAge: 30000, timeout:7000})
+    .then((resp) => {
       console.log(resp.coords.latitude);
       console.log(resp.coords.longitude);
       
@@ -148,6 +152,22 @@ export class ServicioPage {
      }); 
   }
 
+  initMapa (): void {
+    let latLng = new google.maps.LatLng(this.posicion.Latitud, this.posicion.Longitud);
+ 
+        let mapOptions = {
+          center: latLng,
+          zoom: 16,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+      this.directionsDisplay.set('directions', null);
+      this.mapa = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+      this.directionsDisplay.setMap(this.mapa);
+      this.initAutocomplete();
+      
+  }
+
+/*
   iniciarMapaZ() {
     let mapOptions: GoogleMapOptions = {
       camera: {
@@ -167,13 +187,14 @@ export class ServicioPage {
 
     this.mapElement = document.getElementById("map_canvas");
 
-    this.map = GoogleMaps.create(this.mapElement, mapOptions);
+    this.mapa = GoogleMaps.create(this.mapElement, mapOptions);
 
-    this.map.on(GoogleMapsEvent.MAP_READY).subscribe(()=> {
+    this.mapa.on(GoogleMapsEvent.MAP_READY).subscribe(()=> {
       this.mostrarToast("Mapa cargado ");
+      this.initAutocomplete();
     });
 
-    this.map.on(GoogleMapsEvent.MAP_CLICK).subscribe((params: any[])=>{
+    this.mapa.on(GoogleMapsEvent.MAP_CLICK).subscribe((params: any[])=>{
       let latLng: any  = params[0];
 
       if(this.asignacion.Manual){
@@ -182,7 +203,7 @@ export class ServicioPage {
             if(this.markerOrigen !== null){
                 this.markerOrigen.remove();
             }
-            this.markerOrigen = this.map.addMarkerSync ({
+            this.markerOrigen = this.mapa.addMarkerSync ({
                 position:  latLng, 
                 animation: GoogleMapsAnimation.DROP,
                 title:"Posición de Origen",
@@ -196,7 +217,7 @@ export class ServicioPage {
             if(this.markerDestino !== null){
               this.markerDestino.remove();
             }
-            this.markerDestino = this.map.addMarkerSync ({
+            this.markerDestino = this.mapa.addMarkerSync ({
                 position: latLng, 
                 animation: GoogleMapsAnimation.DROP,
                 title:"Posición de Destino",
@@ -212,7 +233,7 @@ export class ServicioPage {
         }
       } 
     });
-  }
+  } */
 
   mostrarToast(mensaje : string, duracion: number = 3000) {
     const toast = this.toastCtrl.create({
@@ -220,6 +241,119 @@ export class ServicioPage {
       duration: duracion
     });
     toast.present();
+  }
+
+  initAutocomplete (): void {
+    let options : any = {  componentRestrictions: {country: 'co'} };
+    let input = document.getElementById('txtOrigen').getElementsByTagName('input')[0];
+    let autocompleteOrigen = new google.maps.places.Autocomplete(input, options);
+    autocompleteOrigen.bindTo('bounds', this.mapa);
+
+    autocompleteOrigen.addListener('place_changed',()=> {
+      //infowindow.close();
+      //this.markerOrigen.setVisible(false);
+      let place = autocompleteOrigen.getPlace();
+      if (!place.geometry) {
+          this.mostrarToast('No se pudo resolver la  posición');
+          return;
+      }
+      this.expandViewportToFitPlace(this.mapa, place);                      
+                  
+      this.servicio.LatOrigen = place.geometry.location.lat();
+      this.servicio.LngOrigen  = place.geometry.location.lng();            
+      this.servicio.DireccionOrigen =  place.formatted_address;            
+
+      if(this.servicio.Tipo.csTipoServicioId == 1){
+          this.buscarZona(this.servicio.LatOrigen, this.servicio.LngOrigen,"ZonaOrigen");
+          this.origenPlaceId = place.place_id;
+          this.route(this.origenPlaceId, this.destinoPlaceId, this.travelMode, this.directionsService, this.directionsDisplay);
+      } else if(this.servicio.Tipo.csTipoServicioId == 4){
+          this.origenPlaceId = place.place_id;
+          this.route(this.origenPlaceId, this.destinoPlaceId, this.travelMode, this.directionsService, this.directionsDisplay);
+      } else {                                  
+          var coordenada = new google.maps.LatLng(this.servicio.LatOrigen, this.servicio.LngOrigen);
+          this.markerOrigen = null;
+          this.markerOrigen = new google.maps.Marker({position: coordenada, map: this.mapa,
+              animation: google.maps.Animation.DROP, title:"Posición Cliente"                         
+          });                                                                      
+          this.markerOrigen.setVisible(true);            
+      }            
+    });
+  }
+
+  initAutocompleteDestino (){
+  
+    if (this.servicio.Tipo.csTipoServicioId == 2 || this.servicio.Tipo.csTipoServicioId == 3) return;
+    
+    let options : any = {  componentRestrictions: {country: 'co'} };
+    let input = document.getElementById('txtDestino').getElementsByTagName('input')[0];
+
+    this.autocompleteDestino = new google.maps.places.Autocomplete(input, options);
+    this.autocompleteDestino.bindTo('bounds', this.mapa);
+
+    this.autocompleteDestino.addListener('place_changed', () => {            
+        var place = this.autocompleteDestino.getPlace();
+        if (!place.geometry) {
+            this.mostrarToast('No pudo resolver la  posición');
+            return;
+        }
+        this.expandViewportToFitPlace(this.mapa, place);
+        this.servicio.LatDestino = place.geometry.location.lat();
+        this.servicio.LngDestino  = place.geometry.location.lng();            
+        this.servicio.DireccionDestino =  place.formatted_address;
+                  
+        if(this.servicio.Tipo.csTipoServicioId == 1){
+            this.buscarZona(this.servicio.LatDestino, this.servicio.LngDestino, 'ZonaDestino');                
+        }
+        
+        this.destinoPlaceId = place.place_id;
+        this.route(this.origenPlaceId, this.destinoPlaceId, this.travelMode, this.directionsService, this.directionsDisplay);
+        
+    });
+  }
+
+  route(origin_place_id, destination_place_id, travel_mode, directionsService, directionsDisplay) {
+    if (!origin_place_id || !destination_place_id) {
+      return;
+    }
+    directionsService.route({
+      origin: {'placeId': origin_place_id},
+      destination: {'placeId': destination_place_id},
+      travelMode: travel_mode
+    }, function(response, status) {
+      if (status === google.maps.DirectionsStatus.OK) {
+        directionsDisplay.setDirections(response);
+      } else {
+          this.mostrarToast('Error al resolver dirección');
+      }
+    });
+  }
+
+  routePosicion(origen, destino, travel_mode, directionsService, directionsDisplay) {
+    if (!origen || !destino) {
+      return;
+    }
+    directionsService.route({
+      origin: origen,
+      destination:  destino,
+      travelMode: travel_mode
+    }, function(response, status) {
+      if (status === google.maps.DirectionsStatus.OK) {              
+        directionsDisplay.setDirections(response);
+      } else {
+       this.mostrarToast('Error al resolver dirección');
+      }
+    });
+  }
+
+  expandViewportToFitPlace(map, place): void {
+    if (place.geometry.viewport) {
+        map.fitBounds(place.geometry.viewport);
+    } else {
+      console.log("estoy en else");
+        map.setCenter(place.geometry.location);
+        map.setZoom(17);
+    }
   }
 
   buscarZona(latitud, longitud, opcion){
@@ -295,48 +429,48 @@ export class ServicioPage {
         console.log(<any>error);
       }
     );
-}
+  }
 
-getRutas(idPlantilla): void  {
+  getRutas(idPlantilla): void  {
 
-  this.contratoProvider.getRutas(idPlantilla).subscribe(
-    result => {   
-      this.lstRutas= result;
-      if(this.editar){
-        var pos1 = this.funcionesProvider.arrayObjectIndexOf(this.lstRutas, this.servicio.DetallePlantillaId, 'rtCodigo');        
-        if(pos1 >=0){                            
-            this.rutaSelect = this.lstRutas[pos1];                    
-            if( this.servicio.ValorCliente >  this.rutaSelect.rtValorCliente ){
-                this.asignacion.Ruta = "doble";
-            }
-        }                                                                
+    this.contratoProvider.getRutas(idPlantilla).subscribe(
+      result => {   
+        this.lstRutas= result;
+        if(this.editar){
+          var pos1 = this.funcionesProvider.arrayObjectIndexOf(this.lstRutas, this.servicio.DetallePlantillaId, 'rtCodigo');        
+          if(pos1 >=0){                            
+              this.rutaSelect = this.lstRutas[pos1];                    
+              if( this.servicio.ValorCliente >  this.rutaSelect.rtValorCliente ){
+                  this.asignacion.Ruta = "doble";
+              }
+          }                                                                
+        }
+      },
+      error => {
+        console.log(<any>error);
+        this.mostrarToast("Error al cargar rutas.");
       }
-    },
-    error => {
-      console.log(<any>error);
-      this.mostrarToast("Error al cargar rutas.");
-    }
-  );
-}
+    );
+  }
 
-getTraslados(idPlantilla: number): void {
+  getTraslados(idPlantilla: number): void {
 
-  this.contratoProvider.getTraslados(idPlantilla).subscribe(
-    result => {        
-      this.lstTraslados= result;
-      if(this.editar){                                
-        var pos1 = this.funcionesProvider.arrayObjectIndexOf(this.lstTraslados, this.servicio.DetallePlantillaId, 'tlCodigo');        
-        if(pos1 >=0){                            
-           this.trasladoSelect = this.lstTraslados[pos1];                    
-        }                                                                
+    this.contratoProvider.getTraslados(idPlantilla).subscribe(
+      result => {        
+        this.lstTraslados= result;
+        if(this.editar){                                
+          var pos1 = this.funcionesProvider.arrayObjectIndexOf(this.lstTraslados, this.servicio.DetallePlantillaId, 'tlCodigo');        
+          if(pos1 >=0){                            
+            this.trasladoSelect = this.lstTraslados[pos1];                    
+          }                                                                
+        }
+      },
+      error => {
+        this.mostrarToast("Error al cargar traslados.");
+        console.log(<any>error);
       }
-    },
-    error => {
-      this.mostrarToast("Error al cargar traslados.");
-      console.log(<any>error);
-    }
-  );
-}
+    );
+  }
 
   getContratos(): void {
     this.contratoProvider.getByCliente(this.servicio.ClienteId, 'ACTIVO').subscribe(
@@ -439,7 +573,9 @@ getTraslados(idPlantilla: number): void {
       var div1 = document.getElementById('map_canvas');                
       div1.classList.remove('hidden');
       div1.classList.add('visible');                                  
-      setTimeout(() => { this.iniciarMapaZ();},200);                
+      setTimeout(() => { this.initMapa();
+        this.initAutocompleteDestino();   
+      },200);                
     }
 
     this.tituloPlantilla = "Plantillas " + this.servicio.Tipo.csDescripcion;
@@ -455,16 +591,16 @@ getTraslados(idPlantilla: number): void {
       this.editTipoVehiculo = true;
       this.servicio.ModoServicio = "PROGRAMADO";
       this.plantilla = this.contrato.Plantilla[pos];           
-      if(this.servicio.Tipo.csTipoServicioId == 1){                 
-          this.buscarValorParada();
-          this.getTipoVehiculo(this.plantilla.plCodigo, this.servicio.Tipo.csTipoServicioId );
-           this.editTipoVehiculo = false;
-           this.editModoServicio = false;
+      if(this.servicio.Tipo.csTipoServicioId == 1){              
+        this.buscarValorParada();
+        this.getTipoVehiculo(this.plantilla.plCodigo, this.servicio.Tipo.csTipoServicioId );
+        this.editTipoVehiculo = false;
+        this.editModoServicio = false;
       } else if(this.servicio.Tipo.csTipoServicioId == 2) {                                
           this.getTipoVehiculo(this.plantilla.plCodigo, this.servicio.Tipo.csTipoServicioId );
           this.editTipoVehiculo = false;
           this.editModoServicio = false;
-      } else if(this.servicio.Tipo.csTipoServicioId == 3){ //ruta                                
+      } else if(this.servicio.Tipo.csTipoServicioId == 3){ //ruta 
           this.getRutas(this.plantilla.plCodigo);
           this.getTiposVehiculos();
       }else { //traslado                
