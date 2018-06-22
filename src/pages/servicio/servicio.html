@@ -17,9 +17,37 @@
 
 
 <ion-content padding>
+
+    <ion-item>
+        <ion-label>Asignación Manual</ion-label>
+        <ion-toggle [(ngModel)]="asignacion.Manual" name="chkAsignacion" ></ion-toggle>
+      </ion-item>
+
+      <ion-list radio-group [(ngModel)]="asignacion.Marcador" name="rdAsignacionMarcador" *ngIf="servicio.Tipo.csTipoServicioId != 3">
+        <ion-list-header>
+          Establecer posición
+        </ion-list-header>
+      
+        <ion-item item-left>
+          <ion-label>Origen</ion-label>
+          <ion-radio value="Origen" color="secondary"></ion-radio>
+        </ion-item>
+      
+        <ion-item item-right>
+          <ion-label>Destino</ion-label>
+          <ion-radio value="Destino" color="danger"></ion-radio>
+        </ion-item>
+        
+      </ion-list>
+
+    <div id="map_canvas"  style="height: 400px; width: 100%" class="hidden">
+      
+    </div>
+
+
   <form #formServicio="ngForm">
 
-    <div padding>
+    <div >
       <ion-segment [(ngModel)]="opcion" name="tbOpcion">
         <ion-segment-button value="Contrato">
           <ion-icon name="document"></ion-icon>
@@ -91,6 +119,8 @@
         <ion-input type="number" value="" maxlength="2" required="true"></ion-input>
       </ion-item>
 
+      
+
       <ion-list radio-group [(ngModel)]="asignacion.Ruta" name="rdAsignacionRuta" *ngIf="servicio.Tipo.csTipoServicioId == 3">
         <ion-list-header>
           Tipo Traslado
@@ -106,10 +136,7 @@
         </ion-item>
       </ion-list>
 
-      <div id="dvMapaServicio"  style="height: 200px; width: 100%">
-
-      </div>
-
+      
       <!--Datos de tipo de servicio traslado-->
       <div *ngIf="servicio.Tipo.csTipoServicioId == 3">
         <ion-item>
@@ -146,10 +173,6 @@
         <ion-select [(ngModel)]="tipoSelect" name="cboTipoVehiculo" required="true" [disabled]="editTipoVehiculo" (ionChange)="cambiarPrecio()">
           <ion-option *ngFor="let tipo of contrato.TipoVehiculo" [value]="tipo">{{tipo.tvDescripcion}}</ion-option>
         </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <div id="mapaServicio" style="height: 200px; width: 100%"></div>
       </ion-item>
 
       <ion-item *ngIf="servicio.Tipo.csTipoServicioId == 1 || servicio.Tipo.csTipoServicioId == 2">

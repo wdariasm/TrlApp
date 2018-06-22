@@ -51,7 +51,7 @@ export class Servicio {
         this.ValorParadaCliente =0;
         this.ValorParadaProveedor = 0;
         this.NumPasajeros = 0;
-        this.FechaServicio = new Date();
+        //this.FechaServicio = new Date();
         this.Paradas = [];
         this.NumeroContrato = "";
         this.LatOrigen = "";

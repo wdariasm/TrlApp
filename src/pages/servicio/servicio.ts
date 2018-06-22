@@ -1,11 +1,16 @@
+import {
+  GoogleMaps,
+  GoogleMap,
+  GoogleMapsEvent,
+  GoogleMapOptions,
+  CameraPosition,
+  Marker,
+  GoogleMapsAnimation
+} from '@ionic-native/google-maps';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
-import { GoogleMaps,   GoogleMap,   GoogleMapsEvent,
-         GoogleMapOptions,   CameraPosition,   MarkerOptions,   Marker
-} from '@ionic-native/google-maps';
-
 import { Platform } from 'ionic-angular';
 
 import { Servicio, Coordenada  } from '../../models/servicio.model';
@@ -22,8 +27,9 @@ import { Usuario } from '../../models/usuario.model';
 import { ContratoProvider } from '../../providers/contrato/contrato';
 import { FuncionesComunesProvider } from '../../providers/funciones-comunes/funciones-comunes';
 import { ServicioProvider } from '../../providers/servicio/servicio';
+import { ZonaProvider } from '../../providers/zona/zona';
 
-@IonicPage()
+
 @Component({
   selector: 'page-servicio',
   templateUrl: 'servicio.html',
@@ -52,24 +58,36 @@ export class ServicioPage {
   aceptarCondicion : boolean;
   enviandoInformacion : boolean;
   usuario : Usuario;  
+
+  // Variables para el servicio de mapas
   posicion : Coordenada;
   map: GoogleMap;
+  mapElement;
+  markerOrigen : Marker = null; 
+  markerDestino : Marker = null;
+
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public toastCtrl: ToastController, public contratoProvider: ContratoProvider,
               public funcionesProvider: FuncionesComunesProvider, public platform: Platform,
-              public servicioProvider : ServicioProvider, private geolocation: Geolocation) {
-    
+              public servicioProvider : ServicioProvider, private geolocation: Geolocation, 
+              private zonaProvider: ZonaProvider
+              
+            ) 
+  {
+    this.platform.ready().then(() => {
+     
+    });
     this.initDatos();
   }
   
 
   ionViewDidLoad() {
-    //this.ubicacionAutomatica(true);
+    this.ubicacionAutomatica(true);
     this.getContratos();
-    this.platform.ready().then(() => {
-        this.ubicacionAutomatica(true);
+    /*this.platform.ready().then(() => {
+        //this.ubicacionAutomatica(true);
         this.iniciarMapaZ();
-    });
+    });*/
   }
 
   initDatos(){
@@ -93,14 +111,15 @@ export class ServicioPage {
     this.editar = false;
     this.editTipoVehiculo =true;
     this.editModoServicio = true;
-
+    this.markerDestino = null;
+    this.markerOrigen = null;
     
     
   }
 
   // FUNCIONES DE MAPAS 
   ubicacionAutomatica(load: boolean): void {
-    this.geolocation.getCurrentPosition({enableHighAccuracy:true}).then((resp) => {
+    this.geolocation.getCurrentPosition({enableHighAccuracy:true, maximumAge: 30000, timeout:7000}).then((resp) => {
       console.log(resp.coords.latitude);
       console.log(resp.coords.longitude);
       
@@ -111,10 +130,12 @@ export class ServicioPage {
         this.servicio.LatOrigen = resp.coords.latitude.toString();
         this.servicio.LngOrigen = resp.coords.longitude.toString();
       }
+
+      //this.mostrarToast(resp.coords.latitude + ' '+ resp.coords.longitude);
       
      }).catch((error) => {
        let msjError = "Error al obtener ubicación. ";
-       console.log(error.message);
+       console.log("-- " + error.message);
        if (error.code == 1){
           msjError = "Estimado Usuario(a) para el correcto funcionamiento de la aplicación, " +
           " se requiere el permiso para acceder a su ubicación. "
@@ -124,7 +145,73 @@ export class ServicioPage {
 
        this.mostrarToast(msjError, 7000);
        console.log('Error getting location', JSON.stringify(error));
-     });
+     }); 
+  }
+
+  iniciarMapaZ() {
+    let mapOptions: GoogleMapOptions = {
+      camera: {
+         target: {
+           lat: this.posicion.Latitud,
+           lng: this.posicion.Longitud
+         },
+         zoom: 16,
+         tilt: 30
+       },
+       controls : {
+         myLocation : true,
+         myLocationButton : true,
+         mapToolbar : true
+       }
+    };
+
+    this.mapElement = document.getElementById("map_canvas");
+
+    this.map = GoogleMaps.create(this.mapElement, mapOptions);
+
+    this.map.on(GoogleMapsEvent.MAP_READY).subscribe(()=> {
+      this.mostrarToast("Mapa cargado ");
+    });
+
+    this.map.on(GoogleMapsEvent.MAP_CLICK).subscribe((params: any[])=>{
+      let latLng: any  = params[0];
+
+      if(this.asignacion.Manual){
+        switch (this.asignacion.Marcador) {
+          case "Origen":     
+            if(this.markerOrigen !== null){
+                this.markerOrigen.remove();
+            }
+            this.markerOrigen = this.map.addMarkerSync ({
+                position:  latLng, 
+                animation: GoogleMapsAnimation.DROP,
+                title:"Posición de Origen",
+                icon:'blue'
+            });                        
+            this.servicio.LatOrigen = params[0].lat;
+            this.servicio.LngOrigen = params[0].lng;
+            this.buscarZona(this.servicio.LatOrigen, this.servicio.LngOrigen,"ZonaOrigen"); 
+            break;                  
+          case "Destino":     
+            if(this.markerDestino !== null){
+              this.markerDestino.remove();
+            }
+            this.markerDestino = this.map.addMarkerSync ({
+                position: latLng, 
+                animation: GoogleMapsAnimation.DROP,
+                title:"Posición de Destino",
+                icon:'red'
+            });                        
+            this.servicio.LatDestino = params[0].lat;
+            this.servicio.LngDestino = params[0].lng;
+            this.buscarZona(this.servicio.LatDestino, this.servicio.LngDestino, 'ZonaDestino'); 
+            break; 
+          default:
+              this.mostrarToast("Por favor seleccione la posicion a establecer Origen o Destino.");
+              break;
+        }
+      } 
+    });
   }
 
   mostrarToast(mensaje : string, duracion: number = 3000) {
@@ -135,24 +222,21 @@ export class ServicioPage {
     toast.present();
   }
 
-  iniciarMapaZ(): void {
-
-    let mapOptions: GoogleMapOptions = {
-      camera: {
-         target: {
-           lat: this.posicion.Latitud,
-           lng: this.posicion.Longitud
-         },
-         zoom: 16,
-         tilt: 30
-       }
-    };
-
-    this.map = GoogleMaps.create('dvMapaServicio');
-   
-    
-
-    console.log("Iniciando mapa");
+  buscarZona(latitud, longitud, opcion){
+    this.zonaProvider.getZona(latitud, longitud).subscribe(
+      result => {        
+          if (result != 0){
+            this.servicio[opcion] = result;
+            this.mostrarToast(opcion +' : ' + this.servicio[opcion]);
+          } else {
+            this.mostrarToast("Estimado Usuario(a), No se encontro la zona");
+          }
+      },
+      error => {
+        console.log(<any>error);
+        this.mostrarToast("Error al buscar zona. ");
+      }
+    );
   }
 
   buscarValorParada(): void{
@@ -352,10 +436,10 @@ getTraslados(idPlantilla: number): void {
 
   tipoServicioCheck():void {
     if(this.servicio.Tipo.csTipoServicioId != 3){                               
-      var div1 = document.getElementById('dvMapaServicio');                
+      var div1 = document.getElementById('map_canvas');                
       div1.classList.remove('hidden');
       div1.classList.add('visible');                                  
-     // setTimeout(function (){ this.iniciarMapaZ();},200);                
+      setTimeout(() => { this.iniciarMapaZ();},200);                
     }
 
     this.tituloPlantilla = "Plantillas " + this.servicio.Tipo.csDescripcion;

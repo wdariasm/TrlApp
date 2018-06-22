@@ -51,18 +51,20 @@
   "description": "An Ionic project",
   "cordova": {
     "plugins": {
-      "cordova-plugin-googlemaps": {
-        "API_KEY_FOR_ANDROID": "AIzaSyC-8_B9jBB8yhpi5yMhxpy35kwdADKvDZA",
-        "API_KEY_FOR_IOS": "AIzaSyDOKwoMAYo765GWK2uKkoigh19cbAEjY5E"
-      },
-      "cordova-plugin-geolocation": {
-        "GEOLOCATION_USAGE_DESCRIPTION": "MiPosición"
-      },
       "cordova-plugin-whitelist": {},
       "cordova-plugin-device": {},
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-ionic-webview": {},
-      "cordova-plugin-ionic-keyboard": {}
+      "cordova-plugin-ionic-keyboard": {},
+      "cordova-plugin-geolocation": {
+        "GEOLOCATION_USAGE_DESCRIPTION": "Mi Posición"
+      },
+      "cordova-plugin-googlemaps": {
+        "API_KEY_FOR_ANDROID": "AIzaSyD_EI-uEK8xKXxfgA5fkerMhAL4gIo0u6Q",
+        "API_KEY_FOR_IOS": "AIzaSyD_EI-uEK8xKXxfgA5fkerMhAL4gIo0u6Q",
+        "PLAY_SERVICES_VERSION": "15.0.1",
+        "ANDROID_SUPPORT_V4_VERSION": "26.1.0"
+      }
     },
     "platforms": [
       "android"
