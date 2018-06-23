@@ -55,8 +55,6 @@ export class ServicioPage {
   posicion : Coordenada;
   mapa : any;
   mapElement;
-  markerOrigen; 
-  markerDestino;
   autocompleteDestino;
 
   origenPlaceId = null;
@@ -114,9 +112,6 @@ export class ServicioPage {
     this.editar = false;
     this.editTipoVehiculo =true;
     this.editModoServicio = true;
-    this.markerDestino = null;
-    this.markerOrigen = null;
-    
     
   }
 
@@ -153,19 +148,91 @@ export class ServicioPage {
   }
 
   initMapa (): void {
-    let latLng = new google.maps.LatLng(this.posicion.Latitud, this.posicion.Longitud);
- 
-        let mapOptions = {
-          center: latLng,
-          zoom: 16,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
+    let puntos = new google.maps.LatLng(this.posicion.Latitud, this.posicion.Longitud);
+    let mapOptions = {
+      center: puntos,
+      zoom: 16,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+    this.directionsDisplay.set('directions', null);
+    this.mapa = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+    this.directionsDisplay.setMap(this.mapa);
+
+   this.initAutocomplete();
+   let markerOrigen = null;
+   let markerDestino = null;
+    google.maps.event.addListener(this.mapa, "click", (evento) => {
+      let latitud = evento.latLng.lat();
+      let longitud = evento.latLng.lng();   
+    
+      if(this.asignacion.Manual){
+       
+        let coordenadas = new google.maps.LatLng(latitud, longitud); 
+        switch (this.asignacion.Marcador) {
+          case "Origen":     
+            if(markerOrigen !== null){
+              markerOrigen.setMap(null);
+            }
+            markerOrigen = new google.maps.Marker ({
+                position:  coordenadas, map: this.mapa,
+                animation: google.maps.Animation.DROP,
+                title:"Posición de Origen",
+                icon:'blue'
+            });                        
+            //this.markerOrigen.setMap(this.mapa);  
+            markerOrigen.setVisible(true);
+  
+            this.servicio.LatOrigen = latitud;
+            this.servicio.LngOrigen = longitud;
+            this.buscarZona(this.servicio.LatOrigen, this.servicio.LngOrigen,"ZonaOrigen"); 
+            break;                  
+          case "Destino":     
+            if(markerDestino !== null){
+              markerDestino.setMap(null);
+            }
+            markerDestino = new google.maps.Marker ({
+                position: coordenadas, map: this.mapa,
+                animation: google.maps.Animation.DROP,
+                title:"Posición de Destino",
+                icon:'red',
+            });       
+            markerDestino.setVisible(true);
+            this.servicio.LatDestino = latitud;
+            this.servicio.LngDestino = longitud;
+            this.buscarZona(this.servicio.LatDestino, this.servicio.LngDestino, 'ZonaDestino'); 
+            break; 
+          default:
+              this.mostrarToast("Por favor seleccione la posicion a establecer Origen o Destino.");
+              break;
         }
-      this.directionsDisplay.set('directions', null);
-      this.mapa = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-      this.directionsDisplay.setMap(this.mapa);
-      this.initAutocomplete();
-      
+        
+        this.getGeocoder(coordenadas);
+      } 
+    });
   }
+
+  getGeocoder(coordenadas): void {  
+    
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ 'latLng': coordenadas }, (results, status)=>{
+      var direccion ="";
+      if (status == google.maps.GeocoderStatus.OK) {
+          if (results[0]) {                             
+              direccion = results[0].formatted_address.split(" a ",1);                 
+          } else {
+          this.mostrarToast('Google no retorno resultado alguno.');
+          }
+      } else {
+        console.log("Geocoding fallo debido a : " + status);
+      }
+
+      if(this.asignacion.Marcador == "Destino"){
+          this.servicio.DireccionDestino = direccion[0];           
+      }else{
+          this.servicio.DireccionOrigen = direccion[0];
+      }
+    });  
+  } 
 
 /*
   iniciarMapaZ() {
@@ -272,11 +339,11 @@ export class ServicioPage {
           this.route(this.origenPlaceId, this.destinoPlaceId, this.travelMode, this.directionsService, this.directionsDisplay);
       } else {                                  
           var coordenada = new google.maps.LatLng(this.servicio.LatOrigen, this.servicio.LngOrigen);
-          this.markerOrigen = null;
-          this.markerOrigen = new google.maps.Marker({position: coordenada, map: this.mapa,
+          let markerOrigen = null;
+          markerOrigen = new google.maps.Marker({position: coordenada, map: this.mapa,
               animation: google.maps.Animation.DROP, title:"Posición Cliente"                         
           });                                                                      
-          this.markerOrigen.setVisible(true);            
+          markerOrigen.setVisible(true);            
       }            
     });
   }

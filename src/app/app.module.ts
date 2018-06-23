@@ -16,7 +16,7 @@ import { ConfiguracionProvider } from '../providers/configuracion/configuracion'
 import { FuncionesComunesProvider } from '../providers/funciones-comunes/funciones-comunes';
 import { ServicioProvider } from '../providers/servicio/servicio';
 import { ZonaProvider } from '../providers/zona/zona';
-import { ConnectivityProvider } from '../providers/connectivity/connectivity';
+
 
 @NgModule({
   declarations: [
@@ -47,8 +47,7 @@ import { ConnectivityProvider } from '../providers/connectivity/connectivity';
     ServicioProvider, 
     Geolocation,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    ZonaProvider,
-    ConnectivityProvider
+    ZonaProvider
   ]
 })
 export class AppModule {}
