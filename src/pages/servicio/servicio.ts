@@ -76,7 +76,7 @@ export class ServicioPage {
       this.travelMode = google.maps.TravelMode.DRIVING;
       this.directionsService = new google.maps.DirectionsService;
       this.directionsDisplay = new google.maps.DirectionsRenderer;
-      this.initMapa();
+     // this.initMapa();
     });
     this.initDatos();
   }
@@ -92,6 +92,7 @@ export class ServicioPage {
   }
 
   initDatos(){
+    this.opcion = 'Contrato';
     this.asignacion = new Asignacion(false, "Origen", "ida");
     this.trasladoSelect  = new Traslado();
     this.tipoSelect = new TipoVehiculo();
@@ -636,15 +637,17 @@ export class ServicioPage {
   }
 
   tipoServicioCheck():void {
-    if(this.servicio.Tipo.csTipoServicioId != 3){                               
-      var div1 = document.getElementById('map_canvas');                
-      div1.classList.remove('hidden');
-      div1.classList.add('visible');                                  
-      setTimeout(() => { this.initMapa();
-        this.initAutocompleteDestino();   
-      },200);                
-    }
 
+    if(this.servicio.Tipo.csTipoServicioId != 3){                             
+      setTimeout(() => {
+        var div1 = document.getElementById('map_canvas');                
+        div1.classList.remove('hidden');
+        div1.classList.add('visible');     
+        this.initMapa();
+        this.initAutocompleteDestino();   
+      },500);                
+    }
+    
     this.tituloPlantilla = "Plantillas " + this.servicio.Tipo.csDescripcion;
     if(this.contrato.Plantilla.length ===0){
         this.mostrarToast("No se definieron plantillas para este contrato.");
@@ -1093,21 +1096,54 @@ export class ServicioPage {
   };   
 
   cambiarPrecioTraslado =  function (){
-    if(this.TrasladoSelect == null){
+    if(this.trasladoSelect == null){
         return;
     }
     
-    this.servicio.ValorCliente = parseFloat(this.TrasladoSelect.tlValorCliente);
-    this.servicio.Valor = parseFloat(this.TrasladoSelect.tlValor);
-    this.servicio.DetallePlantillaId = this.TrasladoSelect.tlCodigo;
+    this.servicio.ValorCliente = parseFloat(this.trasladoSelect.tlValorCliente);
+    this.servicio.Valor = parseFloat(this.trasladoSelect.tlValor);
+    this.servicio.DetallePlantillaId = this.trasladoSelect.tlCodigo;
     
     this.mostrarToast("Valor del Servicio. $ "+ this.servicio.ValorCliente);
     
     var pos = this.funcionesProvider.arrayObjectIndexOf(this.contrato.TipoVehiculo, this.trasladoSelect.tlTipoVehiculo, 'tvCodigo');
+    console.log(pos);
     if(pos >=0){                            
         this.tipoSelect = this.contrato.TipoVehiculo[pos];
     }  
   };   
+
+  // Validar Datos por pestaña
+  onOpcionChange(): void{
+
+    switch (this.opcion){
+
+      case "TipoServicio":
+
+        if (this.contratoSelect.IdContrato == null){
+          this.mostrarToast("Por favor seleccionar el contrato");
+          this.opcion = 'Contrato';
+          return;
+        }
+
+        break;
+
+      case "Direccion":
+      
+        if(this.servicio.Tipo.csTipoServicioId == 0){
+          this.mostrarToast("Por favor seleccionar el tipo de servicio.");
+          this.opcion = 'TipoServicio';
+          return ;
+        }
+
+        break;
+      case "":
+        break;
+    }
+
+
+    
+  }
 
 }
 

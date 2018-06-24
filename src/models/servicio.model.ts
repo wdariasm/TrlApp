@@ -59,6 +59,9 @@ export class Servicio {
         this.DireccionOrigen = "";
         this.LatDestino = "";
         this.LngDestino = "";
+        this.ValorCliente =0;
+        this.ValorTotal = 0;
+        this.Valor = 0;
     }
 }
 
