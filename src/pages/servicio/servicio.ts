@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
-import { Platform } from 'ionic-angular';
+import { Platform, AlertController } from 'ionic-angular';
+import { NgForm } from '@angular/forms';
 
 import { Servicio, Coordenada  } from '../../models/servicio.model';
 import { Asignacion }  from '../../models/asignacion.model'; 
@@ -19,6 +20,7 @@ import { ContratoProvider } from '../../providers/contrato/contrato';
 import { FuncionesComunesProvider } from '../../providers/funciones-comunes/funciones-comunes';
 import { ServicioProvider } from '../../providers/servicio/servicio';
 import { ZonaProvider } from '../../providers/zona/zona';
+import * as moment from 'moment';
 
 declare var google;
 
@@ -48,7 +50,6 @@ export class ServicioPage {
   rutaSelect : Ruta;
   lstTraslados : Traslado [];
   aceptarCondicion : boolean;
-  enviandoInformacion : boolean;
   usuario : Usuario;  
 
   // Variables para el servicio de mapas
@@ -67,7 +68,7 @@ export class ServicioPage {
               public toastCtrl: ToastController, public contratoProvider: ContratoProvider,
               public funcionesProvider: FuncionesComunesProvider, public platform: Platform,
               public servicioProvider : ServicioProvider, private geolocation: Geolocation, 
-              private zonaProvider: ZonaProvider
+              private zonaProvider: ZonaProvider, private alertCtrl: AlertController
               
             ) 
   {
@@ -105,7 +106,7 @@ export class ServicioPage {
     
     this.servicio.ModoServicio = "PROGRAMADO";
     this.servicio.ClienteId = this.usuario.ClienteId;
-    this.servicio.UserReg = this.usuario.Login;
+   // this.servicio.UserReg = this.usuario.Login;
     this.contrato = new ContratoServicio();
     this.lstRutas = [];
     this.lstTraslados = [];
@@ -113,6 +114,8 @@ export class ServicioPage {
     this.editar = false;
     this.editTipoVehiculo =true;
     this.editModoServicio = true;
+    this.servicio.FechaServicio = moment().format('L');
+    this.servicio.Hora = moment().format("hh:mm a");
     
   }
 
@@ -777,12 +780,12 @@ export class ServicioPage {
     this.servicio.ValorTotal= this.servicio.ValorCliente +  this.subTotal;
   }
 
-  validarServicio(): void {
+  validarServicio(frm : NgForm): void {
         
-   /* if(!this.frmServicio.$valid){
-        toaster.pop('error','¡Error!', 'Por favor ingrese los datos requeridos (*).');
-        return;
-    } */
+    if(frm.invalid){
+      this.mostrarToast('Por favor ingrese los datos requeridos (*).');
+      return;
+    } 
     
     this.aceptarCondicion = false;
     if(this.servicio.Tipo.csTipoServicioId == null){
@@ -839,7 +842,7 @@ export class ServicioPage {
             }
             
             
-            if(this.servicio.LatDestino || this.servicio.LngDestino ===""){
+            if(this.servicio.LatDestino == "" || this.servicio.LngDestino ===""){
                 this.mostrarToast( "Estimado Usuario(a), por favor seleccione la posicion de Destino.");
                 return;
             }
@@ -880,8 +883,9 @@ export class ServicioPage {
     if(this.editar){
       this.servicio.Parada = this.servicio.Paradas.length > 0 ? "SI" : "NO";
       this.actualizarServicio();
-    } else {        
-      
+    } else {       
+      this.aceptarCondicion = true; 
+      this.mostrarConfirmacion();
     }
   };
 
@@ -892,8 +896,7 @@ export class ServicioPage {
         return;
     }
     
-    this.enviandoInformacion = true;
-    
+      
     this.servicio.TipoVehiculoId = this.tipoSelect.tvCodigo;
     this.servicio.DescVehiculo = this.tipoSelect.tvDescripcion;
     this.servicio.NumeroContrato = this.contratoSelect.ctNumeroContrato;
@@ -903,12 +906,12 @@ export class ServicioPage {
     
     this.servicioProvider.post(this.servicio).subscribe(
       result => {        
-        this.enviandoInformacion = false;
         this.contratoSelect = new Contrato();
+        this.initDatos();
         this.mostrarToast(result.message);
       },
       error => {
-        this.mostrarToast('¡Error!' + error.data, 5000);
+        this.mostrarToast('¡Error!' + error, 5000);
         console.log(<any>error);
       }
     );
@@ -927,7 +930,7 @@ export class ServicioPage {
   }
 
   actualizarServicio(): void{
-    this.mostrarToast('Actualizando servicio ....', 2000);
+    this.mostrarToast('Actualizando servicio, espere por favor....', 3000);
 
     this.servicioProvider.put(this.servicio.IdServicio, this.servicio).subscribe(
       result => {        
@@ -1140,9 +1143,30 @@ export class ServicioPage {
       case "":
         break;
     }
+  }
 
-
-    
+  mostrarConfirmacion() {
+    const confirm = this.alertCtrl.create({
+      title: 'Confirmación de Servicio.',
+      message: 'Esta seguro que desea solicitar este servicio, por valor de $ '+ this.servicio.ValorTotal
+          + ' .  Recuerde que al dar click en aceptar, acepta nuestras condiciones de servicio. ',
+      buttons: [
+        {
+          text: 'Cancelar',
+          handler: () => {
+            console.log('Disagree clicked');
+          }
+        },
+        {
+          text: 'Aceptar',
+          handler: () => {
+            this.mostrarToast("Espere por favor .. procesando información", 5000);
+            this.guardarServicio();
+          }
+        }
+      ]
+    });
+    confirm.present();
   }
 
 }

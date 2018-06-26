@@ -77,7 +77,7 @@
     
         <ion-item>
           <ion-label floating>Hora Servicio *</ion-label>
-          <ion-datetime displayFormat="HH:mm:ss" [(ngModel)]="servicio.Hora" name="txtHora" aria-required="true"></ion-datetime>
+          <ion-datetime displayFormat="H:mm A" [(ngModel)]="servicio.Hora" name="txtHora" required="true"></ion-datetime>
         </ion-item>
 
         <ion-item>
@@ -187,13 +187,6 @@
         <div id="map_canvas" class="hidden">
           
         </div>
-
-        <ion-item end *ngIf="servicio.Tipo.csTipoServicioId == 1 || servicio.Tipo.csTipoServicioId == 2">
-          <button id="btnConsultarValor" ion-button color="secondary" outline (click)="consultarPrecio()">
-            <ion-icon name="logo-usd"></ion-icon>&nbsp; Consultar
-          </button>
-        </ion-item>
-
         
       </div>
 
@@ -256,17 +249,26 @@
             </button>
           </ion-item>
         </ion-list>
-        <ion-item style="margin-top: 4%" >
+        <ion-item style="margin-top: 2%" >
             <h3 ion-text>SubTotal: <span ion-text color="danger"> ${{subTotal | number }}</span></h3>
         </ion-item>
 
       </div>
 
       <div *ngSwitchCase="'Pago'">
-        <ion-item class="margen-opcion">
+
+        <ion-item *ngIf="servicio.Tipo.csTipoServicioId == 1 || servicio.Tipo.csTipoServicioId == 2" class="margen-opcion">
+          <h5>Click para consultar el valor del servicio *</h5>
+          <button id="btnConsultarValor" ion-button color="secondary" outline (click)="consultarPrecio()">
+            <ion-icon name="logo-usd"></ion-icon>&nbsp; Consultar
+          </button>
+        </ion-item>
+    
+
+        <ion-item >
           <ion-label floating>Forma de Pago *</ion-label>
           <ion-select [(ngModel)]="servicio.FormaPago" name="cboPago" required="true">
-            <ion-option *ngFor="let fpago of contrato.FormaPago" [value]="fpago">{{fpago}}</ion-option>
+            <ion-option *ngFor="let fpago of contrato.FormaPago" [value]="fpago" >{{fpago}}</ion-option>
           </ion-select>
         </ion-item>
 
@@ -283,7 +285,7 @@
         </ion-item>
       
         <ion-item>
-          <button id="btnValidar" ion-button color="secondary" outline (click)="validarServicio()">
+          <button id="btnValidar" ion-button color="secondary" outline (click)="validarServicio(formServicio)">
             <ion-icon name="logo-usd"></ion-icon>&nbsp; Guardar
           </button>
         </ion-item>

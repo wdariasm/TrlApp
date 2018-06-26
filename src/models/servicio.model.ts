@@ -13,8 +13,8 @@ export class Servicio {
     Telefono : string;
     Tipo : ContratoTipoServicio;
     Responsable : string;
-    FechaServicio: Date;
-    Hora: Date;
+    FechaServicio: string;
+    Hora: string;
     Valor : number;
     ValorCliente : number;
     NumHoras : number;
@@ -62,6 +62,9 @@ export class Servicio {
         this.ValorCliente =0;
         this.ValorTotal = 0;
         this.Valor = 0;
+        this.NumHoras = 0;
+        this.UserReg = "Admin";
+        this.EnviarEmail = "SI";
     }
 }
 
