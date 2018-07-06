@@ -115,7 +115,7 @@ export class ServicioPage {
     this.editTipoVehiculo =true;
     this.editModoServicio = true;
     this.servicio.FechaServicio = moment().format('L');
-    this.servicio.Hora = moment().format("hh:mm a");
+    this.servicio.HoraControl = moment().format("HH:mm");
     
   }
 
@@ -917,6 +917,11 @@ export class ServicioPage {
     );
   };
 
+  convertirHora(fecha: string) : void {
+    let hora = moment(fecha, "h:mm a");
+    this.servicio.Hora = hora.format("h:mm a");
+  }
+  
   consultarContactos(id : number) : void {
     this.servicioProvider.getContactos(id).subscribe(
       result => {        

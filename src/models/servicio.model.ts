@@ -44,6 +44,7 @@ export class Servicio {
     Codigo : number;
     DescVehiculo : string;
     PlantillaId : number;
+    HoraControl : string;
 
     constructor(){
         this.Tipo = new ContratoTipoServicio();

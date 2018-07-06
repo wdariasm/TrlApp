@@ -72,12 +72,12 @@
 
         <ion-item>
           <ion-label floating>Fecha Servicio *</ion-label>
-          <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="servicio.FechaServicio" name="txtFechaServicio"></ion-datetime>
+          <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="servicio.FechaServicio" doneText="OK" cancelText="CANCELAR"  min="2017"  name="txtFechaServicio"></ion-datetime>
         </ion-item>
     
         <ion-item>
           <ion-label floating>Hora Servicio *</ion-label>
-          <ion-datetime displayFormat="H:mm A" [(ngModel)]="servicio.Hora" name="txtHora" required="true"></ion-datetime>
+          <ion-datetime displayFormat="h:mm A" pickerFormat="H:mm" [(ngModel)]="servicio.HoraControl" name="txtHora" (ionChange)= "convertirHora(servicio.HoraControl)" doneText="OK" cancelText="CANCELAR" required="true"></ion-datetime>
         </ion-item>
 
         <ion-item>
