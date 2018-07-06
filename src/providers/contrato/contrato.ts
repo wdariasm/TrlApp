@@ -41,7 +41,7 @@ export class ContratoProvider {
   };
 
   getTransfert = function (plantilla:number, tipo:number, origen:number, destino:number): Observable<any>{
-    var req = this.get(this.uri+'/transfert/' + plantilla + '/' + tipo + '/' + origen + '/'+destino);
+    var req = this.http.get(this.uri+'/transfert/' + plantilla + '/' + tipo + '/' + origen + '/'+destino);
     return req;
   };
 

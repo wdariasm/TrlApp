@@ -13,8 +13,8 @@ export class Servicio {
     Telefono : string;
     Tipo : ContratoTipoServicio;
     Responsable : string;
-    FechaServicio: Date;
-    Hora: Date;
+    FechaServicio: string;
+    Hora: string;
     Valor : number;
     ValorCliente : number;
     NumHoras : number;
@@ -44,6 +44,7 @@ export class Servicio {
     Codigo : number;
     DescVehiculo : string;
     PlantillaId : number;
+    HoraControl : string;
 
     constructor(){
         this.Tipo = new ContratoTipoServicio();
@@ -51,7 +52,7 @@ export class Servicio {
         this.ValorParadaCliente =0;
         this.ValorParadaProveedor = 0;
         this.NumPasajeros = 0;
-        this.FechaServicio = new Date();
+        //this.FechaServicio = new Date();
         this.Paradas = [];
         this.NumeroContrato = "";
         this.LatOrigen = "";
@@ -59,6 +60,12 @@ export class Servicio {
         this.DireccionOrigen = "";
         this.LatDestino = "";
         this.LngDestino = "";
+        this.ValorCliente =0;
+        this.ValorTotal = 0;
+        this.Valor = 0;
+        this.NumHoras = 0;
+        this.UserReg = "Admin";
+        this.EnviarEmail = "SI";
     }
 }
 

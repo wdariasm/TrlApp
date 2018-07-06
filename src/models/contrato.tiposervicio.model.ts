@@ -9,5 +9,6 @@ export class ContratoTipoServicio{
     constructor (){
         this.csValor = 0;
         this.csPlantilla = "NO";
+        this.csTipoServicioId = 0;
     }
 }

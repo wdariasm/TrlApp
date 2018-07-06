@@ -4,7 +4,7 @@ export class Parada {
     prLatiud : string;
     prLongitud : string;
     prValor : number;
-    prFecha : Date;
+    prFecha : string;
     prValorCliente : number;
     prServicio : number;
 

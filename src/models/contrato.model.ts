@@ -16,5 +16,7 @@ export class Contrato {
     ctTipoContrato : string;
     ctEstado : string;
     ctFormaPago : string;
-    constructor (){}
+    constructor (){
+        this.IdContrato =  null;
+    }
 }

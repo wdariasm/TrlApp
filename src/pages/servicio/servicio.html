@@ -7,176 +7,212 @@
 <ion-header>
 
   <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
     <ion-title>Solicitar Servicio</ion-title>
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content padding>
+
   <form #formServicio="ngForm">
 
-    <div padding>
-      <ion-segment [(ngModel)]="opcion" name="tbOpcion">
-        <ion-segment-button value="Contrato">
-          <ion-icon name="document"></ion-icon>
-        </ion-segment-button>
-        <ion-segment-button value="TipoServicio">
-          <ion-icon name="calendar"></ion-icon>
-        </ion-segment-button>
-        <ion-segment-button value="Direccion">
-          <ion-icon name="locate"></ion-icon>
-        </ion-segment-button>
-        <ion-segment-button value="Responsable">
-          <ion-icon name="contact"></ion-icon>
-        </ion-segment-button>
-        <ion-segment-button value="Paradas">
-          <ion-icon name="navigate"></ion-icon>
-        </ion-segment-button>
-        <ion-segment-button value="Pago">
-          <ion-icon name="card"></ion-icon>
-        </ion-segment-button>
-      </ion-segment>
-    </div>
+    <ion-segment [(ngModel)]="opcion" name="tbOpcion"  (ionChange)="onOpcionChange()" >
+      <ion-segment-button value="Contrato">
+        <ion-icon name="document"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="TipoServicio">
+        <ion-icon name="calendar"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="Direccion"  [style.display]="servicio.Tipo.csTipoServicioId != 3 ? 'block' : 'none'">
+        <ion-icon name="locate"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="Responsable">
+        <ion-icon name="contact"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="Paradas" [style.display]="servicio.Tipo.csTipoServicioId == 1 ? 'block' : 'none'">
+        <ion-icon name="navigate"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="Pago">
+        <ion-icon name="card"></ion-icon>
+      </ion-segment-button>
+    </ion-segment>
 
-    <ion-item>
-      <ion-label> (*) Campos Obligatorios.</ion-label>
-    </ion-item>
-
+  
     <div [ngSwitch]="opcion">
 
-      <ion-item>
-        <ion-label floating>Contrato *</ion-label>
-        <ion-select [(ngModel)]="contratoSelect" name="cboContrato" required="true" (ionChange)="buscarContrato('COMBO', true)" okText="Ok" cancelText="Cancelar">
-          <ion-option *ngFor="let cto of contratos" [value]="cto">{{cto.ctNumeroContrato}}</ion-option>
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-label floating>Nombre Completo *</ion-label>
-        <ion-input type="text" [(ngModel)]="contrato.Nombre" required="true" disabled name="txtNombre"></ion-input>
-      </ion-item>
-
-
-      <ion-item>
-        <ion-label floating>Tipo Servicio *</ion-label>
-        <ion-select [(ngModel)]="servicio.Tipo" name="cboTipoServicio" (ionChange)="tipoServicioCheck()">
-          <ion-option *ngFor="let ctipo of contrato.TipoServicio" [value]="ctipo" >{{ctipo.csDescripcion}}</ion-option>
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-label floating>Fecha Servicio *</ion-label>
-        <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="servicio.FechaServicio" name="txtFechaServicio"></ion-datetime>
-      </ion-item>
-
-      <ion-item>
-        <ion-label floating>Hora Servicio *</ion-label>
-        <ion-datetime displayFormat="HH:mm:ss" [(ngModel)]="servicio.Hora" name="txtHora" aria-required="true"></ion-datetime>
-      </ion-item>
-
-      <ion-item>
-        <ion-label floating>Modo Servicio *</ion-label>
-        <ion-select [(ngModel)]="servicio.ModoServicio" name="cboModo">
-          <ion-option value="PROGRAMADO">PROGRAMADO</ion-option>
-          <ion-option value="INMEDIATO">INMEDIATO</ion-option>
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-label floating>N° Pasajeros *</ion-label>
-        <ion-input type="number" value="" maxlength="2" required="true"></ion-input>
-      </ion-item>
-
-      <ion-list radio-group [(ngModel)]="asignacion.Ruta" name="rdAsignacionRuta" *ngIf="servicio.Tipo.csTipoServicioId == 3">
-        <ion-list-header>
-          Tipo Traslado
-        </ion-list-header>
-        <ion-item>
-          <ion-label>Solo Ida</ion-label>
-          <ion-radio checked="true" value="ida"></ion-radio>
-        </ion-item>
-
-        <ion-item>
-          <ion-label>Ida y Vuelta</ion-label>
-          <ion-radio value="doble"></ion-radio>
-        </ion-item>
-      </ion-list>
-
-      <div id="dvMapaServicio">
-
-      </div>
-
-      <!--Datos de tipo de servicio traslado-->
-      <div *ngIf="servicio.Tipo.csTipoServicioId == 3">
-        <ion-item>
-          <ion-label floating>Seleccionar ruta *</ion-label>
-          <ion-select [(ngModel)]="rutaSelect" name="cboRutas" [disabled]="editar" (ionChange)="cambiarPrecioRuta()">
-            <ion-option *ngFor="let itemRuta of lstRutas" [value]="itemRuta">{{itemRuta.rtNombre}}</ion-option>
+      <div *ngSwitchCase="'Contrato'">
+        <ion-item class="margen-opcion">
+          <ion-label floating>Contrato *</ion-label>
+          <ion-select [(ngModel)]="contratoSelect" name="cboContrato" required="true" (ionChange)="buscarContrato('COMBO', true)" okText="Ok" cancelText="Cancelar">
+            <ion-option *ngFor="let cto of contratos" [value]="cto">{{cto.ctNumeroContrato}}</ion-option>
           </ion-select>
         </ion-item>
 
         <ion-item>
-          <ion-label floating>Descripción Ruta </ion-label>
-          <ion-textarea [(ngModel)]="rutaSelect.rtDescripcion" name="txtDescripcion" disabled="true"></ion-textarea>
+            <ion-label floating>Nombre Completo *</ion-label>
+            <ion-input type="text" [(ngModel)]="contrato.Nombre" required="true" disabled name="txtNombre"></ion-input>
         </ion-item>
+
+        
+        <p text-justify style="margin-top: 10%">Recuerde que todos los campos marcados con (<span>*</span>) son obligatorios,
+          para poder solicitar el servicio.</p>
+        
       </div>
 
-     
-      <!--Datos de tipo de servicio traslado-->
-      <div *ngIf="servicio.Tipo.csTipoServicioId == 4">
-        <ion-item>
-          <ion-label floating>Seleccionar traslado *</ion-label>
-          <ion-select [(ngModel)]="trasladoSelect" name="cboTraslado" [disabled]="editar" (ionChange)="cambiarPrecioTraslado()">
-            <ion-option *ngFor="let itemTraslado of lstTraslados" [value]="itemTraslado">{{itemTraslado.tlNombre}}</ion-option>
+      <div *ngSwitchCase="'TipoServicio'">
+
+        <ion-item class="margen-opcion">
+          <ion-label floating>Tipo Servicio *</ion-label>
+          <ion-select [(ngModel)]="servicio.Tipo" name="cboTipoServicio" (ionChange)="tipoServicioCheck()">
+            <ion-option *ngFor="let ctipo of contrato.TipoServicio" [value]="ctipo" >{{ctipo.csDescripcion}}</ion-option>
           </ion-select>
         </ion-item>
 
         <ion-item>
-          <ion-label floating>Descripción Traslado </ion-label>
-          <ion-textarea [(ngModel)]="trasladoSelect.muNombre" name="txtDescripcion"  disabled="true"></ion-textarea>
+          <ion-label floating>Fecha Servicio *</ion-label>
+          <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="servicio.FechaServicio" doneText="OK" cancelText="CANCELAR"  min="2017"  name="txtFechaServicio"></ion-datetime>
         </ion-item>
+    
+        <ion-item>
+          <ion-label floating>Hora Servicio *</ion-label>
+          <ion-datetime displayFormat="h:mm A" pickerFormat="H:mm" [(ngModel)]="servicio.HoraControl" name="txtHora" (ionChange)= "convertirHora(servicio.HoraControl)" doneText="OK" cancelText="CANCELAR" required="true"></ion-datetime>
+        </ion-item>
+
+        <ion-item>
+          <ion-label floating>Modo Servicio *</ion-label>
+          <ion-select [(ngModel)]="servicio.ModoServicio" name="cboModo">
+            <ion-option value="PROGRAMADO">PROGRAMADO</ion-option>
+            <ion-option value="INMEDIATO">INMEDIATO</ion-option>
+          </ion-select>
+        </ion-item>
+        
+        <!--Datos de tipo de servicio ruta-->
+        <div *ngIf="servicio.Tipo.csTipoServicioId == 3">
+          <ion-item>
+            <ion-label floating>Seleccionar ruta *</ion-label>
+            <ion-select [(ngModel)]="rutaSelect" name="cboRutas" [disabled]="editar" (ionChange)="cambiarPrecioRuta()">
+              <ion-option *ngFor="let itemRuta of lstRutas" [value]="itemRuta">{{itemRuta.rtNombre}}</ion-option>
+            </ion-select>
+          </ion-item>
+  
+          <ion-item>
+            <ion-label floating>Descripción Ruta </ion-label>
+            <ion-textarea [(ngModel)]="rutaSelect.rtDescripcion" name="txtDescripcion" disabled="true"></ion-textarea>
+          </ion-item>
+        </div>
+
+        <ion-list radio-group [(ngModel)]="asignacion.Ruta" name="rdAsignacionRuta" *ngIf="servicio.Tipo.csTipoServicioId == 3">
+          <ion-list-header>
+            Tipo Traslado
+          </ion-list-header>
+          <ion-item>
+            <ion-label>Solo Ida</ion-label>
+            <ion-radio checked="true" value="ida"></ion-radio>
+          </ion-item>
+  
+          <ion-item>
+            <ion-label>Ida y Vuelta</ion-label>
+            <ion-radio value="doble"></ion-radio>
+          </ion-item>
+        </ion-list>
+  
+        <!--Datos de tipo de servicio traslado-->
+        <div *ngIf="servicio.Tipo.csTipoServicioId == 4">
+          <ion-item>
+            <ion-label floating>Seleccionar traslado *</ion-label>
+            <ion-select [(ngModel)]="trasladoSelect" name="cboTraslado" [disabled]="editar" (ionChange)="cambiarPrecioTraslado()">
+              <ion-option *ngFor="let itemTraslado of lstTraslados" [value]="itemTraslado">{{itemTraslado.tlNombre}}</ion-option>
+            </ion-select>
+          </ion-item>
+  
+          <ion-item>
+            <ion-label floating>Descripción Traslado </ion-label>
+            <ion-textarea [(ngModel)]="trasladoSelect.muNombre" name="txtDescripcion"  disabled="true"></ion-textarea>
+          </ion-item>
+        </div>
+
+        <ion-item>
+          <ion-label floating>Tipo de Vehículo *</ion-label>
+          <ion-select [(ngModel)]="tipoSelect" name="cboTipoVehiculo" required="true" [disabled]="editTipoVehiculo" (ionChange)="cambiarPrecio()">
+            <ion-option *ngFor="let tipo of contrato.TipoVehiculo" [value]="tipo">{{tipo.tvDescripcion}}</ion-option>
+          </ion-select>
+        </ion-item>
+    
+        <ion-item>
+          <ion-label floating>N° Pasajeros *</ion-label>
+          <ion-input [(ngModel)]="servicio.NumPasajeros" name="txtPasajeros" type="number" value="" maxlength="2" required="true"></ion-input>
+        </ion-item>
+
       </div>
 
-      <ion-item>
-        <ion-label floating>Tipo de Vehículo *</ion-label>
-        <ion-select [(ngModel)]="tipoSelect" name="cboTipoVehiculo" required="true" [disabled]="editTipoVehiculo" (ionChange)="cambiarPrecio()">
-          <ion-option *ngFor="let tipo of contrato.TipoVehiculo" [value]="tipo">{{tipo.tvDescripcion}}</ion-option>
-        </ion-select>
-      </ion-item>
+      <div [style.display]="opcion === 'Direccion' ? 'block' : 'none'">
+        <ion-item class="margen-opcion">
+          <ion-label>Asignación Manual</ion-label>
+          <ion-toggle [(ngModel)]="asignacion.Manual" name="chkAsignacion" ></ion-toggle>
+        </ion-item> 
+    
+        <div *ngIf="!asignacion.Manual">
+          <ion-item>
+            <ion-label floating>Dirección de origen *</ion-label>
+            <ion-input type="text" [(ngModel)]="servicio.DireccionOrigen"  name="txtOrigen" id="txtOrigen" ></ion-input>
+          </ion-item>
+    
+          <ion-item *ngIf="servicio.Tipo.csTipoServicioId == 4 || servicio.Tipo.csTipoServicioId == 1">
+            <ion-label floating>Dirección de origen *</ion-label>
+            <ion-input type="text" [(ngModel)]="servicio.DireccionDestino"  name="txtDestino" id="txtDestino" ></ion-input>
+          </ion-item>
+        </div>
+    
+        <div *ngIf="asignacion.Manual">
+          <ion-list radio-group [(ngModel)]="asignacion.Marcador" name="rdAsignacionMarcador" *ngIf="servicio.Tipo.csTipoServicioId != 3">
+            <ion-list-header>
+              Establecer posición
+            </ion-list-header>
+          
+            <ion-item item-left>
+              <ion-label>Origen</ion-label>
+              <ion-radio value="Origen" color="secondary"></ion-radio>
+            </ion-item>
+          
+            <ion-item item-right>
+              <ion-label>Destino</ion-label>
+              <ion-radio value="Destino" color="danger"></ion-radio>
+            </ion-item>
+            
+          </ion-list>
+        </div>
+    
+        <div id="map_canvas" class="hidden">
+          
+        </div>
+        
+      </div>
 
-      <ion-item>
-        <div id="mapaServicio"></div>
-      </ion-item>
-
-      <ion-item *ngIf="servicio.Tipo.csTipoServicioId == 1 || servicio.Tipo.csTipoServicioId == 2">
-        <button id="btnConsultarValor" ion-button color="secondary" outline (click)="consultarPrecio()">
-          <ion-icon name="logo-usd"></ion-icon>&nbsp; Consultar
-        </button>
-      </ion-item>
-
-      <ion-item>
-        <ion-label floating>Responsable del Servicio *</ion-label>
-        <ion-input type="text" [(ngModel)]="contacto.scNombre" name="txtResponsable" maxlength="60"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label floating>Teléfono *</ion-label>
-        <ion-input type="text" [(ngModel)]="contacto.scTelefono" name="txtTelefonoPpal" maxlength="15"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label floating>Nota Servicio / C.Costo </ion-label>
-        <ion-textarea [(ngModel)]="contacto.scNota" name="txtNota" maxlength="200"></ion-textarea>
-      </ion-item>
-
-      <ion-item>
-        <button id="btnAgregarResponsable" ion-button color="secondary" outline (click)="agregarContacto()">
-          <ion-icon name="add"></ion-icon>&nbsp;Agregar
-        </button>
-      </ion-item>
-
-      <ion-list>
+      <div *ngSwitchCase="'Responsable'">
+        <ion-item class="margen-opcion">
+          <ion-label floating>Responsable del Servicio *</ion-label>
+          <ion-input type="text" [(ngModel)]="contacto.scNombre" name="txtResponsable" maxlength="60"></ion-input>
+        </ion-item>
+  
+        <ion-item>
+          <ion-label floating>Teléfono *</ion-label>
+          <ion-input type="text" [(ngModel)]="contacto.scTelefono" name="txtTelefonoPpal" maxlength="15"></ion-input>
+        </ion-item>
+  
+        <ion-item>
+          <ion-label floating>Nota Servicio / C.Costo </ion-label>
+          <ion-textarea [(ngModel)]="contacto.scNota" name="txtNota" maxlength="200"></ion-textarea>
+        </ion-item>
+  
+        <ion-item>
+          <button id="btnAgregarResponsable" ion-button color="secondary" outline (click)="agregarContacto()">
+            <ion-icon name="add"></ion-icon>&nbsp;Agregar
+          </button>
+        </ion-item>
+  
+        <ion-list>
           <ion-item *ngFor="let item of servicio.Contactos; let idx = index">
             <h2>Resp. {{item.scNombre}}</h2>
             <h3>Tel. {{item.scTelefono}}</h3>
@@ -187,46 +223,73 @@
             
           </ion-item>
         </ion-list>
+      </div>
 
-      <ion-item>
-        <ion-label floating>Dirección de parada </ion-label>
-        <ion-input type="text" [(ngModel)]="parada.prDireccion" name="txtParada" maxlength="250"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <button id="btnAgregarParada" ion-button color="secondary" outline (click)="agregarParada()">
-          <ion-icon name="add"></ion-icon>&nbsp;Agregar
-        </button>
-      </ion-item>
-
-      <ion-list>
-        <ion-item *ngFor="let item of servicio.Paradas; let idx1 = index">
-          <h2>Dir. {{item.prDireccion}}</h2>
-          <p>Valor. ${{item.prValorCliente | number}}</p>
-          <button *ngIf="!editar" color="danger" clear ion-button icon-only  item-end icon-left (click)="quitarParada(idx1)">
-            <ion-icon name="trash"></ion-icon>
-          </button>
-          <button *ngIf="editar" color="danger" clear ion-button icon-only  item-end icon-left (click)="eliminarParada(item)">
-            <ion-icon name="trash"></ion-icon>
-          </button>
+      <div [style.display]="opcion === 'Paradas' ? 'block' : 'none'">
+        <ion-item class="margen-opcion">
+          <ion-label floating>Dirección de parada </ion-label>
+          <ion-input type="text" [(ngModel)]="parada.prDireccion" name="txtParada" maxlength="250"></ion-input>
         </ion-item>
+  
         <ion-item>
-          <h3>SubTotal: <span color="danger"> ${{subTotal | number }}</span></h3>
+          <button id="btnAgregarParada" ion-button color="secondary" outline (click)="agregarParada()">
+            <ion-icon name="add"></ion-icon>&nbsp;Agregar
+          </button>
         </ion-item>
-      </ion-list>
+  
+        <ion-list>
+          <ion-item *ngFor="let item of servicio.Paradas; let idx1 = index">
+            <h2>Dir. {{item.prDireccion}}</h2>
+            <p>Valor. ${{item.prValorCliente | number}}</p>
+            <button *ngIf="!editar" color="danger" clear ion-button icon-only  item-end icon-left (click)="quitarParada(idx1)">
+              <ion-icon name="trash"></ion-icon>
+            </button>
+            <button *ngIf="editar" color="danger" clear ion-button icon-only  item-end icon-left (click)="eliminarParada(item)">
+              <ion-icon name="trash"></ion-icon>
+            </button>
+          </ion-item>
+        </ion-list>
+        <ion-item style="margin-top: 2%" >
+            <h3 ion-text>SubTotal: <span ion-text color="danger"> ${{subTotal | number }}</span></h3>
+        </ion-item>
 
-      <ion-item>
-        <ion-label floating>Forma de Pago *</ion-label>
-        <ion-select [(ngModel)]="servicio.FormaPago" name="cboPago" required="true">
-          <ion-option *ngFor="let fpago of contrato.FormaPago" [value]="fpago">{{fpago}}</ion-option>
-        </ion-select>
-      </ion-item>
+      </div>
 
-      <ion-item>
-        <button id="btnValidar" ion-button color="secondary" outline (click)="validarServicio()">
-          <ion-icon name="logo-usd"></ion-icon>&nbsp; Guardar
-        </button>
-      </ion-item>
+      <div *ngSwitchCase="'Pago'">
+
+        <ion-item *ngIf="servicio.Tipo.csTipoServicioId == 1 || servicio.Tipo.csTipoServicioId == 2" class="margen-opcion">
+          <h5>Click para consultar el valor del servicio *</h5>
+          <button id="btnConsultarValor" ion-button color="secondary" outline (click)="consultarPrecio()">
+            <ion-icon name="logo-usd"></ion-icon>&nbsp; Consultar
+          </button>
+        </ion-item>
+    
+
+        <ion-item >
+          <ion-label floating>Forma de Pago *</ion-label>
+          <ion-select [(ngModel)]="servicio.FormaPago" name="cboPago" required="true">
+            <ion-option *ngFor="let fpago of contrato.FormaPago" [value]="fpago" >{{fpago}}</ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <h3 ion-text>Valor Servicio * <span ion-text color="danger" text-right> ${{servicio.ValorCliente | number }}</span></h3>
+        </ion-item>
+
+        <ion-item>
+            <h3 ion-text>Total Paradas * <span ion-text color="secondary" text-right> ${{subTotal | number }}</span></h3>
+        </ion-item>
+
+        <ion-item>
+          <h2 ion-text>Total Servicio * <span ion-text color="primary" text-right> ${{servicio.ValorTotal | number }}</span></h2>
+        </ion-item>
+      
+        <ion-item>
+          <button id="btnValidar" ion-button color="secondary" outline (click)="validarServicio(formServicio)">
+            <ion-icon name="logo-usd"></ion-icon>&nbsp; Guardar
+          </button>
+        </ion-item>
+      </div>
 
     </div>
 
