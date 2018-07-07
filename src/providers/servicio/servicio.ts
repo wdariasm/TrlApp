@@ -18,7 +18,6 @@ import { Parada } from '../../models/parada.model';
 export class ServicioProvider {
   uri : string;
   constructor(public http: HttpClient, configProvider: ConfiguracionProvider) {
-    console.log('Hello ServicioProvider Provider');
     this.uri = configProvider.URL_API;
   }
 

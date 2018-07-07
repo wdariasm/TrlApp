@@ -11,9 +11,12 @@ export class Usuario {
     ValidarClave : string;
     Contrato : string;
     Email : string;
+    Clave : string;
 
     constructor () {
         this.ClienteId = 1;
+        this.Login = "";
+        this.Clave = "";
     }
 
 }

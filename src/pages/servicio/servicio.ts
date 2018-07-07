@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import { ToastController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
-import { Platform, AlertController } from 'ionic-angular';
+import { Platform, AlertController, ToastController } from 'ionic-angular';
 import { NgForm } from '@angular/forms';
 
 import { Servicio, Coordenada  } from '../../models/servicio.model';
@@ -73,7 +72,6 @@ export class ServicioPage {
             ) 
   {
     this.platform.ready().then(() => {
-      //this.iniciarMapaZ();
       this.travelMode = google.maps.TravelMode.DRIVING;
       this.directionsService = new google.maps.DirectionsService;
       this.directionsDisplay = new google.maps.DirectionsRenderer;
@@ -86,10 +84,6 @@ export class ServicioPage {
   ionViewDidLoad() {
     //this.ubicacionAutomatica(true);
     this.getContratos();
-    /*this.platform.ready().then(() => {
-        //this.ubicacionAutomatica(true);
-        this.iniciarMapaZ();
-    });*/
   }
 
   initDatos(){
@@ -237,74 +231,6 @@ export class ServicioPage {
       }
     });  
   } 
-
-/*
-  iniciarMapaZ() {
-    let mapOptions: GoogleMapOptions = {
-      camera: {
-         target: {
-           lat: this.posicion.Latitud,
-           lng: this.posicion.Longitud
-         },
-         zoom: 16,
-         tilt: 30
-       },
-       controls : {
-         myLocation : true,
-         myLocationButton : true,
-         mapToolbar : true
-       }
-    };
-
-    this.mapElement = document.getElementById("map_canvas");
-
-    this.mapa = GoogleMaps.create(this.mapElement, mapOptions);
-
-    this.mapa.on(GoogleMapsEvent.MAP_READY).subscribe(()=> {
-      this.mostrarToast("Mapa cargado ");
-      this.initAutocomplete();
-    });
-
-    this.mapa.on(GoogleMapsEvent.MAP_CLICK).subscribe((params: any[])=>{
-      let latLng: any  = params[0];
-
-      if(this.asignacion.Manual){
-        switch (this.asignacion.Marcador) {
-          case "Origen":     
-            if(this.markerOrigen !== null){
-                this.markerOrigen.remove();
-            }
-            this.markerOrigen = this.mapa.addMarkerSync ({
-                position:  latLng, 
-                animation: GoogleMapsAnimation.DROP,
-                title:"Posición de Origen",
-                icon:'blue'
-            });                        
-            this.servicio.LatOrigen = params[0].lat;
-            this.servicio.LngOrigen = params[0].lng;
-            this.buscarZona(this.servicio.LatOrigen, this.servicio.LngOrigen,"ZonaOrigen"); 
-            break;                  
-          case "Destino":     
-            if(this.markerDestino !== null){
-              this.markerDestino.remove();
-            }
-            this.markerDestino = this.mapa.addMarkerSync ({
-                position: latLng, 
-                animation: GoogleMapsAnimation.DROP,
-                title:"Posición de Destino",
-                icon:'red'
-            });                        
-            this.servicio.LatDestino = params[0].lat;
-            this.servicio.LngDestino = params[0].lng;
-            this.buscarZona(this.servicio.LatDestino, this.servicio.LngDestino, 'ZonaDestino'); 
-            break; 
-          default:
-              this.mostrarToast("Por favor seleccione la posicion a establecer Origen o Destino.");
-              break;
-        }
-      } 
-    });
-  } */
 
   mostrarToast(mensaje : string, duracion: number = 3000) {
     const toast = this.toastCtrl.create({

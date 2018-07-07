@@ -8,6 +8,7 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { ServicioPage } from '../pages/servicio/servicio'
+import { InicioSesionPage } from '../pages/inicio-sesion/inicio-sesion'
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -16,6 +17,8 @@ import { ConfiguracionProvider } from '../providers/configuracion/configuracion'
 import { FuncionesComunesProvider } from '../providers/funciones-comunes/funciones-comunes';
 import { ServicioProvider } from '../providers/servicio/servicio';
 import { ZonaProvider } from '../providers/zona/zona';
+import { isMoment } from 'moment';
+import { SesionProvider } from '../providers/sesion/sesion';
 
 
 @NgModule({
@@ -23,7 +26,8 @@ import { ZonaProvider } from '../providers/zona/zona';
     MyApp,
     HomePage,
     ListPage, 
-    ServicioPage
+    ServicioPage,
+    InicioSesionPage
   ],
   imports: [
     BrowserModule,
@@ -35,7 +39,8 @@ import { ZonaProvider } from '../providers/zona/zona';
     MyApp,
     HomePage,
     ListPage,
-    ServicioPage
+    ServicioPage,
+    InicioSesionPage
   ],
   providers: [
     StatusBar,
@@ -47,7 +52,9 @@ import { ZonaProvider } from '../providers/zona/zona';
     ServicioProvider, 
     Geolocation,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    ZonaProvider
+    ZonaProvider,
+    SesionProvider,
+    SesionProvider
   ]
 })
 export class AppModule {}
