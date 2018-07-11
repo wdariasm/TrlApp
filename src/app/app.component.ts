@@ -14,7 +14,7 @@ import { InicioSesionPage } from '../pages/inicio-sesion/inicio-sesion';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = InicioSesionPage;
+  rootPage: any = ServicioPage;
 
   pages: Array<{title: string, component: any}>;
 

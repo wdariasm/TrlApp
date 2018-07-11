@@ -5,6 +5,9 @@ import { NgForm } from '@angular/forms';
 import { Usuario } from '../../models/usuario.model';
 
 import { SesionProvider } from '../../providers/sesion/sesion';
+import { UserDataProvider } from '../../providers/user-data/user-data';
+
+import {ServicioPage }  from '../servicio/servicio';
 
 @Component({
   selector: 'page-inicio-sesion',
@@ -16,7 +19,8 @@ export class InicioSesionPage {
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    public toastCtrl: ToastController, private sessionProvider : SesionProvider ) {
+    public toastCtrl: ToastController, private sessionProvider : SesionProvider,
+              private userDataProvider: UserDataProvider ) {
     this.usuario = new Usuario();
   }
 
@@ -50,7 +54,13 @@ export class InicioSesionPage {
           this.mostrarToast(" Error al autenticar. "+ result.error);
           return;
         }    
-       
+        this.userDataProvider.SetDatosToken(result.token);
+        let idUsuario  = this.userDataProvider.getIdUsuario();
+
+        if (idUsuario != null){
+          this.getUser(idUsuario);
+        }
+
       },
       error => {
         let data = JSON.parse(JSON.stringify(error.error));
@@ -61,6 +71,23 @@ export class InicioSesionPage {
       }
     );
 
+  }
+
+  getUser (idUsuario : number) : void {
+    this.sessionProvider.getUser(idUsuario).subscribe(
+      result => {   
+        if (!result){
+          this.mostrarToast(" Error al obtener datos del usuario. "+ result);
+          return;
+        }   
+        this.userDataProvider.SetDatos(result);
+        this.navCtrl.push(ServicioPage);
+      },
+      error => {
+        this.mostrarToast(" Error al autenticar. " + error);
+        console.log(<any>error);
+      }
+    );
   }
 
 }

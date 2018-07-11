@@ -18,7 +18,7 @@
 
   <form #formServicio="ngForm">
 
-    <ion-segment [(ngModel)]="opcion" name="tbOpcion"  (ionChange)="onOpcionChange()" >
+    <ion-segment [(ngModel)]="opcionTab" name="tbOpcion"  (ionChange)="onOpcionChange()" >
       <ion-segment-button value="Contrato">
         <ion-icon name="document"></ion-icon>
       </ion-segment-button>
@@ -40,7 +40,7 @@
     </ion-segment>
 
   
-    <div [ngSwitch]="opcion">
+    <div [ngSwitch]="opcionTab">
 
       <div *ngSwitchCase="'Contrato'">
         <ion-item class="margen-opcion">

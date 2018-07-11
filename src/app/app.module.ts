@@ -19,6 +19,7 @@ import { ServicioProvider } from '../providers/servicio/servicio';
 import { ZonaProvider } from '../providers/zona/zona';
 import { isMoment } from 'moment';
 import { SesionProvider } from '../providers/sesion/sesion';
+import { UserDataProvider } from '../providers/user-data/user-data';
 
 
 @NgModule({
@@ -45,6 +46,7 @@ import { SesionProvider } from '../providers/sesion/sesion';
   providers: [
     StatusBar,
     SplashScreen,
+    UserDataProvider,
     ContratoProvider,
     ConfiguracionProvider,
     ContratoProvider,
@@ -53,7 +55,6 @@ import { SesionProvider } from '../providers/sesion/sesion';
     Geolocation,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ZonaProvider,
-    SesionProvider,
     SesionProvider
   ]
 })
