@@ -6,7 +6,7 @@
 -->
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar color="primary">
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
@@ -15,32 +15,31 @@
 </ion-header>
 
 <ion-content padding>
+  <form  #formServicio="ngForm">
 
-  <form #formServicio="ngForm">
-
-    <ion-segment [(ngModel)]="opcion" name="tbOpcion"  (ionChange)="onOpcionChange()" >
+    <ion-segment [(ngModel)]="opcionTab" name="tbOpcion"  (ionChange)="onOpcionChange()" >
       <ion-segment-button value="Contrato">
-        <ion-icon name="document"></ion-icon>
+        <ion-icon name="document" color="secondary"></ion-icon>
       </ion-segment-button>
       <ion-segment-button value="TipoServicio">
-        <ion-icon name="calendar"></ion-icon>
+        <ion-icon name="calendar" color="secondary"></ion-icon>
       </ion-segment-button>
       <ion-segment-button value="Direccion"  [style.display]="servicio.Tipo.csTipoServicioId != 3 ? 'block' : 'none'">
-        <ion-icon name="locate"></ion-icon>
+        <ion-icon name="locate" color="secondary"></ion-icon>
       </ion-segment-button>
       <ion-segment-button value="Responsable">
-        <ion-icon name="contact"></ion-icon>
-      </ion-segment-button>
+        <ion-icon name="contact" color="secondary"></ion-icon>
+      </ion-segment-button >
       <ion-segment-button value="Paradas" [style.display]="servicio.Tipo.csTipoServicioId == 1 ? 'block' : 'none'">
-        <ion-icon name="navigate"></ion-icon>
+        <ion-icon name="navigate" color="secondary"></ion-icon>
       </ion-segment-button>
       <ion-segment-button value="Pago">
-        <ion-icon name="card"></ion-icon>
+        <ion-icon name="card" color="secondary"></ion-icon>
       </ion-segment-button>
     </ion-segment>
 
   
-    <div [ngSwitch]="opcion">
+    <div [ngSwitch]="opcionTab">
 
       <div *ngSwitchCase="'Contrato'">
         <ion-item class="margen-opcion">
@@ -65,14 +64,14 @@
 
         <ion-item class="margen-opcion">
           <ion-label floating>Tipo Servicio *</ion-label>
-          <ion-select [(ngModel)]="servicio.Tipo" name="cboTipoServicio" (ionChange)="tipoServicioCheck()">
+          <ion-select [(ngModel)]="servicio.Tipo" name="cboTipoServicio" (ionChange)="tipoServicioCheck()" required="true">
             <ion-option *ngFor="let ctipo of contrato.TipoServicio" [value]="ctipo" >{{ctipo.csDescripcion}}</ion-option>
           </ion-select>
         </ion-item>
 
         <ion-item>
           <ion-label floating>Fecha Servicio *</ion-label>
-          <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="servicio.FechaServicio" doneText="OK" cancelText="CANCELAR"  min="2017"  name="txtFechaServicio"></ion-datetime>
+          <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="servicio.FechaServicio" doneText="OK" cancelText="CANCELAR"  min="2017"  name="txtFechaServicio" required="true"></ion-datetime>
         </ion-item>
     
         <ion-item>
@@ -82,7 +81,7 @@
 
         <ion-item>
           <ion-label floating>Modo Servicio *</ion-label>
-          <ion-select [(ngModel)]="servicio.ModoServicio" name="cboModo">
+          <ion-select [(ngModel)]="servicio.ModoServicio" name="cboModo" required="true">
             <ion-option value="PROGRAMADO">PROGRAMADO</ion-option>
             <ion-option value="INMEDIATO">INMEDIATO</ion-option>
           </ion-select>
@@ -147,7 +146,7 @@
 
       </div>
 
-      <div [style.display]="opcion === 'Direccion' ? 'block' : 'none'">
+      <div [style.display]="opcionTab === 'Direccion' ? 'block' : 'none'">
         <ion-item class="margen-opcion">
           <ion-label>Asignación Manual</ion-label>
           <ion-toggle [(ngModel)]="asignacion.Manual" name="chkAsignacion" ></ion-toggle>
@@ -207,7 +206,7 @@
         </ion-item>
   
         <ion-item>
-          <button id="btnAgregarResponsable" ion-button color="secondary" outline (click)="agregarContacto()">
+          <button id="btnAgregarResponsable" ion-button block color="secondary" outline (click)="agregarContacto()">
             <ion-icon name="add"></ion-icon>&nbsp;Agregar
           </button>
         </ion-item>
@@ -225,14 +224,14 @@
         </ion-list>
       </div>
 
-      <div [style.display]="opcion === 'Paradas' ? 'block' : 'none'">
+      <div [style.display]="opcionTab === 'Paradas' ? 'block' : 'none'">
         <ion-item class="margen-opcion">
           <ion-label floating>Dirección de parada </ion-label>
           <ion-input type="text" [(ngModel)]="parada.prDireccion" name="txtParada" maxlength="250"></ion-input>
         </ion-item>
   
         <ion-item>
-          <button id="btnAgregarParada" ion-button color="secondary" outline (click)="agregarParada()">
+          <button id="btnAgregarParada" ion-button block outline color="secondary"  (click)="agregarParada()">
             <ion-icon name="add"></ion-icon>&nbsp;Agregar
           </button>
         </ion-item>
@@ -258,8 +257,9 @@
       <div *ngSwitchCase="'Pago'">
 
         <ion-item *ngIf="servicio.Tipo.csTipoServicioId == 1 || servicio.Tipo.csTipoServicioId == 2" class="margen-opcion">
+          <h3></h3>
           <h5>Click para consultar el valor del servicio *</h5>
-          <button id="btnConsultarValor" ion-button color="secondary" outline (click)="consultarPrecio()">
+          <button id="btnConsultarValor" ion-button color="secondary" block outline (click)="consultarPrecio()">
             <ion-icon name="logo-usd"></ion-icon>&nbsp; Consultar
           </button>
         </ion-item>
@@ -272,26 +272,30 @@
           </ion-select>
         </ion-item>
 
-        <ion-item>
-          <h3 ion-text>Valor Servicio * <span ion-text color="danger" text-right> ${{servicio.ValorCliente | number }}</span></h3>
+        <ion-item style="margin-top: 2%">
+          <h2 ion-text>Valor Servicio * <span ion-text color="danger" text-right> ${{servicio.ValorCliente | number }}</span></h2>
         </ion-item>
 
         <ion-item>
-            <h3 ion-text>Total Paradas * <span ion-text color="secondary" text-right> ${{subTotal | number }}</span></h3>
+          <h2 ion-text>Total Paradas * <span ion-text color="secondary" text-right> ${{subTotal | number }}</span></h2>
         </ion-item>
 
         <ion-item>
-          <h2 ion-text>Total Servicio * <span ion-text color="primary" text-right> ${{servicio.ValorTotal | number }}</span></h2>
+          <h1 ion-text>Total Servicio * <span ion-text color="primary" text-right> ${{servicio.ValorTotal | number }}</span></h1>
         </ion-item>
-      
-        <ion-item>
-          <button id="btnValidar" ion-button color="secondary" outline (click)="validarServicio(formServicio)">
-            <ion-icon name="logo-usd"></ion-icon>&nbsp; Guardar
-          </button>
-        </ion-item>
+    
       </div>
 
     </div>
 
   </form>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+      <button id="btnValidar" ion-button block outline large color="secondary" 
+            outline (click)="validarServicio(formServicio)" >
+        <ion-icon name="logo-usd"></ion-icon>&nbsp; Guardar
+      </button>
+  </ion-toolbar>
+</ion-footer>

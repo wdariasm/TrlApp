@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import { ToastController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
-import { Platform, AlertController } from 'ionic-angular';
+import { Platform, AlertController, ToastController } from 'ionic-angular';
 import { NgForm } from '@angular/forms';
 
 import { Servicio, Coordenada  } from '../../models/servicio.model';
@@ -14,24 +13,25 @@ import { Parada } from '../../models/parada.model';
 import { ContratoServicio, ContratoPlantilla } from '../../models/contrato.servicio.model';
 import { Contrato } from '../../models/contrato.model';
 import { Ruta } from '../../models/ruta.model';
-import { Usuario } from '../../models/usuario.model';
 
+import { UserDataProvider } from '../../providers/user-data/user-data';
 import { ContratoProvider } from '../../providers/contrato/contrato';
 import { FuncionesComunesProvider } from '../../providers/funciones-comunes/funciones-comunes';
 import { ServicioProvider } from '../../providers/servicio/servicio';
 import { ZonaProvider } from '../../providers/zona/zona';
+import { ConfiguracionProvider } from '../../providers/configuracion/configuracion';
 import * as moment from 'moment';
 
 declare var google;
 
 @Component({
   selector: 'page-servicio',
-  templateUrl: 'servicio.html',
+  templateUrl: 'servicio.html'
 })
 export class ServicioPage {
 
   servicio : Servicio;
-  opcion : string = "Contrato"; // Opcion de tab 
+  opcionTab : string = "Contrato"; // Opcion de tab 
   asignacion : Asignacion;
   trasladoSelect : Traslado;  //traslado seleccionado
   tipoSelect : TipoVehiculo; //Tipo de vehiculo seleccionado
@@ -50,8 +50,7 @@ export class ServicioPage {
   rutaSelect : Ruta;
   lstTraslados : Traslado [];
   aceptarCondicion : boolean;
-  usuario : Usuario;  
-
+ 
   // Variables para el servicio de mapas
   posicion : Coordenada;
   mapa : any;
@@ -68,32 +67,27 @@ export class ServicioPage {
               public toastCtrl: ToastController, public contratoProvider: ContratoProvider,
               public funcionesProvider: FuncionesComunesProvider, public platform: Platform,
               public servicioProvider : ServicioProvider, private geolocation: Geolocation, 
-              private zonaProvider: ZonaProvider, private alertCtrl: AlertController
+              private zonaProvider: ZonaProvider, private alertCtrl: AlertController,
+              private userDataProvider : UserDataProvider, private configProvider: ConfiguracionProvider
               
             ) 
   {
     this.platform.ready().then(() => {
-      //this.iniciarMapaZ();
       this.travelMode = google.maps.TravelMode.DRIVING;
       this.directionsService = new google.maps.DirectionsService;
       this.directionsDisplay = new google.maps.DirectionsRenderer;
-     // this.initMapa();
+      this.initClases();
     });
-    this.initDatos();
   }
   
 
   ionViewDidLoad() {
-    //this.ubicacionAutomatica(true);
+    this.ubicacionAutomatica(true);
+    this.initDatos();
     this.getContratos();
-    /*this.platform.ready().then(() => {
-        //this.ubicacionAutomatica(true);
-        this.iniciarMapaZ();
-    });*/
   }
 
-  initDatos(){
-    this.opcion = 'Contrato';
+  initClases(){
     this.asignacion = new Asignacion(false, "Origen", "ida");
     this.trasladoSelect  = new Traslado();
     this.tipoSelect = new TipoVehiculo();
@@ -101,13 +95,17 @@ export class ServicioPage {
     this.contacto =  new Contacto();
     this.parada = new Parada();
     this.plantilla = new ContratoPlantilla();
-    this.usuario = new Usuario();
     this.posicion = new Coordenada();
-    
-    this.servicio.ModoServicio = "PROGRAMADO";
-    this.servicio.ClienteId = this.usuario.ClienteId;
-   // this.servicio.UserReg = this.usuario.Login;
     this.contrato = new ContratoServicio();
+  }
+
+  initDatos(){
+    this.opcionTab = 'Contrato';
+    this.servicio.ModoServicio = "PROGRAMADO";
+    this.servicio.ClienteId = this.userDataProvider.getIdCliente();
+    this.servicio.UserReg =  this.userDataProvider.getLogin();
+    this.servicio.EnviarEmail = this.configProvider.EnviarEmail; 
+    this.servicio.ParEmail = this.configProvider.Email;
     this.lstRutas = [];
     this.lstTraslados = [];
     this.rutaSelect = new Ruta();
@@ -116,7 +114,10 @@ export class ServicioPage {
     this.editModoServicio = true;
     this.servicio.FechaServicio = moment().format('L');
     this.servicio.HoraControl = moment().format("HH:mm");
-    
+    this.posicion.Latitud = this.configProvider.Latitud;
+    this.posicion.Longitud = this.configProvider.Longitud;
+
+    console.log(this.posicion.Longitud);
   }
 
   // FUNCIONES DE MAPAS 
@@ -237,74 +238,6 @@ export class ServicioPage {
       }
     });  
   } 
-
-/*
-  iniciarMapaZ() {
-    let mapOptions: GoogleMapOptions = {
-      camera: {
-         target: {
-           lat: this.posicion.Latitud,
-           lng: this.posicion.Longitud
-         },
-         zoom: 16,
-         tilt: 30
-       },
-       controls : {
-         myLocation : true,
-         myLocationButton : true,
-         mapToolbar : true
-       }
-    };
-
-    this.mapElement = document.getElementById("map_canvas");
-
-    this.mapa = GoogleMaps.create(this.mapElement, mapOptions);
-
-    this.mapa.on(GoogleMapsEvent.MAP_READY).subscribe(()=> {
-      this.mostrarToast("Mapa cargado ");
-      this.initAutocomplete();
-    });
-
-    this.mapa.on(GoogleMapsEvent.MAP_CLICK).subscribe((params: any[])=>{
-      let latLng: any  = params[0];
-
-      if(this.asignacion.Manual){
-        switch (this.asignacion.Marcador) {
-          case "Origen":     
-            if(this.markerOrigen !== null){
-                this.markerOrigen.remove();
-            }
-            this.markerOrigen = this.mapa.addMarkerSync ({
-                position:  latLng, 
-                animation: GoogleMapsAnimation.DROP,
-                title:"Posición de Origen",
-                icon:'blue'
-            });                        
-            this.servicio.LatOrigen = params[0].lat;
-            this.servicio.LngOrigen = params[0].lng;
-            this.buscarZona(this.servicio.LatOrigen, this.servicio.LngOrigen,"ZonaOrigen"); 
-            break;                  
-          case "Destino":     
-            if(this.markerDestino !== null){
-              this.markerDestino.remove();
-            }
-            this.markerDestino = this.mapa.addMarkerSync ({
-                position: latLng, 
-                animation: GoogleMapsAnimation.DROP,
-                title:"Posición de Destino",
-                icon:'red'
-            });                        
-            this.servicio.LatDestino = params[0].lat;
-            this.servicio.LngDestino = params[0].lng;
-            this.buscarZona(this.servicio.LatDestino, this.servicio.LngDestino, 'ZonaDestino'); 
-            break; 
-          default:
-              this.mostrarToast("Por favor seleccione la posicion a establecer Origen o Destino.");
-              break;
-        }
-      } 
-    });
-  } */
 
   mostrarToast(mensaje : string, duracion: number = 3000) {
     const toast = this.toastCtrl.create({
@@ -550,8 +483,8 @@ export class ServicioPage {
           this.mostrarToast("No se encontraron contratos asociados a este usuario.");
           return;
         }    
-        if (this.usuario.TipoAcceso == 5){
-          this.contratos = result.filter(cto => cto.ctNumeroContrato == this.usuario.Contrato);
+        if (this.userDataProvider.getTipoAcceso() == 5){
+          this.contratos = result.filter(cto => cto.ctNumeroContrato == this.userDataProvider.getContrato());
         } else {
           this.contratos= result;
         } 
@@ -622,8 +555,8 @@ export class ServicioPage {
             this.servicio.Telefono =  result.ctTelefono;
             this.servicio.NumeroContrato = this.contratoSelect.ctNumeroContrato;
             this.servicio.Responsable = this.contrato.Nombre;
-            if( this.usuario.TipoAcceso === 5){
-              this.servicio.Responsable = this.usuario.Nombre;
+            if( this.userDataProvider.getTipoAcceso() === 5){
+              this.servicio.Responsable = this.userDataProvider.getNombre();
             }           
           }
           
@@ -730,6 +663,7 @@ export class ServicioPage {
           this.servicio.Codigo = result.tfCodigo;
           this.servicio.DetallePlantillaId = result.tfCodigo;
           this.mostrarToast("Valor del Servicio. $ "+ this.servicio.ValorCliente) 
+          this.servicio.ValorTotal= this.servicio.ValorCliente +  this.subTotal;
         } else {
           this.mostrarToast("Estimado Usuario(a), no se encontró el precio con estos " +
                         "parametros de ubicación y tipo de vehículo");
@@ -1124,13 +1058,13 @@ export class ServicioPage {
   // Validar Datos por pestaña
   onOpcionChange(): void{
 
-    switch (this.opcion){
+    switch (this.opcionTab){
 
       case "TipoServicio":
 
         if (this.contratoSelect.IdContrato == null){
           this.mostrarToast("Por favor seleccionar el contrato");
-          this.opcion = 'Contrato';
+          this.opcionTab = 'Contrato';
           return;
         }
 
@@ -1140,7 +1074,7 @@ export class ServicioPage {
       
         if(this.servicio.Tipo.csTipoServicioId == 0){
           this.mostrarToast("Por favor seleccionar el tipo de servicio.");
-          this.opcion = 'TipoServicio';
+          this.opcionTab = 'TipoServicio';
           return ;
         }
 
