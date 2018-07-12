@@ -6,8 +6,9 @@ import { Usuario } from '../../models/usuario.model';
 
 import { SesionProvider } from '../../providers/sesion/sesion';
 import { UserDataProvider } from '../../providers/user-data/user-data';
+import { ConfiguracionProvider } from '../../providers/configuracion/configuracion';
 
-import {ServicioPage }  from '../servicio/servicio';
+import { HomePage } from '../home/home';
 
 @Component({
   selector: 'page-inicio-sesion',
@@ -20,7 +21,8 @@ export class InicioSesionPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public toastCtrl: ToastController, private sessionProvider : SesionProvider,
-              private userDataProvider: UserDataProvider ) {
+              private userDataProvider: UserDataProvider, 
+              private configuracionProvider : ConfiguracionProvider ) {
     this.usuario = new Usuario();
   }
 
@@ -81,10 +83,28 @@ export class InicioSesionPage {
           return;
         }   
         this.userDataProvider.SetDatos(result);
-        this.navCtrl.push(ServicioPage);
+        this.getConfiguracion();
+        this.navCtrl.setRoot(HomePage);
       },
       error => {
-        this.mostrarToast(" Error al autenticar. " + error);
+        this.mostrarToast(" Error al obtener datos del usuario. " + error);
+        console.log(<any>error);
+      }
+    );
+  }
+
+  getConfiguracion () : void {
+    this.sessionProvider.getConfiguracion().subscribe(
+      result => {   
+        if (!result){
+          this.mostrarToast(" Error al obtener datos de configuración. "+ result);
+          return;
+        }   
+        console.log(result);
+        this.configuracionProvider.SetDatos(result);
+      },
+      error => {
+        this.mostrarToast(" Error al consultar datos de configuración. " + error);
         console.log(<any>error);
       }
     );

@@ -7,8 +7,10 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
-import { ServicioPage } from '../pages/servicio/servicio'
-import { InicioSesionPage } from '../pages/inicio-sesion/inicio-sesion'
+import { ServicioPage } from '../pages/servicio/servicio';
+import { InicioSesionPage } from '../pages/inicio-sesion/inicio-sesion';
+import { ListadoServicioPage } from '../pages/listado-servicio/listado-servicio';
+import { CerrarSesionPage } from '../pages/cerrar-sesion/cerrar-sesion';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -28,7 +30,9 @@ import { UserDataProvider } from '../providers/user-data/user-data';
     HomePage,
     ListPage, 
     ServicioPage,
-    InicioSesionPage
+    InicioSesionPage,
+    ListadoServicioPage,
+    CerrarSesionPage
   ],
   imports: [
     BrowserModule,
@@ -41,7 +45,9 @@ import { UserDataProvider } from '../providers/user-data/user-data';
     HomePage,
     ListPage,
     ServicioPage,
-    InicioSesionPage
+    InicioSesionPage,
+    ListadoServicioPage,
+    CerrarSesionPage
   ],
   providers: [
     StatusBar,

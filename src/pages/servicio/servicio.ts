@@ -19,6 +19,7 @@ import { ContratoProvider } from '../../providers/contrato/contrato';
 import { FuncionesComunesProvider } from '../../providers/funciones-comunes/funciones-comunes';
 import { ServicioProvider } from '../../providers/servicio/servicio';
 import { ZonaProvider } from '../../providers/zona/zona';
+import { ConfiguracionProvider } from '../../providers/configuracion/configuracion';
 import * as moment from 'moment';
 
 declare var google;
@@ -67,7 +68,7 @@ export class ServicioPage {
               public funcionesProvider: FuncionesComunesProvider, public platform: Platform,
               public servicioProvider : ServicioProvider, private geolocation: Geolocation, 
               private zonaProvider: ZonaProvider, private alertCtrl: AlertController,
-              private userDataProvider : UserDataProvider
+              private userDataProvider : UserDataProvider, private configProvider: ConfiguracionProvider
               
             ) 
   {
@@ -81,11 +82,9 @@ export class ServicioPage {
   
 
   ionViewDidLoad() {
-   
+    this.ubicacionAutomatica(true);
     this.initDatos();
     this.getContratos();
-   
-    
   }
 
   initClases(){
@@ -105,6 +104,8 @@ export class ServicioPage {
     this.servicio.ModoServicio = "PROGRAMADO";
     this.servicio.ClienteId = this.userDataProvider.getIdCliente();
     this.servicio.UserReg =  this.userDataProvider.getLogin();
+    this.servicio.EnviarEmail = this.configProvider.EnviarEmail; 
+    this.servicio.ParEmail = this.configProvider.Email;
     this.lstRutas = [];
     this.lstTraslados = [];
     this.rutaSelect = new Ruta();
@@ -113,7 +114,10 @@ export class ServicioPage {
     this.editModoServicio = true;
     this.servicio.FechaServicio = moment().format('L');
     this.servicio.HoraControl = moment().format("HH:mm");
-    
+    this.posicion.Latitud = this.configProvider.Latitud;
+    this.posicion.Longitud = this.configProvider.Longitud;
+
+    console.log(this.posicion.Longitud);
   }
 
   // FUNCIONES DE MAPAS 
@@ -659,6 +663,7 @@ export class ServicioPage {
           this.servicio.Codigo = result.tfCodigo;
           this.servicio.DetallePlantillaId = result.tfCodigo;
           this.mostrarToast("Valor del Servicio. $ "+ this.servicio.ValorCliente) 
+          this.servicio.ValorTotal= this.servicio.ValorCliente +  this.subTotal;
         } else {
           this.mostrarToast("Estimado Usuario(a), no se encontró el precio con estos " +
                         "parametros de ubicación y tipo de vehículo");

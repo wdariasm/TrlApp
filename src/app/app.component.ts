@@ -6,7 +6,13 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { ServicioPage }  from '../pages/servicio/servicio';
+import { ListadoServicioPage } from '../pages/listado-servicio/listado-servicio';
 import { InicioSesionPage } from '../pages/inicio-sesion/inicio-sesion';
+import { CerrarSesionPage } from '../pages/cerrar-sesion/cerrar-sesion';
+
+import { UserDataProvider  } from '../providers/user-data/user-data';
+import { ConfiguracionProvider } from '../providers/configuracion/configuracion';
+
 
 @Component({
   templateUrl: 'app.html'
@@ -14,18 +20,22 @@ import { InicioSesionPage } from '../pages/inicio-sesion/inicio-sesion';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = ServicioPage;
+  rootPage: any = ListadoServicioPage;
 
-  pages: Array<{title: string, component: any}>;
+  pages: Array<{title: string, component: any, icon: string}>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
+  constructor(public platform: Platform, public statusBar: StatusBar, 
+              public splashScreen: SplashScreen, private userDataProvider: UserDataProvider,
+              private configProvider: ConfiguracionProvider) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title : 'Servicio', component : ServicioPage },
-      { title: 'Home', component: HomePage },
-      { title: 'List', component: ListPage }
+      { title: 'Mis Servicios', component: ListadoServicioPage, icon: 'list' },
+      { title : 'Servicio', component : ServicioPage , icon: 'locate' },
+      { title: 'Home', component: HomePage, icon: 'home' },
+      { title: 'List', component: ListPage, icon: 'list' },
+      { title : 'Cerrar Sesión', component: CerrarSesionPage , icon: 'log-out'}
     ];
 
   }
@@ -34,8 +44,18 @@ export class MyApp {
     this.platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
+      let user = localStorage.getItem("usuario");
+      if (user){
+        this.rootPage = ListadoServicioPage;
+        this.userDataProvider.RecuperarDatos();
+        this.configProvider.RecuperarDatos();
+      } else {
+        this.rootPage  = InicioSesionPage;
+      }
+     
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+
     });
   }
 

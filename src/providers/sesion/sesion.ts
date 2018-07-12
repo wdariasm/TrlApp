@@ -41,4 +41,8 @@ export class SesionProvider {
     return req;
   };
 
+  getConfiguracion = function () : Observable<any> {
+    return this.http.get(this.uri +'/parametro');
+  };   
+
 }

@@ -60,6 +60,11 @@ export class UserDataProvider {
     }
   }
 
+  public RecuperarDatos(){
+    let user =JSON.parse(atob(localStorage.getItem("usuario")));
+    this.SetDatos(user);
+  }
+
   public getIdUsuario(){
     return this.IdUsuario;
   }

@@ -64,8 +64,6 @@ export class Servicio {
         this.ValorTotal = 0;
         this.Valor = 0;
         this.NumHoras = 0;
-        this.UserReg = "Admin";
-        this.EnviarEmail = "SI";
     }
 }
 
@@ -73,7 +71,6 @@ export class Coordenada {
     Latitud : number;
     Longitud : number;
     constructor () {
-        this.Latitud = 4.7081865;
-        this.Longitud = -74.0949768;
+       
     }
 }
