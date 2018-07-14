@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ToastController } from 'ionic-angular';
+import { NavController, NavParams, ToastController, MenuController } from 'ionic-angular';
 import { NgForm } from '@angular/forms';
 
 import { Usuario } from '../../models/usuario.model';
@@ -10,6 +10,7 @@ import { ConfiguracionProvider } from '../../providers/configuracion/configuraci
 
 import { HomePage } from '../home/home';
 
+ 
 @Component({
   selector: 'page-inicio-sesion',
   templateUrl: 'inicio-sesion.html',
@@ -22,12 +23,22 @@ export class InicioSesionPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public toastCtrl: ToastController, private sessionProvider : SesionProvider,
               private userDataProvider: UserDataProvider, 
-              private configuracionProvider : ConfiguracionProvider ) {
+              private configuracionProvider : ConfiguracionProvider, 
+              private menu : MenuController ) {
     this.usuario = new Usuario();
+     this.menu.swipeEnable(false);
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad InicioSesionPage');
+  }
+
+  ionViewDidEnter() {
+    this.menu.swipeEnable(false);
+  }
+
+  ionViewWillLeave() {
+    this.menu.swipeEnable(true);
   }
 
   mostrarToast(mensaje : string, duracion: number = 3000) {

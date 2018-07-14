@@ -18,22 +18,22 @@
   <form  #formServicio="ngForm">
 
     <ion-segment [(ngModel)]="opcionTab" name="tbOpcion"  (ionChange)="onOpcionChange()" >
-      <ion-segment-button value="Contrato">
+      <ion-segment-button value="1">
         <ion-icon name="document" color="secondary"></ion-icon>
       </ion-segment-button>
-      <ion-segment-button value="TipoServicio">
+      <ion-segment-button value="2">
         <ion-icon name="calendar" color="secondary"></ion-icon>
       </ion-segment-button>
-      <ion-segment-button value="Direccion"  [style.display]="servicio.Tipo.csTipoServicioId != 3 ? 'block' : 'none'">
+      <ion-segment-button value="3"  [style.display]="servicio.Tipo.csTipoServicioId != 3 ? 'block' : 'none'">
         <ion-icon name="locate" color="secondary"></ion-icon>
       </ion-segment-button>
-      <ion-segment-button value="Responsable">
+      <ion-segment-button value="4">
         <ion-icon name="contact" color="secondary"></ion-icon>
       </ion-segment-button >
-      <ion-segment-button value="Paradas" [style.display]="servicio.Tipo.csTipoServicioId == 1 ? 'block' : 'none'">
+      <ion-segment-button value="5" [style.display]="servicio.Tipo.csTipoServicioId == 1 ? 'block' : 'none'">
         <ion-icon name="navigate" color="secondary"></ion-icon>
       </ion-segment-button>
-      <ion-segment-button value="Pago">
+      <ion-segment-button value="6">
         <ion-icon name="card" color="secondary"></ion-icon>
       </ion-segment-button>
     </ion-segment>
@@ -41,7 +41,7 @@
   
     <div [ngSwitch]="opcionTab">
 
-      <div *ngSwitchCase="'Contrato'">
+      <div *ngSwitchCase="1">
         <ion-item class="margen-opcion">
           <ion-label floating>Contrato *</ion-label>
           <ion-select [(ngModel)]="contratoSelect" name="cboContrato" required="true" (ionChange)="buscarContrato('COMBO', true)" okText="Ok" cancelText="Cancelar">
@@ -60,7 +60,7 @@
         
       </div>
 
-      <div *ngSwitchCase="'TipoServicio'">
+      <div *ngSwitchCase="2">
 
         <ion-item class="margen-opcion">
           <ion-label floating>Tipo Servicio *</ion-label>
@@ -146,7 +146,7 @@
 
       </div>
 
-      <div [style.display]="opcionTab === 'Direccion' ? 'block' : 'none'">
+      <div id="dvDireccion" [style.display]="opcionTab === '3' ? 'block' : 'none'">
         <ion-item class="margen-opcion">
           <ion-label>Asignación Manual</ion-label>
           <ion-toggle [(ngModel)]="asignacion.Manual" name="chkAsignacion" ></ion-toggle>
@@ -189,7 +189,7 @@
         
       </div>
 
-      <div *ngSwitchCase="'Responsable'">
+      <div *ngSwitchCase="'4'">
         <ion-item class="margen-opcion">
           <ion-label floating>Responsable del Servicio *</ion-label>
           <ion-input type="text" [(ngModel)]="contacto.scNombre" name="txtResponsable" maxlength="60"></ion-input>
@@ -224,13 +224,13 @@
         </ion-list>
       </div>
 
-      <div [style.display]="opcionTab === 'Paradas' ? 'block' : 'none'">
+      <div id="dvParavada" [style.display]="opcionTab === '5' ? 'block' : 'none'">
         <ion-item class="margen-opcion">
           <ion-label floating>Dirección de parada </ion-label>
           <ion-input type="text" [(ngModel)]="parada.prDireccion" name="txtParada" maxlength="250"></ion-input>
         </ion-item>
   
-        <ion-item>
+        <ion-item no-lines>
           <button id="btnAgregarParada" ion-button block outline color="secondary"  (click)="agregarParada()">
             <ion-icon name="add"></ion-icon>&nbsp;Agregar
           </button>
@@ -249,12 +249,12 @@
           </ion-item>
         </ion-list>
         <ion-item style="margin-top: 2%" >
-            <h3 ion-text>SubTotal: <span ion-text color="danger"> ${{subTotal | number }}</span></h3>
+            <h2 ion-text>SubTotal: <span ion-text color="danger"> ${{subTotal | number }}</span></h2>
         </ion-item>
 
       </div>
 
-      <div *ngSwitchCase="'Pago'">
+      <div *ngSwitchCase="'6'">
 
         <ion-item *ngIf="servicio.Tipo.csTipoServicioId == 1 || servicio.Tipo.csTipoServicioId == 2" class="margen-opcion">
           <h3></h3>
@@ -293,9 +293,24 @@
 
 <ion-footer>
   <ion-toolbar>
-      <button id="btnValidar" ion-button block outline large color="secondary" 
-            outline (click)="validarServicio(formServicio)" >
-        <ion-icon name="logo-usd"></ion-icon>&nbsp; Guardar
-      </button>
+    <ion-grid>
+      <ion-row>
+        <ion-col col-2>
+          <button ion-button icon-only block clear strong [disabled]="btnAnterior" (click)="moverTabAnterior()">
+              <ion-icon ios="ios-arrow-back" md="md-arrow-back"></ion-icon>
+          </button>
+        </ion-col>
+        <ion-col col-8>
+          <button id="btnValidar" ion-button block outline  color="secondary" outline (click)="validarServicio(formServicio)">
+            <ion-icon name="logo-usd"></ion-icon>&nbsp; Guardar
+          </button>
+        </ion-col>
+        <ion-col col-2>
+          <button ion-button icon-only block clear strong [disabled]="btnSiguiente" (click)="moverTabSiguiente()">
+            <ion-icon name="arrow-forward"></ion-icon>
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-toolbar>
 </ion-footer>
