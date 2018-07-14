@@ -31,7 +31,7 @@ declare var google;
 export class ServicioPage {
 
   servicio : Servicio;
-  opcionTab : string = "Contrato"; // Opcion de tab 
+  opcionTab : string = "1"; // Opcion de tab 
   asignacion : Asignacion;
   trasladoSelect : Traslado;  //traslado seleccionado
   tipoSelect : TipoVehiculo; //Tipo de vehiculo seleccionado
@@ -50,6 +50,8 @@ export class ServicioPage {
   rutaSelect : Ruta;
   lstTraslados : Traslado [];
   aceptarCondicion : boolean;
+  btnSiguiente : boolean = false;
+  btnAnterior : boolean = true;
  
   // Variables para el servicio de mapas
   posicion : Coordenada;
@@ -100,7 +102,18 @@ export class ServicioPage {
   }
 
   initDatos(){
-    this.opcionTab = 'Contrato';
+
+    /** 
+     * OPCIONES DE TAB A TENER EN CUENTA
+     * Contrato -> 1
+     * TipoServicio -> 2
+     * Direccion -> 3
+     * Responsable -> 4
+     * Paradas -> 5
+     * Pago -> 6
+     * **/
+
+    this.opcionTab = "1";
     this.servicio.ModoServicio = "PROGRAMADO";
     this.servicio.ClienteId = this.userDataProvider.getIdCliente();
     this.servicio.UserReg =  this.userDataProvider.getLogin();
@@ -720,7 +733,12 @@ export class ServicioPage {
       this.mostrarToast('Por favor ingrese los datos requeridos (*).');
       return;
     } 
-    
+
+    if (this.contratoSelect.IdContrato == null){
+      this.mostrarToast("Por favor seleccionar el contrato");
+      return;
+    }
+
     this.aceptarCondicion = false;
     if(this.servicio.Tipo.csTipoServicioId == null){
       this.mostrarToast('Seleccione el tipo de servicio.');
@@ -1057,31 +1075,85 @@ export class ServicioPage {
 
   // Validar Datos por pestaña
   onOpcionChange(): void{
+    this.btnSiguiente = false;
+    this.btnAnterior = false;
+
 
     switch (this.opcionTab){
 
-      case "TipoServicio":
-
-        if (this.contratoSelect.IdContrato == null){
-          this.mostrarToast("Por favor seleccionar el contrato");
-          this.opcionTab = 'Contrato';
-          return;
-        }
-
+      //Contrato
+      case "1":
+        this.btnAnterior = true;
         break;
 
-      case "Direccion":
+      // TipoServicio
+      case "2":
+        if (this.contratoSelect.IdContrato == null){
+          this.mostrarToast("Por favor seleccionar el contrato");
+          this.opcionTab = "1";
+          return;
+        }
+        break;
+
+      // Direccion
+      case "3":
       
         if(this.servicio.Tipo.csTipoServicioId == 0){
           this.mostrarToast("Por favor seleccionar el tipo de servicio.");
-          this.opcionTab = 'TipoServicio';
+          this.opcionTab = "2";
           return ;
         }
+        break;
 
+      //Responsable
+      case "4":
+        
+      break;
+
+      case "5":
+        
+       break;
+
+      case "6":
+        this.btnSiguiente = true;
         break;
-      case "":
-        break;
+
+      default :
+        console.log("entre por aca");
+       break;
     }
+  }
+
+  moverTabSiguiente(){
+    let tab = parseInt(this.opcionTab) + 1 ;
+
+    if (tab == 5 && this.servicio.Tipo.csTipoServicioId != 1){
+      this.opcionTab = "6";
+      return;
+    }
+
+    if (tab == 3 && this.servicio.Tipo.csTipoServicioId  == 3){
+      this.opcionTab = "4";
+      return;
+    }
+
+    this.opcionTab = tab.toString();
+  }
+
+  moverTabAnterior(){
+    let tab = parseInt(this.opcionTab) - 1 ;
+    
+    if (tab == 5 && this.servicio.Tipo.csTipoServicioId != 1){
+      this.opcionTab = "4";
+      return;
+    }
+
+    if (tab == 3 && this.servicio.Tipo.csTipoServicioId  == 3){
+      this.opcionTab = "2";
+      return;
+    }
+    
+    this.opcionTab = tab.toString();
   }
 
   mostrarConfirmacion() {
