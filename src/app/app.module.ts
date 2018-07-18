@@ -5,7 +5,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { Geolocation } from '@ionic-native/geolocation';
 
 import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { ServicioPage } from '../pages/servicio/servicio';
 import { InicioSesionPage } from '../pages/inicio-sesion/inicio-sesion';
@@ -27,7 +26,6 @@ import { UserDataProvider } from '../providers/user-data/user-data';
 @NgModule({
   declarations: [
     MyApp,
-    HomePage,
     ListPage, 
     ServicioPage,
     InicioSesionPage,
@@ -42,7 +40,6 @@ import { UserDataProvider } from '../providers/user-data/user-data';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage,
     ListPage,
     ServicioPage,
     InicioSesionPage,

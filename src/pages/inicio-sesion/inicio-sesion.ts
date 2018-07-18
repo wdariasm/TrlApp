@@ -8,7 +8,7 @@ import { SesionProvider } from '../../providers/sesion/sesion';
 import { UserDataProvider } from '../../providers/user-data/user-data';
 import { ConfiguracionProvider } from '../../providers/configuracion/configuracion';
 
-import { HomePage } from '../home/home';
+import { ListadoServicioPage } from '../listado-servicio/listado-servicio';
 
  
 @Component({
@@ -58,7 +58,7 @@ export class InicioSesionPage {
     var data = {
       email: this.usuario.Login,
       password: this.usuario.Clave, 
-      tipo : "APP"
+      tipo : "MOVIL"
     };
 
     this.sessionProvider.login(data).subscribe(
@@ -95,7 +95,7 @@ export class InicioSesionPage {
         }   
         this.userDataProvider.SetDatos(result);
         this.getConfiguracion();
-        this.navCtrl.setRoot(HomePage);
+        this.navCtrl.setRoot(ListadoServicioPage);
       },
       error => {
         this.mostrarToast(" Error al obtener datos del usuario. " + error);

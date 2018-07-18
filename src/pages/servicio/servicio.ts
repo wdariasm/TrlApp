@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, Platform, AlertController, 
+        ToastController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
-import { Platform, AlertController, ToastController } from 'ionic-angular';
+
 import { NgForm } from '@angular/forms';
 
 import { Servicio, Coordenada  } from '../../models/servicio.model';
