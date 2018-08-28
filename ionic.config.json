@@ -1,8 +1,8 @@
 {
   "name": "TrlApp",
-  "app_id": "f30348a1",
-  "type": "ionic-angular",
   "integrations": {
     "cordova": {}
-  }
+  },
+  "type": "ionic-angular",
+  "pro_id": "f30348a1"
 }

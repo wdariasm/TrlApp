@@ -865,7 +865,7 @@ export class ServicioPage {
       },
       error => {
         this.mostrarToast('¡Error!' + error, 5000);
-        console.log(<any>error);
+        console.log(JSON.stringify(error));
       }
     );
   };

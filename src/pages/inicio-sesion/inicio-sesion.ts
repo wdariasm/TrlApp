@@ -76,9 +76,9 @@ export class InicioSesionPage {
 
       },
       error => {
-        let data = JSON.parse(JSON.stringify(error.error));
+        let data = JSON.parse(JSON.stringify(error));
         if (data != null){
-          this.mostrarToast(" Error al autenticar. " + data.error);
+          this.mostrarToast(" Error al autenticar. " + data.message);
         }
         console.log(<any>error);
       }

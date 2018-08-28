@@ -12,7 +12,9 @@ export class ConfiguracionProvider {
 
   constructor() {
     //this.URL_API = 'http://localhost/TrlTaxi/public/api';
-    this.URL_API = 'http://192.168.0.22/TrlTaxi/public/api';
+    //this.URL_API = 'http://192.168.0.25/TrlTaxi/public/api';
+    this.URL_API = 'http://35.185.20.53/public/api';
+    
   }
 
 

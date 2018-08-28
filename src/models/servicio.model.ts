@@ -64,6 +64,7 @@ export class Servicio {
         this.ValorTotal = 0;
         this.Valor = 0;
         this.NumHoras = 0;
+        this.ValorParadas = 0;
     }
 }
 

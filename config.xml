@@ -87,11 +87,14 @@
     <plugin name="cordova-plugin-geolocation" spec="^4.0.1">
         <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="Mi Posición" />
     </plugin>
-    <engine name="android" spec="~7.0.0" />
     <plugin name="cordova-plugin-googlemaps" spec="^2.3.6">
         <variable name="API_KEY_FOR_ANDROID" value="AIzaSyD_EI-uEK8xKXxfgA5fkerMhAL4gIo0u6Q" />
         <variable name="API_KEY_FOR_IOS" value="AIzaSyD_EI-uEK8xKXxfgA5fkerMhAL4gIo0u6Q" />
         <variable name="PLAY_SERVICES_VERSION" value="15.0.1" />
         <variable name="ANDROID_SUPPORT_V4_VERSION" value="26.1.0" />
+    </plugin>
+    <engine name="android" spec="7.0.0" />
+    <plugin name="phonegap-plugin-push" spec="^2.1.3">
+        <variable name="FCM_VERSION" value="11.6.2" />
     </plugin>
 </widget>
