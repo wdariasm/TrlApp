@@ -5,6 +5,8 @@ import { ServicioProvider }  from '../../providers/servicio/servicio';
 import { UserDataProvider } from '../../providers/user-data/user-data';
 import { Servicio } from '../../models/servicio.model';
 
+import { DetalleServicioPage } from '../detalle-servicio/detalle-servicio';
+
 
 @Component({
   selector: 'page-listado-servicio',
@@ -47,6 +49,11 @@ export class ListadoServicioPage {
         this.mostrarToast("Error al consultar servicios. ");
       }
     );
+  }
+
+  detalleServicio(item): void {
+    // Enviar ID Servicio a la pagina detalle    
+    this.navCtrl.push(DetalleServicioPage, { IdServicio: item.IdServicio});
   }
 
 }

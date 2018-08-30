@@ -9,7 +9,7 @@
 
 
 <ion-content padding>
-  <button ion-item *ngFor="let item of servicios" >
+  <button ion-item *ngFor="let item of servicios" (click)="detalleServicio(item)">
     <ion-badge item-start>{{item.IdServicio}}</ion-badge>
     <p ion-text>Responsable: <strong>{{item.Responsable}}</strong></p>
     <p ion-text>Fecha: <strong ion-text >{{item.FechaServicio}}</strong> </p>

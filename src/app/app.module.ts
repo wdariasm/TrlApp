@@ -10,6 +10,7 @@ import { ServicioPage } from '../pages/servicio/servicio';
 import { InicioSesionPage } from '../pages/inicio-sesion/inicio-sesion';
 import { ListadoServicioPage } from '../pages/listado-servicio/listado-servicio';
 import { CerrarSesionPage } from '../pages/cerrar-sesion/cerrar-sesion';
+import { DetalleServicioPage } from '../pages/detalle-servicio/detalle-servicio';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -30,7 +31,8 @@ import { UserDataProvider } from '../providers/user-data/user-data';
     ServicioPage,
     InicioSesionPage,
     ListadoServicioPage,
-    CerrarSesionPage
+    CerrarSesionPage,
+    DetalleServicioPage
   ],
   imports: [
     BrowserModule,
@@ -44,7 +46,8 @@ import { UserDataProvider } from '../providers/user-data/user-data';
     ServicioPage,
     InicioSesionPage,
     ListadoServicioPage,
-    CerrarSesionPage
+    CerrarSesionPage,
+    DetalleServicioPage
   ],
   providers: [
     StatusBar,
