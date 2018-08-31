@@ -10,18 +10,29 @@
 
   <ion-card>
     <ion-card-header>
-      Datos Básicos
+      Datos Básicos 
     </ion-card-header>
     <ion-card-content>
       
-      <ion-item>      
-        <span item-start>Fecha Servicio</span>
-        <span item-end>{{servicio.FechaServicio}}</span>
+      <ion-item>
+        <span item-start> N° Contrato </span>
+        <span item-start>{{servicio.NumeroContrato}}</span>
       </ion-item>
 
       <ion-item>
-        <span item-start>Hora Servicio </span>
+        <ion-icon name="stats" item-start></ion-icon>
+        <h2>{{servicio.Estado}}</h2>
+        <p>Estado</p>
+      </ion-item>
+
+      <ion-item>
+        <span item-start> Tipo de servicio </span>
         <span item-start>{{servicio.Hora}}</span>
+      </ion-item>
+
+      <ion-item>      
+        <span item-start>Fecha y Hora : </span>
+        <span item-start>{{servicio.FechaServicio}} &nbsp;&nbsp; {{servicio.Hora}} </span>
       </ion-item>
 
     </ion-card-content>
@@ -50,15 +61,15 @@
         </ion-fab>
       
         <ion-item>
-          <ion-icon name="football" item-start large></ion-icon>
-          <h2>Museum of Football</h2>
-          <p>11 N. Way St, Madison, WI 53703</p>
+          <ion-icon name="locate" item-start ></ion-icon>
+          <h2>{{servicio.DireccionOrigen}}</h2>
+          <p>Dirección origen</p>
         </ion-item>
       
         <ion-item>
-          <ion-icon name="wine" item-start large ></ion-icon>
-          <h2>Institute of Fine Cocktails</h2>
-          <p>14 S. Hop Avenue, Madison, WI 53703</p>
+          <ion-icon name="map" item-start  ></ion-icon>
+          <h2>{{servicio.DireccionDestino}}</h2>
+          <p>Dirección Destino</p>
         </ion-item>
       
         <ion-item>
@@ -75,13 +86,14 @@
 
   <ion-card>
     <ion-card-header>
-      Responsable
+      Responsable(s)
     </ion-card-header>
     <ion-card-content>
       <ion-list>
         <ion-item *ngFor="let item of servicio.Contactos; let idx = index">
+          <ion-icon name="contact" item-start  ></ion-icon>
           <h2>Resp. {{item.scNombre}}</h2>
-          <h3>Tel. {{item.scTelefono}}</h3>          
+          <p>Tel. {{item.scTelefono}}</p>          
           <p>Nota. {{item.scNota}}</p>          
         </ion-item>
       </ion-list>
