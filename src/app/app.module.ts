@@ -3,6 +3,7 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { HttpClientModule } from '@angular/common/http';
 import { Geolocation } from '@ionic-native/geolocation';
+import { Push } from '@ionic-native/push';
 
 import { MyApp } from './app.component';
 import { ListPage } from '../pages/list/list';
@@ -21,6 +22,7 @@ import { ZonaProvider } from '../providers/zona/zona';
 import { isMoment } from 'moment';
 import { SesionProvider } from '../providers/sesion/sesion';
 import { UserDataProvider } from '../providers/user-data/user-data';
+import { ClienteProvider } from '../providers/cliente/cliente';
 
 
 @NgModule({
@@ -48,6 +50,7 @@ import { UserDataProvider } from '../providers/user-data/user-data';
   ],
   providers: [
     StatusBar,
+    Push,
     SplashScreen,
     UserDataProvider,
     ContratoProvider,
@@ -58,7 +61,8 @@ import { UserDataProvider } from '../providers/user-data/user-data';
     Geolocation,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ZonaProvider,
-    SesionProvider
+    SesionProvider,
+    ClienteProvider
   ]
 })
 export class AppModule {}
