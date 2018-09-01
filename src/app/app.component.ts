@@ -1,7 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform } from 'ionic-angular';
+import { Nav, Platform, ToastController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { Push, PushObject, PushOptions } from '@ionic-native/push';
 
 import { ListPage } from '../pages/list/list';
 import { ServicioPage }  from '../pages/servicio/servicio';
@@ -11,6 +12,7 @@ import { CerrarSesionPage } from '../pages/cerrar-sesion/cerrar-sesion';
 
 import { UserDataProvider  } from '../providers/user-data/user-data';
 import { ConfiguracionProvider } from '../providers/configuracion/configuracion';
+import { ClienteProvider } from '../providers/cliente/cliente';
 
 
 @Component({
@@ -19,14 +21,16 @@ import { ConfiguracionProvider } from '../providers/configuracion/configuracion'
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = InicioSesionPage;
+  rootPage: any = ListadoServicioPage;
 
   pages: Array<{title: string, component: any, icon: string}>;
   userName : string  = "";
+  idCliente : number = 0;
 
   constructor(public platform: Platform, public statusBar: StatusBar, 
               public splashScreen: SplashScreen, private userDataProvider: UserDataProvider,
-              private configProvider: ConfiguracionProvider) {
+              private configProvider: ConfiguracionProvider, public push: Push,
+              public toastCtrl: ToastController, private clienteProvider: ClienteProvider) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
@@ -44,15 +48,32 @@ export class MyApp {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       let user = localStorage.getItem("usuario");
+      this.idCliente = 0;
       if (user){
         this.userDataProvider.RecuperarDatos();
         this.userName = this.userDataProvider.getNombre();
+        this.idCliente = this.userDataProvider.getIdCliente();
         this.configProvider.RecuperarDatos();
         this.rootPage = ListadoServicioPage;
+        
       } else {
         this.rootPage  = InicioSesionPage;
       }
+      
+    
+    this.pushSetting();
+    
      
+    this.push.hasPermission()
+      .then((res: any) => {
+
+        if (res.isEnabled) {
+          this.mostrarToast('Permiso concedido para notificaciones push');
+        } else {
+          this.mostrarToast('Estimado usuario, le sugerimos aceptar las notificaciones push');
+        }
+      }); 
+
       this.statusBar.styleDefault();
       this.splashScreen.hide();
 
@@ -64,4 +85,50 @@ export class MyApp {
     // we wouldn't want the back button to show in this scenario
     this.nav.setRoot(page.component);
   }
+
+  pushSetting(){
+    const options: PushOptions = {
+      android: {
+        senderID: "358053439592",
+        vibrate : true,
+        sound: true,
+        forceShow:true
+      },
+      ios: {
+          alert: 'true',
+          badge: true,
+          sound: true
+      }
+   };
+   
+    const pushObject: PushObject = this.push.init(options);
+   
+    pushObject.on('notification').subscribe((notification: any) => this.mostrarToast(JSON.stringify(notification)));
+   
+    pushObject.on('registration').subscribe(data => {
+      if (this.idCliente != 0){
+        this.clienteProvider.putKeyNotificacion(this.idCliente, data.registrationId).subscribe(
+          result => {        
+            //this.mostrarToast("Key actualizado correctamente.");
+          },
+          error => {
+            console.log(JSON.stringify(error));
+            this.mostrarToast("Error al actualizar key de notifiación push ");
+          }
+        );
+      }
+      this.mostrarToast(JSON.stringify(data.additionalData), 10000);
+    });
+   
+    pushObject.on('error').subscribe(error => this.mostrarToast('Error obtener key de notificación' +error.message));
+  }
+
+  mostrarToast(mensaje : string, duracion: number = 3000) {
+    const toast = this.toastCtrl.create({
+      message: mensaje,
+      duration: duracion
+    });
+    toast.present();
+  }
+  
 }
