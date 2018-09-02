@@ -1,0 +1,103 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Detalle Servicio N° {{IdServicio}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+
+  <ion-card>
+    <ion-card-header>
+      Datos Básicos 
+    </ion-card-header>
+    <ion-card-content>
+      
+      <ion-item>
+        <span item-start> N° Contrato </span>
+        <span item-start>{{servicio.NumeroContrato}}</span>
+      </ion-item>
+
+      <ion-item>
+        <ion-icon name="stats" item-start></ion-icon>
+        <h2>{{servicio.Estado}}</h2>
+        <p>Estado</p>
+      </ion-item>
+
+      <ion-item>
+        <span item-start> Tipo de servicio </span>
+        <span item-start>{{servicio.Hora}}</span>
+      </ion-item>
+
+      <ion-item>      
+        <span item-start>Fecha y Hora : </span>
+        <span item-start>{{servicio.FechaServicio}} &nbsp;&nbsp; {{servicio.Hora}} </span>
+      </ion-item>
+
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      Datos Conductor
+    </ion-card-header>
+    <ion-card-content>
+      
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      Ubicación
+    </ion-card-header>
+    <ion-card-content>
+
+        <img src="img/advance-card-map-madison.png">
+        <ion-fab right top>
+          <button ion-fab>
+            <ion-icon name="pin"></ion-icon>
+          </button>
+        </ion-fab>
+      
+        <ion-item>
+          <ion-icon name="locate" item-start ></ion-icon>
+          <h2>{{servicio.DireccionOrigen}}</h2>
+          <p>Dirección origen</p>
+        </ion-item>
+      
+        <ion-item>
+          <ion-icon name="map" item-start  ></ion-icon>
+          <h2>{{servicio.DireccionDestino}}</h2>
+          <p>Dirección Destino</p>
+        </ion-item>
+      
+        <ion-item>
+          <span item-start>18 min</span>
+          <span item-start>(2.6 mi)</span>
+          <button ion-button icon-start clear item-end>
+            <ion-icon name="navigate"></ion-icon>
+            Start
+          </button>
+        </ion-item>
+      
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      Responsable(s)
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let item of servicio.Contactos; let idx = index">
+          <ion-icon name="contact" item-start  ></ion-icon>
+          <h2>Resp. {{item.scNombre}}</h2>
+          <p>Tel. {{item.scTelefono}}</p>          
+          <p>Nota. {{item.scNota}}</p>          
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
