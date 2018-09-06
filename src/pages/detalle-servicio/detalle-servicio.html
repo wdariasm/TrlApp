@@ -51,12 +51,15 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card>
+  <ion-card *ngIf="verConductor">
     <ion-card-header>
       Datos Conductor
     </ion-card-header>
     <ion-card-content>
-
+      <ion-item>
+        <h2>{{servicio.Placa}}  </h2>
+        <p>Placa </p>
+      </ion-item>
     </ion-card-content>
   </ion-card>
 
@@ -66,7 +69,9 @@
     </ion-card-header>
     <ion-card-content>
 
-      <img src="img/advance-card-map-madison.png">
+      <div id="map_canvas" class="hidden">
+          
+      </div>
       <ion-fab right top>
         <button ion-fab>
           <ion-icon name="pin"></ion-icon>

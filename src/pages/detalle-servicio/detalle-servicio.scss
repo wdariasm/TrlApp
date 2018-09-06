@@ -4,4 +4,20 @@ page-detalle-servicio {
         padding-left: 7px;
         margin-bottom: -2%;
     }
+
+    .hidden {
+        display:  none;
+    }
+
+    .visible {
+        display: block;
+    }
+
+    .margen-opcion {
+        margin-top: 2%;
+    }
+
+    #map_canvas{
+        height: 300px; width: 100%; margin-top: 2%
+    }
 }
