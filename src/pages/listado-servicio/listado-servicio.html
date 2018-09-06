@@ -1,5 +1,5 @@
-<ion-header >
-  <ion-navbar color="primary" >
+<ion-header>
+  <ion-navbar color="primary">
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
@@ -8,16 +8,42 @@
 </ion-header>
 
 
-<ion-content padding>
-  <button ion-item *ngFor="let item of servicios" (click)="detalleServicio(item)">
-    <ion-badge item-start>{{item.IdServicio}}</ion-badge>
-    <p ion-text>Responsable: <strong>{{item.Responsable}}</strong></p>
-    <p ion-text>Fecha: <strong ion-text >{{item.FechaServicio}}</strong> </p>
-    <p> Hora: <strong ion-text > {{item.Hora }}</strong></p>
-    <p>Estado : <strong ion-text > {{ item.Estado == 'RECHAZADO' ? 'SOLICITADO' : item.Estado }}</strong></p>
-    <p>Tipo Servicio: {{item.svDescripcion}} &nbsp; - &nbsp; {{item.DescVehiculo}}  </p> 
-    <div class="item-note" item-end>
-      $ {{item.ValorTotal | number}}
-    </div>
-  </button>
+<ion-content no-padding>
+  <ion-list no-lines no-padding	>
+    <button ion-item  no-padding	 *ngFor="let item of servicios" (click)="detalleServicio(item)" style="margin-bottom: -6% !important; width: 104%" >
+      <ion-card no-padding>
+        <ion-item >
+          <h2>{{item.Responsable}}</h2>
+          <p>Responsable</p>
+        </ion-item>
+
+        <ion-item >
+          <h2>{{item.FechaServicio}} {{item.Hora }}</h2>
+          <p>Fecha y Hora</p>
+        </ion-item>
+
+        <ion-item >
+          <ion-row>
+            <ion-col col-7>
+              <h2 text-wrap text-capitalize>{{item.svDescripcion}} </h2>
+              <p>Tipo Servicio </p>
+            </ion-col>
+            <ion-col col-5>
+              <h2 text-wrap><strong>$ {{item.ValorTotal | number}}</strong></h2>
+              <p>Valor </p>
+
+            </ion-col>
+          </ion-row>
+        </ion-item>
+
+        <ion-item>
+          <ion-badge float-left>{{item.IdServicio}}</ion-badge>
+          <span float-right><strong ion-text color="secondary">
+             {{ item.Estado == 'RECHAZADO' ? 'SOLICITADO' : item.Estado  }}
+          </strong></span>
+        </ion-item>
+
+      </ion-card>
+    </button>
+  </ion-list>
 </ion-content>

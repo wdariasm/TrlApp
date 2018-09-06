@@ -9,7 +9,7 @@ import { UserDataProvider } from '../../providers/user-data/user-data';
 import { ConfiguracionProvider } from '../../providers/configuracion/configuracion';
 
 import { ListadoServicioPage } from '../listado-servicio/listado-servicio';
-
+import { ClienteProvider } from '../../providers/cliente/cliente';
  
 @Component({
   selector: 'page-inicio-sesion',
@@ -24,7 +24,7 @@ export class InicioSesionPage {
     public toastCtrl: ToastController, private sessionProvider : SesionProvider,
               private userDataProvider: UserDataProvider, 
               private configuracionProvider : ConfiguracionProvider, 
-              private menu : MenuController ) {
+              private menu : MenuController, private clienteProvider: ClienteProvider ) {
     this.usuario = new Usuario();
      this.menu.swipeEnable(false);
   }
@@ -95,6 +95,18 @@ export class InicioSesionPage {
         }   
         this.userDataProvider.SetDatos(result);
         this.getConfiguracion();
+        let keyPush = this.configuracionProvider.GetKeyNotificacion();
+        if (keyPush != null || keyPush != ""){
+          this.clienteProvider.putKeyNotificacion(this.userDataProvider.getIdCliente(), keyPush).subscribe(
+            result => {        
+              console.log(result);
+            },
+            error => {
+              console.log(JSON.stringify(error));
+              this.mostrarToast("Error al actualizar key de notifiación push ");
+            }
+          );
+        }
         this.navCtrl.setRoot(ListadoServicioPage);
       },
       error => {

@@ -17,13 +17,20 @@ export class ListadoServicioPage {
   servicios : Servicio[];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-              private servicioProvider : ServicioProvider, private userDataProvider : UserDataProvider,
+              private servicioProvider : ServicioProvider, public userDataProvider : UserDataProvider,
               private toastCtrl: ToastController) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ListadoServicioPage');
-    this.consultarServicios();
+    if(this.userDataProvider.getIdCliente()){
+      this.consultarServicios();
+    } else {
+      // Esperar a que se cargue los datos en el provider
+      setTimeout(()=>{ this.consultarServicios()}, 1000)
+    }
+
+     
   }
 
   mostrarToast(mensaje : string, duracion: number = 3000) {
@@ -46,7 +53,7 @@ export class ListadoServicioPage {
       },
       error => {
         console.log(<any>error);
-        this.mostrarToast("Error al consultar servicios. ");
+        this.mostrarToast("Error al consultar servicios. "+ error.message);
       }
     );
   }
