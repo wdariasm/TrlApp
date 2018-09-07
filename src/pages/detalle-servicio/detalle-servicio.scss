@@ -1,5 +1,5 @@
 page-detalle-servicio {
-    .item {
+    .card-content-md > .item {
         height: 60px;
         padding-left: 7px;
         margin-bottom: -2%;
@@ -19,5 +19,9 @@ page-detalle-servicio {
 
     #map_canvas{
         height: 300px; width: 100%; margin-top: 2%
+    }
+
+    .capitalize {
+        text-transform: capitalize;
     }
 }

@@ -20,14 +20,32 @@
       </ion-item>
 
       <ion-item>
-        <h2 ion-text text-capitalize color="greenApp"><strong>{{servicio.Estado}}</strong></h2>
-        <p>Estado</p>
+        <ion-row>
+          <ion-col col-7>
+            <h2 class="capitalize">{{servicio.svDescripcion}} </h2>
+            <p>Tipo Servicio </p>
+          </ion-col>
+
+          <ion-col col-5>
+            <h2 ion-text><strong> {{servicio.NumPasajeros}}</strong></h2>
+            <p>N° Pasajeros </p>
+          </ion-col>
+        </ion-row>
+
       </ion-item>
 
       <ion-item>
-        <h2 ion-text text-capitalize>Transfert</h2>
-        <p> Tipo de servicio </p>
+        <ion-row>
 
+          <ion-col col-7>
+            <h2 class="capitalize">{{servicio.FormaPago}} </h2>
+            <p>Forma de Pago </p>
+          </ion-col>
+          <ion-col col-5>
+            <h2><strong color="greenApp">$ {{servicio.ValorTotal | number}}</strong></h2>
+            <p>Valor </p>
+          </ion-col>
+        </ion-row>
       </ion-item>
 
       <ion-item>
@@ -35,17 +53,11 @@
         <p>Fecha y Hora </p>
       </ion-item>
 
-      <ion-item >
-        <ion-row>
-          <ion-col col-7>
-            <h2 ion-text text-wrap text-capitalize>{{servicio.FormaPago}} </h2>
-            <p>Forma de Pago </p>
-          </ion-col>
-          <ion-col col-5>
-            <h2 ion-text color="secondary" text-wrap><strong>$ {{servicio.ValorTotal | number}}</strong></h2>
-            <p>Valor </p>
-          </ion-col>
-        </ion-row>
+      <ion-item>
+        <ion-badge float-left>{{servicio.IdServicio}}</ion-badge>
+        <span float-right ion-text text-capitalize><strong ion-text color="secondary">
+            {{ servicio.Estado == 'RECHAZADO' ? 'SOLICITADO' : servicio.Estado }}
+          </strong></span>
       </ion-item>
 
     </ion-card-content>
@@ -53,24 +65,54 @@
 
   <ion-card *ngIf="verConductor">
     <ion-card-header>
-      Datos Conductor
+      Datos conductor asignado
     </ion-card-header>
     <ion-card-content>
       <ion-item>
-        <h2>{{servicio.Placa}}  </h2>
-        <p>Placa </p>
+        <ion-avatar item-start>
+          <img src="{{servicio.Conductor.RutaImg}}">
+        </ion-avatar>
+      </ion-item>
+      <ion-item>
+        <div text-wrap text-capitalize class="capitalize">{{servicio.Conductor.Nombre}} </div>
+        <p>Nombre </p>
+      </ion-item>
+      <ion-item>
+        <h2>{{servicio.Conductor.TelefonoPpal}} </h2>
+        <p>Celular </p>
+      </ion-item>
+      <ion-item>
+        <h2>{{servicio.Placa}} </h2>
+        <p>Placa Vehículo</p>
       </ion-item>
     </ion-card-content>
   </ion-card>
 
-  <ion-card no-padding>
+
+  <ion-card *ngIf="servicio.TipoServicidoId == 4">
+      <ion-card-header>
+        Detalle Traslado
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <h2 text-wrap>{{servicio.Traslado.tlNombre}} </h2>
+          <p>Nombre </p>
+        </ion-item>
+        <ion-item>
+          <h2 text-wrap>{{servicio.Traslado.muNombre}} </h2>
+          <p>Descripción</p>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+  <ion-card no-padding *ngIf="servicio.TipoServicidoId != 3">
     <ion-card-header>
       Ubicación
     </ion-card-header>
     <ion-card-content>
 
       <div id="map_canvas" class="hidden">
-          
+
       </div>
       <ion-fab right top>
         <button ion-fab>
@@ -80,16 +122,24 @@
 
       <ion-item>
         <ion-icon name="locate" item-start></ion-icon>
-        <h2>{{servicio.DireccionOrigen}}</h2>
+        <h2 text-wrap>{{servicio.DireccionOrigen}}</h2>
         <p>Dirección origen</p>
       </ion-item>
 
-      <ion-item>
+      <ion-item *ngIf="servicio.TipoServicidoId == 4 || servicio.TipoServicidoId  == 1">
         <ion-icon name="map" item-start></ion-icon>
-        <h2>{{servicio.DireccionDestino}}</h2>
+        <h2 text-wrap>{{servicio.DireccionDestino}}</h2>
         <p>Dirección Destino</p>
       </ion-item>
 
+      <ion-item>
+        <ion-icon name="car" item-start></ion-icon>
+        <h2 text-wrap>{{servicio.DescVehiculo}}</h2>
+        <p>Tipo Vehículo</p>
+      </ion-item>
+
+      
+      <!--
       <ion-item>
         <span item-start>18 min</span>
         <span item-start>(2.6 mi)</span>
@@ -97,10 +147,30 @@
           <ion-icon name="navigate"></ion-icon>
           Start
         </button>
-      </ion-item>
+      </ion-item> -->
 
     </ion-card-content>
   </ion-card>
+
+  <ion-card *ngIf="servicio.TipoServicidoId == 3">
+      <ion-card-header>
+        Detalle Ruta
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <h2 text-wrap>{{servicio.Ruta.rtNombre}} </h2>
+          <p>Nombre </p>
+        </ion-item>
+        <ion-item>
+          <h2 text-wrap>{{servicio.Ruta.rtDescripcion}} </h2>
+          <p>Descripción</p>
+        </ion-item>
+        <ion-item>
+          <h2>{{servicio.ValorCliente > servicio.Ruta.rtValorCliente ? 'Ida y Vuelta' : 'Solo ida'}}</h2>
+          <p>Tipo </p>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
 
   <ion-card>
     <ion-card-header>
@@ -110,9 +180,9 @@
       <ion-list>
         <ion-item *ngFor="let item of servicio.Contactos; let idx = index">
           <ion-icon name="contact" item-start></ion-icon>
-          <h2>Resp. {{item.scNombre}}</h2>
+          <h2 text-wrap>Resp. {{item.scNombre}}</h2>
           <p>Tel. {{item.scTelefono}}</p>
-          <p>Nota. {{item.scNota}}</p>
+          <p text-wrap>Nota. {{item.scNota}}</p>
         </ion-item>
       </ion-list>
     </ion-card-content>
@@ -126,7 +196,7 @@
       <ion-list>
         <ion-item *ngFor="let item of servicio.Paradas; let idx1 = index">
           <ion-icon name="map" item-start></ion-icon>
-          <h2>Dir. {{item.prDireccion}}</h2>
+          <h2 text-wrap>Dir. {{item.prDireccion}}</h2>
           <p>Valor. ${{item.prValorCliente | number}}</p>
         </ion-item>
       </ion-list>

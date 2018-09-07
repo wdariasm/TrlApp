@@ -21,7 +21,7 @@ import { ClienteProvider } from '../providers/cliente/cliente';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = ListadoServicioPage;
+  rootPage: any = InicioSesionPage;
 
   pages: Array<{title: string, component: any, icon: string}>;
   userName : string  = "";

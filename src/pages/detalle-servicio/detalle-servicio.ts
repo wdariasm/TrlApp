@@ -46,6 +46,7 @@ export class DetalleServicioPage {
   }
 
   consultarServicio(){
+    this.servicio = new Servicio();  
     this.servicioProvider.get(this.IdServicio).subscribe(
       result => {   
         if (result == null){        
@@ -66,7 +67,23 @@ export class DetalleServicioPage {
           },500);     
         }
 
-        console.log(this.servicio);
+        if(this.servicio.TipoServicidoId == 1){
+          this.route(this.directionsService, this.directionsDisplay);
+        } else if(this.servicio.TipoServicidoId == 4){
+            this.route(this.directionsService, this.directionsDisplay);
+        } else {                                  
+             
+          setTimeout(() => {
+            let coordenada = new google.maps.LatLng(this.servicio.LatOrigen, this.servicio.LngOrigen);
+            let markerOrigen = null;
+            markerOrigen = new google.maps.Marker({
+              position: coordenada, map: this.mapa,
+              animation: google.maps.Animation.DROP, title:"Posición Cliente" ,
+              icon:'blue', visible : true                     
+            });                                                                  
+            markerOrigen.setVisible(true);
+          }, 5000);             
+        }      
       },
       error => {
         console.log(<any>error);
@@ -75,7 +92,6 @@ export class DetalleServicioPage {
   }
 
   initMapa (): void {
-    console.log(this.posicion);
     let puntos = new google.maps.LatLng(this.posicion.Latitud, this.posicion.Longitud);
     let mapOptions = {
       center: puntos,
@@ -85,10 +101,20 @@ export class DetalleServicioPage {
     this.directionsDisplay.set('directions', null);
     this.mapa = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
     this.directionsDisplay.setMap(this.mapa);
+  }
 
-    google.maps.event.addListener(this.mapa, "click", (evento) => {
-      let latitud = evento.latLng.lat();
-      let longitud = evento.latLng.lng();       
+  route(directionsService, directionsDisplay) {
+    
+    directionsService.route({
+      origin: new google.maps.LatLng(this.servicio.LatOrigen, this.servicio.LngOrigen),
+      destination:  new google.maps.LatLng(this.servicio.LatDestino, this.servicio.LngDestino),
+      travelMode: google.maps.TravelMode.DRIVING
+    }, function(response, status) {
+      if (status === google.maps.DirectionsStatus.OK) {
+        directionsDisplay.setDirections(response);
+      } else {
+         
+      }
     });
   }
 
