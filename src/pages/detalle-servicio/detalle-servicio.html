@@ -52,15 +52,24 @@
         <h2>{{servicio.FechaServicio}} &nbsp;&nbsp; {{servicio.Hora}} </h2>
         <p>Fecha y Hora </p>
       </ion-item>
-
-      <ion-item>
-        <ion-badge float-left>{{servicio.IdServicio}}</ion-badge>
-        <span float-right ion-text text-capitalize><strong ion-text color="secondary">
-            {{ servicio.Estado == 'RECHAZADO' ? 'SOLICITADO' : servicio.Estado }}
-          </strong></span>
-      </ion-item>
-
     </ion-card-content>
+
+    <ion-row>
+      <ion-col>
+        <button ion-button icon-start clear small color="secondary">
+          <ion-icon name="stats"></ion-icon>
+          <div> &nbsp;  {{ servicio.Estado == 'RECHAZADO' ? 'SOLICITADO' : servicio.Estado }} </div>
+        </button>
+      </ion-col>
+      <ion-col>
+        <button ion-button icon-end clear small>
+          <ion-icon name="thumbs-up"></ion-icon>
+          <div> &nbsp; Calificar</div>
+        </button>
+      </ion-col>
+    </ion-row>
+
+
   </ion-card>
 
   <ion-card *ngIf="verConductor">
