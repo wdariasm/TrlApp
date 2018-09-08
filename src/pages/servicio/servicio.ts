@@ -379,7 +379,6 @@ export class ServicioPage {
       result => {        
           if (result != 0){
             this.servicio[opcion] = result;
-            this.mostrarToast(opcion +' : ' + this.servicio[opcion]);
           } else {
             this.mostrarToast("Estimado Usuario(a), No se encontro la zona");
           }
@@ -1033,6 +1032,7 @@ export class ServicioPage {
   }
 
   cambiarPrecioRuta() : void{
+   
     if(this.rutaSelect == null){
         return;
     }
@@ -1049,6 +1049,8 @@ export class ServicioPage {
     };
     
     this.mostrarToast("Valor del Servicio. $ " + this.servicio.ValorCliente);
+
+    this.servicio.ValorTotal = this.servicio.ValorCliente;
     
     var pos = this.funcionesProvider.arrayObjectIndexOf(this.contrato.TipoVehiculo, this.rutaSelect.rtTipoVehiculo, 'tvCodigo');        
     if(pos >=0){                            

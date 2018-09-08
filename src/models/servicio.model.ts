@@ -45,6 +45,7 @@ export class Servicio {
     DescVehiculo : string;
     PlantillaId : number;
     HoraControl : string;
+    ConductorId : number;
 
     constructor(){
         this.Tipo = new ContratoTipoServicio();
@@ -65,6 +66,8 @@ export class Servicio {
         this.Valor = 0;
         this.NumHoras = 0;
         this.ValorParadas = 0;
+        this.ZonaDestino = 0;
+        this.ZonaOrigen = 0;
     }
 }
 

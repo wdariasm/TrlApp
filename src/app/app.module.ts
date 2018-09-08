@@ -24,6 +24,7 @@ import { isMoment } from 'moment';
 import { SesionProvider } from '../providers/sesion/sesion';
 import { UserDataProvider } from '../providers/user-data/user-data';
 import { ClienteProvider } from '../providers/cliente/cliente';
+import { ToastProvider } from '../providers/toast/toast';
 
 
 @NgModule({
@@ -65,7 +66,8 @@ import { ClienteProvider } from '../providers/cliente/cliente';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ZonaProvider,
     SesionProvider,
-    ClienteProvider
+    ClienteProvider,
+    ToastProvider
   ]
 })
 export class AppModule {}

@@ -38,7 +38,7 @@ export class ServicioProvider {
   };
 
   getAll = function (idCliente: number, rol, user: string) : Observable<any> {
-    return  this.http.get(this.uri+'/cliente/' + idCliente + "/servicios/" + rol + "/" + user );
+    return  this.http.get(this.uri+'/cliente/' + idCliente + "/servicios/" + rol + "/" + user  + "/" + 10);
   }; 
 
   getConductor = function (id: number) : Observable<any> {

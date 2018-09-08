@@ -102,18 +102,18 @@
           </ion-item>
         </div>
 
-        <ion-list radio-group [(ngModel)]="asignacion.Ruta" name="rdAsignacionRuta" *ngIf="servicio.Tipo.csTipoServicioId == 3">
+        <ion-list radio-group [(ngModel)]="asignacion.Ruta" name="rdAsignacionRuta" *ngIf="servicio.Tipo.csTipoServicioId == 3" >
           <ion-list-header>
             Tipo Traslado
           </ion-list-header>
           <ion-item>
             <ion-label>Solo Ida</ion-label>
-            <ion-radio checked="true" value="ida"></ion-radio>
+            <ion-radio checked="true" value="ida" (ionSelect)="cambiarPrecioRuta()"></ion-radio>
           </ion-item>
   
           <ion-item>
             <ion-label>Ida y Vuelta</ion-label>
-            <ion-radio value="doble"></ion-radio>
+            <ion-radio value="doble" (ionSelect)="cambiarPrecioRuta()"></ion-radio>
           </ion-item>
         </ion-list>
   
@@ -206,7 +206,7 @@
         </ion-item>
   
         <ion-item>
-          <button id="btnAgregarResponsable" ion-button block color="secondary" outline (click)="agregarContacto()">
+          <button id="btnAgregarResponsable" ion-button block color="secondary"  (click)="agregarContacto()">
             <ion-icon name="add"></ion-icon>&nbsp;Agregar
           </button>
         </ion-item>
@@ -259,7 +259,7 @@
         <ion-item *ngIf="servicio.Tipo.csTipoServicioId == 1 || servicio.Tipo.csTipoServicioId == 2" class="margen-opcion">
           <h3></h3>
           <h5>Click para consultar el valor del servicio *</h5>
-          <button id="btnConsultarValor" ion-button color="secondary" block outline (click)="consultarPrecio()">
+          <button id="btnConsultarValor" ion-button color="secondary" block  (click)="consultarPrecio()">
             <ion-icon name="logo-usd"></ion-icon>&nbsp; Consultar
           </button>
         </ion-item>
@@ -301,7 +301,7 @@
           </button>
         </ion-col>
         <ion-col col-8>
-          <button id="btnValidar" ion-button block outline  color="secondary" outline (click)="validarServicio(formServicio)">
+          <button id="btnValidar" ion-button block   color="secondary"  (click)="validarServicio(formServicio)">
             <ion-icon name="logo-usd"></ion-icon>&nbsp; Guardar
           </button>
         </ion-col>

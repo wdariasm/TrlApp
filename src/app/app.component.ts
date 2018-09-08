@@ -4,11 +4,11 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
 
-import { ListPage } from '../pages/list/list';
 import { ServicioPage }  from '../pages/servicio/servicio';
 import { ListadoServicioPage } from '../pages/listado-servicio/listado-servicio';
 import { InicioSesionPage } from '../pages/inicio-sesion/inicio-sesion';
 import { CerrarSesionPage } from '../pages/cerrar-sesion/cerrar-sesion';
+import { DetalleServicioPage } from '../pages/detalle-servicio/detalle-servicio';
 
 import { UserDataProvider  } from '../providers/user-data/user-data';
 import { ConfiguracionProvider } from '../providers/configuracion/configuracion';
@@ -21,7 +21,7 @@ import { ClienteProvider } from '../providers/cliente/cliente';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = ListadoServicioPage;
+  rootPage: any = InicioSesionPage;
 
   pages: Array<{title: string, component: any, icon: string}>;
   userName : string  = "";
@@ -37,7 +37,6 @@ export class MyApp {
     this.pages = [
       { title: 'Mis Servicios', component: ListadoServicioPage, icon: 'list' },
       { title : 'Servicio', component : ServicioPage , icon: 'locate' },
-      { title: 'List', component: ListPage, icon: 'list' },
       { title : 'Cerrar Sesión', component: CerrarSesionPage , icon: 'log-out'}
     ];
 
@@ -50,7 +49,8 @@ export class MyApp {
       let user = localStorage.getItem("usuario");
       this.idCliente = 0;
       if (user){
-        this.userDataProvider.RecuperarDatos();
+       
+        this.userDataProvider.RecuperarDatos()
         this.userName = this.userDataProvider.getNombre();
         this.idCliente = this.userDataProvider.getIdCliente();
         this.configProvider.RecuperarDatos();
@@ -60,19 +60,8 @@ export class MyApp {
         this.rootPage  = InicioSesionPage;
       }
       
-    
-    this.pushSetting();
-    
-     
-    this.push.hasPermission()
-      .then((res: any) => {
-
-        if (res.isEnabled) {
-          this.mostrarToast('Permiso concedido para notificaciones push');
-        } else {
-          this.mostrarToast('Estimado usuario, le sugerimos aceptar las notificaciones push');
-        }
-      }); 
+      this.pushSetting();
+      //this.permisoNotificacion();
 
       this.statusBar.styleDefault();
       this.splashScreen.hide();
@@ -92,7 +81,8 @@ export class MyApp {
         senderID: "358053439592",
         vibrate : true,
         sound: true,
-        forceShow:true
+        forceShow:true, 
+        icon : 'icon'
       },
       ios: {
           alert: 'true',
@@ -103,24 +93,45 @@ export class MyApp {
    
     const pushObject: PushObject = this.push.init(options);
    
-    pushObject.on('notification').subscribe((notification: any) => this.mostrarToast(JSON.stringify(notification)));
-   
+    //pushObject.on('notification').subscribe((notification: any) => this.mostrarToast(JSON.stringify(notification), 10000));
+    //pushObject.on('notification').subscribe((notification: any) => console.log('Received a notification', notification));
+    
+    pushObject.on('notification').subscribe(notificacion => {
+      if (notificacion.additionalData.pagina == 1){
+        this.nav.push(DetalleServicioPage, { IdServicio: notificacion.additionalData.codigo});
+      }
+    });
+
     pushObject.on('registration').subscribe(data => {
       if (this.idCliente != 0){
         this.clienteProvider.putKeyNotificacion(this.idCliente, data.registrationId).subscribe(
           result => {        
-            //this.mostrarToast("Key actualizado correctamente.");
+            console.log(result);
           },
           error => {
             console.log(JSON.stringify(error));
             this.mostrarToast("Error al actualizar key de notifiación push ");
           }
         );
+      } else {
+        this.configProvider.SetKeyNotificacion(data.registrationId);
       }
-      this.mostrarToast(JSON.stringify(data.additionalData), 10000);
     });
    
     pushObject.on('error').subscribe(error => this.mostrarToast('Error obtener key de notificación' +error.message));
+  }
+
+  permisoNotificacion(){
+    this.push.hasPermission()
+    .then((res: any) => {
+
+      if (res.isEnabled) {
+        this.mostrarToast('Permiso concedido para notificaciones push');
+      } else {
+        this.mostrarToast('Estimado usuario, le sugerimos aceptar las notificaciones push');
+      }
+    }); 
+
   }
 
   mostrarToast(mensaje : string, duracion: number = 3000) {
