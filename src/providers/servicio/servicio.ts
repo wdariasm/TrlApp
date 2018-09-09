@@ -45,7 +45,7 @@ export class ServicioProvider {
       return  this.http.get(this.uri+'/conductor/' + id + "/vehiculo");
   }; 
 
-  cancelar = function (id:number, servicio : Servicio): Observable<any> {     
+  cancelar = function (id:number, servicio : any): Observable<any> {     
     let data  = JSON.stringify(servicio);
     let headers = new HttpHeaders().set('Content-Type','application/json');       
     return  this.http.put(this.uri+'/servicio/' + id + '/cancelar', data, {headers: headers} );       

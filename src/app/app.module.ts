@@ -12,6 +12,7 @@ import { InicioSesionPage } from '../pages/inicio-sesion/inicio-sesion';
 import { ListadoServicioPage } from '../pages/listado-servicio/listado-servicio';
 import { CerrarSesionPage } from '../pages/cerrar-sesion/cerrar-sesion';
 import { DetalleServicioPage } from '../pages/detalle-servicio/detalle-servicio';
+import { CancelarPage  } from '../pages/cancelar/cancelar';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -35,7 +36,8 @@ import { ToastProvider } from '../providers/toast/toast';
     InicioSesionPage,
     ListadoServicioPage,
     CerrarSesionPage,
-    DetalleServicioPage
+    DetalleServicioPage,
+    CancelarPage
   ],
   imports: [
     BrowserModule,
@@ -50,7 +52,8 @@ import { ToastProvider } from '../providers/toast/toast';
     InicioSesionPage,
     ListadoServicioPage,
     CerrarSesionPage,
-    DetalleServicioPage
+    DetalleServicioPage,
+    CancelarPage
   ],
   providers: [
     StatusBar,

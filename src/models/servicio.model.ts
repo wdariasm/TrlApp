@@ -78,3 +78,13 @@ export class Coordenada {
        
     }
 }
+
+export class MotivoCancelacion{
+    IdMotivo : number;
+    mtDescripcion  : string;
+    mtDejarServicio : string;
+
+    constructor () {
+        
+    }
+}

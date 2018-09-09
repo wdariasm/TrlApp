@@ -1,0 +1,46 @@
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title>Cancelar Servicio N° {{idServicio}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content  class="cards-bg">
+
+  <ion-card>
+    <ion-card-header>
+      Seleccionar opción
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-list radio-group [(ngModel)]="motivo" no-lines style="margin-top:2%;">
+        <ion-item *ngFor="let item of motivosCancelacion">
+            <ion-label  text-wrap text-capitalize>{{item.mtDescripcion}}</ion-label>
+            <ion-radio item-left value="{{item.IdMotivo}}"></ion-radio>
+        </ion-item>
+
+      </ion-list>
+      
+      <ion-item-divider></ion-item-divider>
+
+      <ion-row>
+        <ion-col>
+          <button ion-button icon-start clear color="danger" (click)="cerrarModal()">
+            <ion-icon name="close"></ion-icon>
+            <div>Cerrar</div>
+          </button>
+        </ion-col>
+        <ion-col>
+          <button ion-button icon-start clear color="secondary" (click)="cancelarServicio()">
+            <ion-icon name="send"></ion-icon>
+            <div>Aceptar</div>
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+
+  </ion-card>
+
+</ion-content>

@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, Platform } from 'ionic-angular';
+import { NavController, NavParams, Platform, ModalController } from 'ionic-angular';
 
 import { ServicioProvider  } from '../../providers/servicio/servicio';
 import { Servicio, Coordenada } from '../../models/servicio.model';
 import { ConfiguracionProvider } from '../../providers/configuracion/configuracion';
+import { CancelarPage  } from '../cancelar/cancelar';
+import { ToastProvider } from '../../providers/toast/toast';
 
 declare var google;
 
@@ -21,12 +23,13 @@ export class DetalleServicioPage {
   mapa : any;
   directionsService : any;
   directionsDisplay: any;
+  mostrarMenu : boolean;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
       private servicioProvider: ServicioProvider, public platform: Platform,
-      private configProvider: ConfiguracionProvider) {
-    // recibir valor del servicio
-     this.IdServicio = this.navParams.get('IdServicio');  
+      private configProvider: ConfiguracionProvider, public modalCtrl: ModalController,
+      private toastProvider:ToastProvider) {
+   
      this.servicio = new Servicio();      
      this.posicion = new Coordenada();
 
@@ -38,8 +41,13 @@ export class DetalleServicioPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad DetalleServicioPage');   
+     // recibir valor del servicio
+     this.IdServicio = this.navParams.get('IdServicio');  
+     this.mostrarMenu = this.navParams.get('menu');
+
     this.posicion.Latitud = this.configProvider.Latitud;
     this.posicion.Longitud = this.configProvider.Longitud; 
+    console.log(this.IdServicio);
     this.consultarServicio();
     this.verConductor=false;
    
@@ -90,6 +98,26 @@ export class DetalleServicioPage {
       }
     );
   }
+
+  calificar(){
+
+  }
+
+  cancelar(){
+    let profileModal = this.modalCtrl.create(CancelarPage, { 
+          idServicio: this.servicio.IdServicio, 
+          idCliente : this.servicio.ClienteId, 
+          idConductor : this.servicio.ConductorId });
+    profileModal.present();
+
+    profileModal.onDidDismiss(data => {  
+      if (data.cancelado){
+        this.toastProvider.mostrarToast(data.message);
+        this.navCtrl.setRoot(this.navCtrl.getActive().component, { IdServicio: this.IdServicio  , menu: true});
+      }
+    });
+  }
+
 
   initMapa (): void {
     let puntos = new google.maps.LatLng(this.posicion.Latitud, this.posicion.Longitud);
