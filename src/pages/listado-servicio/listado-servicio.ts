@@ -60,7 +60,7 @@ export class ListadoServicioPage {
 
   detalleServicio(item): void {
     // Enviar ID Servicio a la pagina detalle    
-    this.navCtrl.push(DetalleServicioPage, { IdServicio: item.IdServicio});
+    this.navCtrl.push(DetalleServicioPage, { IdServicio: item.IdServicio, menu: false});
   }
 
 }
