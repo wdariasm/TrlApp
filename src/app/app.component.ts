@@ -9,6 +9,7 @@ import { ListadoServicioPage } from '../pages/listado-servicio/listado-servicio'
 import { InicioSesionPage } from '../pages/inicio-sesion/inicio-sesion';
 import { CerrarSesionPage } from '../pages/cerrar-sesion/cerrar-sesion';
 import { DetalleServicioPage } from '../pages/detalle-servicio/detalle-servicio';
+import { CalificacionPage } from '../pages/calificacion/calificacion';
 
 import { UserDataProvider  } from '../providers/user-data/user-data';
 import { ConfiguracionProvider } from '../providers/configuracion/configuracion';
@@ -99,6 +100,10 @@ export class MyApp {
     pushObject.on('notification').subscribe(notificacion => {
       if (notificacion.additionalData.pagina == 1){
         this.nav.push(DetalleServicioPage, { IdServicio: notificacion.additionalData.codigo});
+      }
+
+      else if (notificacion.additionalData.pagina == 2){
+        this.nav.push(CalificacionPage, { idServicio: notificacion.additionalData.codigo});
       }
     });
 

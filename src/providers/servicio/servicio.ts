@@ -80,7 +80,13 @@ export class ServicioProvider {
   };
 
   getParadas = function (idServicio: number) : Observable<Parada[]> {
-      return  this.http.get(this.uri+'/parada/' + idServicio);
+      return  this.http.get(this.uri + '/parada/' + idServicio);
   }; 
+
+  calificar = function (id, objeto): Observable<any> { 
+    let data  = JSON.stringify(objeto);
+    let headers = new HttpHeaders().set('Content-Type','application/json');  
+    return  this.http.put(this.uri + '/servicio/calificar/' + id, data,{ headers : headers} );    
+  };
 
 }
