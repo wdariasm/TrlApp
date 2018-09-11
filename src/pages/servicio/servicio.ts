@@ -808,7 +808,7 @@ export class ServicioPage {
             
         case 2: 
             
-            if(this.servicio.LatOrigen || this.servicio.LngOrigen ===""){
+            if(this.servicio.LatOrigen === "" || this.servicio.LngOrigen ===""){
                 this.mostrarToast( "Estimado Usuario(a), por favor seleccione la posicion de Origen.");
                 return;
             }
