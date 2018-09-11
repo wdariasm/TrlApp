@@ -82,7 +82,7 @@ export class MyApp {
         vibrate : true,
         sound: true,
         forceShow:true, 
-        icon : 'icon'
+        icon : 'assets/imgs/notificacion.png'
       },
       ios: {
           alert: 'true',
