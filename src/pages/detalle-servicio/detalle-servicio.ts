@@ -6,6 +6,7 @@ import { Servicio, Coordenada } from '../../models/servicio.model';
 import { ConfiguracionProvider } from '../../providers/configuracion/configuracion';
 import { CancelarPage  } from '../cancelar/cancelar';
 import { ToastProvider } from '../../providers/toast/toast';
+import { CalificacionPage }  from '../calificacion/calificacion';
 
 declare var google;
 
@@ -47,7 +48,7 @@ export class DetalleServicioPage {
 
     this.posicion.Latitud = this.configProvider.Latitud;
     this.posicion.Longitud = this.configProvider.Longitud; 
-    console.log(this.IdServicio);
+    
     this.consultarServicio();
     this.verConductor=false;
    
@@ -100,7 +101,7 @@ export class DetalleServicioPage {
   }
 
   calificar(){
-
+      this.navCtrl.push(CalificacionPage, {  idServicio: this.IdServicio});
   }
 
   cancelar(){

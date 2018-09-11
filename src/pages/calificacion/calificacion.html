@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Calificacion de Servicio</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      Datos Básicos
+    </ion-card-header>
+    <ion-card-content>
+
+      <ion-item>
+        <ion-row>
+          <ion-col>
+            <h2>{{servicio.IdServicio}}</h2>
+            <p> N° Servicio</p>
+          </ion-col>
+          <ion-col>
+            <h2>{{servicio.NumeroContrato}}</h2>
+            <p> N° Servicio</p>
+          </ion-col>
+        </ion-row>
+      </ion-item>
+
+      <ion-item>
+        <ion-row>
+          <ion-col>
+            <h2 class="capitalize">{{servicio.svDescripcion}} </h2>
+            <p>Tipo Servicio </p>
+          </ion-col>
+          <ion-col>
+            <h2><strong color="greenApp">$ {{servicio.ValorTotal | number}}</strong></h2>
+            <p>Valor Servicio </p>
+          </ion-col>
+        </ion-row>
+      </ion-item>
+
+      <ion-item *ngIf="servicio.Conductor != null">
+        <div text-wrap text-capitalize class="capitalize">{{servicio.Conductor.Nombre}} </div>
+        <p>Conductor </p>
+      </ion-item>
+
+      <ion-item-divider></ion-item-divider>
+
+      <ion-item>
+        <ion-range min="0" max="5" step="1" [(ngModel)]="calificacion" snaps="true" pin="true">
+          <ion-icon small range-left name="star-outline" color="danger"></ion-icon>
+          <ion-icon range-right name="star-outline" color="greenApp"></ion-icon>
+        </ion-range>
+      </ion-item>
+    </ion-card-content>
+
+    <ion-row>
+      <ion-col>
+        <button float-end ion-button large icon-start clear color="secondary" *ngIf="servicio.Estado == 'FINALIZADO'" (click)="calificar()">
+          <ion-icon name="thumbs-up"></ion-icon>
+          <div> &nbsp; Calificar</div>
+        </button>
+      </ion-col>
+    </ion-row>
+
+  </ion-card>
+
+</ion-content>
