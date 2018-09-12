@@ -49,6 +49,7 @@ export class Servicio {
     Calificacion : number;
     Conductor : any;
     Estado : string;
+    IdUsuario: number;
 
     constructor(){
         this.Tipo = new ContratoTipoServicio();

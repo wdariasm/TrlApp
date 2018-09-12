@@ -130,8 +130,7 @@ export class ServicioPage {
     this.servicio.HoraControl = moment().format("HH:mm");
     this.posicion.Latitud = this.configProvider.Latitud;
     this.posicion.Longitud = this.configProvider.Longitud;
-
-    console.log(this.posicion.Longitud);
+    this.servicio.IdUsuario = this.userDataProvider.getIdUsuario();
   }
 
   // FUNCIONES DE MAPAS 
