@@ -1,0 +1,226 @@
+<ion-header>
+
+  <ion-navbar color="primary">
+      <button ion-button menuToggle *ngIf="mostrarMenu">
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    <ion-title>Det. Servicio N° {{IdServicio}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-card>
+    <ion-card-header>
+      Datos Básicos
+    </ion-card-header>
+    <ion-card-content>
+
+      <ion-item>
+        <h2>{{servicio.NumeroContrato}}</h2>
+        <p> N° Contrato</p>
+      </ion-item>
+
+      <ion-item>
+        <ion-row>
+          <ion-col col-7>
+            <h2 class="capitalize">{{servicio.svDescripcion}} </h2>
+            <p>Tipo Servicio </p>
+          </ion-col>
+
+          <ion-col col-5>
+            <h2 ion-text><strong> {{servicio.NumPasajeros}}</strong></h2>
+            <p>N° Pasajeros </p>
+          </ion-col>
+        </ion-row>
+      </ion-item>
+
+      <ion-item>
+        <ion-row>
+          <ion-col col-7>
+            <h2 class="capitalize">{{servicio.FormaPago}} </h2>
+            <p>Forma de Pago </p>
+          </ion-col>
+          <ion-col col-5>
+            <h2 color="greenApp"><strong color="greenApp">$ {{servicio.ValorTotal | number}}</strong></h2>
+            <p>Valor </p>
+          </ion-col>
+        </ion-row>
+      </ion-item>
+
+      <ion-item>
+        <h2>{{servicio.FechaServicio}} &nbsp;&nbsp; {{servicio.Hora}} </h2>
+        <p>Fecha y Hora </p>
+      </ion-item>
+    </ion-card-content>
+
+    <ion-row>
+      <ion-col>
+        <button ion-button icon-start clear color="secondary">
+          <ion-icon name="stats"></ion-icon>
+          <div> &nbsp; {{ servicio.Estado == 'RECHAZADO' ? 'SOLICITADO' : servicio.Estado }} </div>
+        </button>
+      </ion-col>
+      <ion-col>
+        <button ion-button icon-start clear *ngIf="servicio.Estado == 'FINALIZADO'" (click)="calificar()">
+          <ion-icon name="thumbs-up"></ion-icon>
+          <div> &nbsp; Calificar</div>
+        </button>
+
+        <button ion-button icon-start clear *ngIf="servicio.Estado != 'FINALIZADO' && servicio.Estado !== 'CANCELADO'" color="danger"
+          (click)="cancelar()">
+          <ion-icon name="close"></ion-icon>
+          <div> &nbsp; Cancelar</div>
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-card>
+
+  <ion-card *ngIf="verConductor">
+    <ion-card-header>
+      Datos conductor asignado
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-avatar item-start>
+          <img src="{{servicio.Conductor.RutaImg}}">
+        </ion-avatar>
+      </ion-item>
+      <ion-item>
+        <div text-wrap text-capitalize class="capitalize">{{servicio.Conductor.Nombre}} </div>
+        <p>Nombre </p>
+      </ion-item>
+      <ion-item>
+        <h2>{{servicio.Conductor.TelefonoPpal}} </h2>
+        <p>Celular </p>
+      </ion-item>
+
+      <ion-row>
+        <ion-col>
+          <h2>{{servicio.Placa}} </h2>
+          <p>Placa Vehículo</p>
+        </ion-col>
+        <ion-col>
+          <h2>{{servicio.Conductor.Movil}} </h2>
+          <p>Móvil</p>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+
+
+  <ion-card *ngIf="servicio.TipoServicidoId == 4">
+    <ion-card-header>
+      Detalle Traslado
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <h2 text-wrap>{{servicio.Traslado.tlNombre}} </h2>
+        <p>Nombre </p>
+      </ion-item>
+      <ion-item>
+        <h2 text-wrap>{{servicio.Traslado.muNombre}} </h2>
+        <p>Descripción</p>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card no-padding *ngIf="servicio.TipoServicidoId != 3">
+    <ion-card-header>
+      Ubicación
+    </ion-card-header>
+    <ion-card-content>
+
+      <div id="map_canvas" class="hidden">
+
+      </div>
+      <ion-fab right top>
+        <button ion-fab>
+          <ion-icon name="pin"></ion-icon>
+        </button>
+      </ion-fab>
+
+      <ion-item>
+        <ion-icon name="locate" item-start></ion-icon>
+        <h2 text-wrap>{{servicio.DireccionOrigen}}</h2>
+        <p>Dirección origen</p>
+      </ion-item>
+
+      <ion-item *ngIf="servicio.TipoServicidoId == 4 || servicio.TipoServicidoId  == 1">
+        <ion-icon name="map" item-start></ion-icon>
+        <h2 text-wrap>{{servicio.DireccionDestino}}</h2>
+        <p>Dirección Destino</p>
+      </ion-item>
+
+      <ion-item>
+        <ion-icon name="car" item-start></ion-icon>
+        <h2 text-wrap>{{servicio.DescVehiculo}}</h2>
+        <p>Tipo Vehículo</p>
+      </ion-item>
+
+
+      <!--
+      <ion-item>
+        <span item-start>18 min</span>
+        <span item-start>(2.6 mi)</span>
+        <button ion-button icon-start clear item-end>
+          <ion-icon name="navigate"></ion-icon>
+          Start
+        </button>
+      </ion-item> -->
+
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="servicio.TipoServicidoId == 3">
+    <ion-card-header>
+      Detalle Ruta
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <h2 text-wrap>{{servicio.Ruta.rtNombre}} </h2>
+        <p>Nombre </p>
+      </ion-item>
+      <ion-item>
+        <h2 text-wrap>{{servicio.Ruta.rtDescripcion}} </h2>
+        <p>Descripción</p>
+      </ion-item>
+      <ion-item>
+        <h2>{{servicio.ValorCliente > servicio.Ruta.rtValorCliente ? 'Ida y Vuelta' : 'Solo ida'}}</h2>
+        <p>Tipo </p>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      Responsable(s)
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let item of servicio.Contactos; let idx = index">
+          <ion-icon name="contact" item-start></ion-icon>
+          <h2 text-wrap>Resp. {{item.scNombre}}</h2>
+          <p>Tel. {{item.scTelefono}}</p>
+          <p text-wrap>Nota. {{item.scNota}}</p>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card [style.display]="servicio.TipoServicidoId == 1 ? 'block' : 'none'">
+    <ion-card-header>
+      Parada(s)
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let item of servicio.Paradas; let idx1 = index">
+          <ion-icon name="map" item-start></ion-icon>
+          <h2 text-wrap>Dir. {{item.prDireccion}}</h2>
+          <p>Valor. ${{item.prValorCliente | number}}</p>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

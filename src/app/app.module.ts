@@ -3,14 +3,18 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { HttpClientModule } from '@angular/common/http';
 import { Geolocation } from '@ionic-native/geolocation';
+import { Push } from '@ionic-native/push';
 
 import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { ServicioPage } from '../pages/servicio/servicio';
 import { InicioSesionPage } from '../pages/inicio-sesion/inicio-sesion';
 import { ListadoServicioPage } from '../pages/listado-servicio/listado-servicio';
 import { CerrarSesionPage } from '../pages/cerrar-sesion/cerrar-sesion';
+import { DetalleServicioPage } from '../pages/detalle-servicio/detalle-servicio';
+import { CancelarPage  } from '../pages/cancelar/cancelar';
+import { CalificacionPage } from '../pages/calificacion/calificacion';
+import { PerfilPage } from '../pages/perfil/perfil';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -22,17 +26,22 @@ import { ZonaProvider } from '../providers/zona/zona';
 import { isMoment } from 'moment';
 import { SesionProvider } from '../providers/sesion/sesion';
 import { UserDataProvider } from '../providers/user-data/user-data';
+import { ClienteProvider } from '../providers/cliente/cliente';
+import { ToastProvider } from '../providers/toast/toast';
 
 
 @NgModule({
   declarations: [
     MyApp,
-    HomePage,
     ListPage, 
     ServicioPage,
     InicioSesionPage,
     ListadoServicioPage,
-    CerrarSesionPage
+    CerrarSesionPage,
+    DetalleServicioPage,
+    CancelarPage,
+    CalificacionPage,
+    PerfilPage
   ],
   imports: [
     BrowserModule,
@@ -42,15 +51,19 @@ import { UserDataProvider } from '../providers/user-data/user-data';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage,
     ListPage,
     ServicioPage,
     InicioSesionPage,
     ListadoServicioPage,
-    CerrarSesionPage
+    CerrarSesionPage,
+    DetalleServicioPage,
+    CancelarPage,
+    CalificacionPage,
+    PerfilPage
   ],
   providers: [
     StatusBar,
+    Push,
     SplashScreen,
     UserDataProvider,
     ContratoProvider,
@@ -61,7 +74,9 @@ import { UserDataProvider } from '../providers/user-data/user-data';
     Geolocation,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ZonaProvider,
-    SesionProvider
+    SesionProvider,
+    ClienteProvider,
+    ToastProvider
   ]
 })
 export class AppModule {}

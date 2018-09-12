@@ -1,13 +1,50 @@
-<ion-header >
-  <ion-navbar color="primary" >
+<ion-header>
+  <ion-navbar color="primary">
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Mis Servicios</ion-title>
+    <ion-title>Mis Ultimos Servicios</ion-title>
   </ion-navbar>
 </ion-header>
 
 
-<ion-content padding>
+<ion-content no-padding>
+   
+  <ion-list no-lines no-padding	>
+    <button ion-item  no-padding	 *ngFor="let item of servicios" (click)="detalleServicio(item)" style="margin-bottom: -6% !important; width: 104%" >
+      <ion-card no-padding>
+        <ion-item >
+          <h2>{{item.Responsable}}</h2>
+          <p>Responsable</p>
+        </ion-item>
 
+        <ion-item >
+          <h2>{{item.FechaServicio}} {{item.Hora }}</h2>
+          <p>Fecha y Hora</p>
+        </ion-item>
+
+        <ion-item >
+          <ion-row>
+            <ion-col col-7>
+              <h2 text-wrap text-capitalize>{{item.svDescripcion}} </h2>
+              <p>Tipo Servicio </p>
+            </ion-col>
+            <ion-col col-5>
+              <h2 text-wrap><strong>$ {{item.ValorTotal | number}}</strong></h2>
+              <p>Valor </p>
+
+            </ion-col>
+          </ion-row>
+        </ion-item>
+
+        <ion-item>
+          <ion-badge float-left>{{item.IdServicio}}</ion-badge>
+          <span float-right><strong ion-text color="secondary">
+             {{ item.Estado == 'RECHAZADO' ? 'SOLICITADO' : item.Estado  }}
+          </strong></span>
+        </ion-item>
+
+      </ion-card>
+    </button>
+  </ion-list>
 </ion-content>

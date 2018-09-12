@@ -1,0 +1,27 @@
+page-detalle-servicio {
+    .card-content-md > .item {
+        height: 60px;
+        padding-left: 7px;
+        margin-bottom: -2%;
+    }
+
+    .hidden {
+        display:  none;
+    }
+
+    .visible {
+        display: block;
+    }
+
+    .margen-opcion {
+        margin-top: 2%;
+    }
+
+    #map_canvas{
+        height: 300px; width: 100%; margin-top: 2%
+    }
+
+    .capitalize {
+        text-transform: capitalize;
+    }
+}

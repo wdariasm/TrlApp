@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, Platform, AlertController, 
+        ToastController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
-import { Platform, AlertController, ToastController } from 'ionic-angular';
+
 import { NgForm } from '@angular/forms';
 
 import { Servicio, Coordenada  } from '../../models/servicio.model';
@@ -129,8 +130,7 @@ export class ServicioPage {
     this.servicio.HoraControl = moment().format("HH:mm");
     this.posicion.Latitud = this.configProvider.Latitud;
     this.posicion.Longitud = this.configProvider.Longitud;
-
-    console.log(this.posicion.Longitud);
+    this.servicio.IdUsuario = this.userDataProvider.getIdUsuario();
   }
 
   // FUNCIONES DE MAPAS 
@@ -378,7 +378,6 @@ export class ServicioPage {
       result => {        
           if (result != 0){
             this.servicio[opcion] = result;
-            this.mostrarToast(opcion +' : ' + this.servicio[opcion]);
           } else {
             this.mostrarToast("Estimado Usuario(a), No se encontro la zona");
           }
@@ -808,7 +807,7 @@ export class ServicioPage {
             
         case 2: 
             
-            if(this.servicio.LatOrigen || this.servicio.LngOrigen ===""){
+            if(this.servicio.LatOrigen === "" || this.servicio.LngOrigen ===""){
                 this.mostrarToast( "Estimado Usuario(a), por favor seleccione la posicion de Origen.");
                 return;
             }
@@ -864,7 +863,7 @@ export class ServicioPage {
       },
       error => {
         this.mostrarToast('¡Error!' + error, 5000);
-        console.log(<any>error);
+        console.log(JSON.stringify(error));
       }
     );
   };
@@ -1032,6 +1031,7 @@ export class ServicioPage {
   }
 
   cambiarPrecioRuta() : void{
+   
     if(this.rutaSelect == null){
         return;
     }
@@ -1048,6 +1048,8 @@ export class ServicioPage {
     };
     
     this.mostrarToast("Valor del Servicio. $ " + this.servicio.ValorCliente);
+
+    this.servicio.ValorTotal = this.servicio.ValorCliente;
     
     var pos = this.funcionesProvider.arrayObjectIndexOf(this.contrato.TipoVehiculo, this.rutaSelect.rtTipoVehiculo, 'tvCodigo');        
     if(pos >=0){                            

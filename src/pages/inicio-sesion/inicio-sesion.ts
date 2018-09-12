@@ -8,8 +8,8 @@ import { SesionProvider } from '../../providers/sesion/sesion';
 import { UserDataProvider } from '../../providers/user-data/user-data';
 import { ConfiguracionProvider } from '../../providers/configuracion/configuracion';
 
-import { HomePage } from '../home/home';
-
+import { ListadoServicioPage } from '../listado-servicio/listado-servicio';
+import { ClienteProvider } from '../../providers/cliente/cliente';
  
 @Component({
   selector: 'page-inicio-sesion',
@@ -24,7 +24,7 @@ export class InicioSesionPage {
     public toastCtrl: ToastController, private sessionProvider : SesionProvider,
               private userDataProvider: UserDataProvider, 
               private configuracionProvider : ConfiguracionProvider, 
-              private menu : MenuController ) {
+              private menu : MenuController, private clienteProvider: ClienteProvider ) {
     this.usuario = new Usuario();
      this.menu.swipeEnable(false);
   }
@@ -58,7 +58,7 @@ export class InicioSesionPage {
     var data = {
       email: this.usuario.Login,
       password: this.usuario.Clave, 
-      tipo : "APP"
+      tipo : "MOVIL"
     };
 
     this.sessionProvider.login(data).subscribe(
@@ -76,9 +76,9 @@ export class InicioSesionPage {
 
       },
       error => {
-        let data = JSON.parse(JSON.stringify(error.error));
+        let data = JSON.parse(JSON.stringify(error));
         if (data != null){
-          this.mostrarToast(" Error al autenticar. " + data.error);
+          this.mostrarToast(" Error al autenticar. " + data.message);
         }
         console.log(<any>error);
       }
@@ -95,7 +95,19 @@ export class InicioSesionPage {
         }   
         this.userDataProvider.SetDatos(result);
         this.getConfiguracion();
-        this.navCtrl.setRoot(HomePage);
+        let keyPush = this.configuracionProvider.GetKeyNotificacion();
+        if (keyPush != null || keyPush != ""){
+          this.clienteProvider.putKeyNotificacion(this.userDataProvider.getIdCliente(), keyPush).subscribe(
+            result => {        
+              console.log(result);
+            },
+            error => {
+              console.log(JSON.stringify(error));
+              this.mostrarToast("Error al actualizar key de notifiación push ");
+            }
+          );
+        }
+        this.navCtrl.setRoot(ListadoServicioPage);
       },
       error => {
         this.mostrarToast(" Error al obtener datos del usuario. " + error);

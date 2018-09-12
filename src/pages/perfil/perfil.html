@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Datos usuario principal</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form #formPerfil="ngForm">
+    <ion-item>
+      <ion-label floating>Tipo de documento *</ion-label>
+      <ion-select [(ngModel)]="cliente.TipoDocumento" name="cboTipoDocumento" required="true" [disabled]="!verActualizacion" okText="Ok" cancelText="Cancelar">
+        <ion-option *ngFor="let cto of tipoDocumentos" [value]="cto.tdCodigo">{{cto.tdDescripcion}}</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Identificación</ion-label>
+      <ion-input type="text" [(ngModel)]="cliente.Identificacion" required="true" disabled name="txtCedula"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Nombre Completo *</ion-label>
+      <ion-input type="text" [(ngModel)]="cliente.Nombres" required="true" name="txtNombre" maxlength="80" [disabled]="!verActualizacion"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Tipo Persona *</ion-label>
+      <ion-select [(ngModel)]="cliente.TipoPersona" name="cboTipoPersona" required="true" okText="Ok" cancelText="Cancelar" [disabled]="!verActualizacion">
+        <ion-option value="NATURAL">NATURAL</ion-option>
+        <ion-option value="JURIDICA">JURIDICA</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Teléfono Principal *</ion-label>
+      <ion-input type="tel" [(ngModel)]="cliente.MovilPpal" required="true" name="txtTelefonoPpal" maxlength="15" [disabled]="!verActualizacion"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Dirección *</ion-label>
+      <ion-input type="text" [(ngModel)]="cliente.Direccion" required="true" name="txtDireccion" maxlength="60" [disabled]="!verActualizacion"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>E-mail *</ion-label>
+      <ion-input type="email" [(ngModel)]="cliente.Correo" required="true" name="txtEmail" maxlength="60" [disabled]="!verActualizacion"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Móvil</ion-label>
+      <ion-input type="tel" [(ngModel)]="cliente.MovilDos" name="txtTelefonoDos" maxlength="15" [disabled]="!verActualizacion"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Teléfono</ion-label>
+      <ion-input type="tel" [(ngModel)]="cliente.MovilTres" [disabled]="!verActualizacion" name="txtTelefono3" maxlength="15"></ion-input>
+    </ion-item>
+    <div text-center padding-left>
+        <button ion-button full  (click)="guardar(formPerfil)" *ngIf="verActualizacion" style="margin-top: 5%; width: 98%;">
+          <ion-icon name="send"></ion-icon>&nbsp; Actualizar Datos
+        </button>
+    </div>
+
+  </form>
+</ion-content>

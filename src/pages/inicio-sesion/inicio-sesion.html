@@ -11,6 +11,11 @@
     </ion-card-header>
   
     <ion-card-content>
+      
+      <ion-avatar class="avatar">
+        <img class="avatar-img" src="assets/imgs/logo.png">
+      </ion-avatar>
+
       <ion-item>
           <ion-label floating>Nombre de Usuario *</ion-label>
           <ion-input type="text" [(ngModel)]="usuario.Login" required="true"  name="txtUsuario"></ion-input>
@@ -21,12 +26,12 @@
           <ion-input type="password" [(ngModel)]="usuario.Clave" required="true"  name="txtClave"></ion-input>
         </ion-item>
     
-        <ion-item >
-          <button id="btnValidar" ion-button color="primary" block outline large
+        <div text-center padding >
+          <button id="btnValidar" ion-button color="primary" block  
                 (click)="iniciarSesion(frmLogin)" icon-start>
             <ion-icon name="send"></ion-icon>&nbsp; Iniciar sesión
           </button>
-        </ion-item>
+        </div>
     </ion-card-content>
     
   </ion-card>

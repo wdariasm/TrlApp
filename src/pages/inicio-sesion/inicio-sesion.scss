@@ -4,6 +4,27 @@ page-inicio-sesion {
     }
 
     .card {
-        margin-top: 30%;
+        margin-top: 24%;
+    }
+
+    .item-md .item-button {
+        height: 35px;
+    }
+
+    .input {
+        border-bottom: 0.5px solid map-get($colors, primary);
+    }
+
+    .avatar {
+        text-align: center;
+        height: 80px;
+        margin-top:-17%;
+    }
+    .avatar-img{
+        border-radius: 50%;
+        border: 1px solid #fff;
+        width: 72px;
+        height: 72px;
+        margin: 30px auto 0;
     }
 }

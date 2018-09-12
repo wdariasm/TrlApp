@@ -6,8 +6,12 @@
   </ion-header>
 
   <ion-content>
+    <ion-item>
+      <ion-title text-center>{{userName}}</ion-title>
+      <p ion-text text-center>Cliente</p>
+    </ion-item>
+
     <ion-list>
-      
       <button menuClose ion-item detail-push *ngFor="let p of pages" (click)="openPage(p)">
           <ion-icon [name]="p.icon" item-start></ion-icon>
             {{p.title}}

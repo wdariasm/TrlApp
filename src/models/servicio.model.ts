@@ -45,6 +45,11 @@ export class Servicio {
     DescVehiculo : string;
     PlantillaId : number;
     HoraControl : string;
+    ConductorId : number;
+    Calificacion : number;
+    Conductor : any;
+    Estado : string;
+    IdUsuario: number;
 
     constructor(){
         this.Tipo = new ContratoTipoServicio();
@@ -64,6 +69,9 @@ export class Servicio {
         this.ValorTotal = 0;
         this.Valor = 0;
         this.NumHoras = 0;
+        this.ValorParadas = 0;
+        this.ZonaDestino = 0;
+        this.ZonaOrigen = 0;
     }
 }
 
@@ -72,5 +80,15 @@ export class Coordenada {
     Longitud : number;
     constructor () {
        
+    }
+}
+
+export class MotivoCancelacion{
+    IdMotivo : number;
+    mtDescripcion  : string;
+    mtDejarServicio : string;
+
+    constructor () {
+        
     }
 }
