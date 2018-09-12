@@ -57,6 +57,7 @@ export class UserDataProvider {
       this.ClienteId = user.ClienteId;
       this.ValidarClave = user.ValidarClave;
       this.Estado = user.Estado;
+      this.Contrato  = user.Contrato;
     }
   }
 

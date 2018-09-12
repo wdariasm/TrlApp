@@ -10,6 +10,7 @@ import { InicioSesionPage } from '../pages/inicio-sesion/inicio-sesion';
 import { CerrarSesionPage } from '../pages/cerrar-sesion/cerrar-sesion';
 import { DetalleServicioPage } from '../pages/detalle-servicio/detalle-servicio';
 import { CalificacionPage } from '../pages/calificacion/calificacion';
+import { PerfilPage } from '../pages/perfil/perfil';
 
 import { UserDataProvider  } from '../providers/user-data/user-data';
 import { ConfiguracionProvider } from '../providers/configuracion/configuracion';
@@ -38,6 +39,7 @@ export class MyApp {
     this.pages = [
       { title: 'Mis Servicios', component: ListadoServicioPage, icon: 'list' },
       { title : 'Servicio', component : ServicioPage , icon: 'locate' },
+      { title : 'Perfil', component: PerfilPage , icon: 'contact'},
       { title : 'Cerrar Sesión', component: CerrarSesionPage , icon: 'log-out'}
     ];
 
