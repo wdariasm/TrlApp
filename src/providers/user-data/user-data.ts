@@ -18,15 +18,18 @@ export class UserDataProvider {
   private ValidarClave : string;
   private Contrato : string;
   private Email : string;
+  private _token : string;
  
   constructor() {
     console.log("Iniciando UserDataProvider ");
+    this._token = localStorage.getItem("trl_token");
   }
 
   public SetDatosToken(token:string){
 
     //Guardar Token
     localStorage.setItem("trl_token", token);
+    this._token = token;
 
     let user : any = {};
 
@@ -40,9 +43,12 @@ export class UserDataProvider {
           this.IdUsuario = user.IdUsuario;
           this.Nombre = user.Nombre;
           this.TipoAcceso = user.TipoAcceso;
-         
         }
     }
+  }
+
+  public getToken(){
+    return this._token;
   }
 
   public SetDatos(user: any){

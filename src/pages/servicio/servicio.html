@@ -190,7 +190,7 @@
   
         <ion-item>
           <ion-label floating>Teléfono *</ion-label>
-          <ion-input type="text" [(ngModel)]="contacto.scTelefono" name="txtTelefonoPpal" maxlength="15"></ion-input>
+          <ion-input type="tel" [(ngModel)]="contacto.scTelefono" name="txtTelefonoPpal" maxlength="15"></ion-input>
         </ion-item>
   
         <ion-item>
@@ -198,20 +198,20 @@
           <ion-textarea [(ngModel)]="contacto.scNota" name="txtNota" maxlength="200"></ion-textarea>
         </ion-item>
   
-        <ion-item>
-          <button id="btnAgregarResponsable" ion-button block color="secondary"  (click)="agregarContacto()">
+        <div float-right padding-top>
+          <button id="btnAgregarResponsable" ion-button  color="secondary"  (click)="agregarContacto()">
             <ion-icon name="add"></ion-icon>&nbsp;Agregar
           </button>
-        </ion-item>
+        </div>
   
         <ion-list>
           <ion-item *ngFor="let item of servicio.Contactos; let idx = index">
-            <h2>Resp. {{item.scNombre}}</h2>
+            <h2 text-wrap>Resp. {{item.scNombre}}</h2>
             <h3>Tel. {{item.scTelefono}}</h3>
             <button color="danger" clear ion-button icon-only  item-end icon-left (click)="quitarContacto(idx)">
               <ion-icon name="trash"></ion-icon>
             </button>
-            <p>Nota. {{item.scNota}}</p>
+            <p text-wrap>Nota. {{item.scNota}}</p>
             
           </ion-item>
         </ion-list>
@@ -223,15 +223,15 @@
           <ion-input type="text" [(ngModel)]="parada.prDireccion" name="txtParada" maxlength="250"></ion-input>
         </ion-item>
   
-        <ion-item no-lines>
-          <button id="btnAgregarParada" ion-button block outline color="secondary"  (click)="agregarParada()">
+        <div float-right padding-top>
+          <button id="btnAgregarParada" ion-button  color="secondary"  (click)="agregarParada()">
             <ion-icon name="add"></ion-icon>&nbsp;Agregar
           </button>
-        </ion-item>
+        </div>
   
         <ion-list>
           <ion-item *ngFor="let item of servicio.Paradas; let idx1 = index">
-            <h2>Dir. {{item.prDireccion}}</h2>
+            <h2 text-wrap>Dir. {{item.prDireccion}}</h2>
             <p>Valor. ${{item.prValorCliente | number}}</p>
             <button *ngIf="!editar" color="danger" clear ion-button icon-only  item-end icon-left (click)="quitarParada(idx1)">
               <ion-icon name="trash"></ion-icon>
@@ -241,7 +241,7 @@
             </button>
           </ion-item>
         </ion-list>
-        <ion-item style="margin-top: 2%" >
+        <ion-item padding-top no-lines >
             <h2 ion-text>SubTotal: <span ion-text color="danger"> ${{subTotal | number }}</span></h2>
         </ion-item>
 
@@ -249,13 +249,12 @@
 
       <div *ngSwitchCase="'6'">
 
-        <ion-item *ngIf="servicio.Tipo.csTipoServicioId == 1 || servicio.Tipo.csTipoServicioId == 2" class="margen-opcion">
-          <h3></h3>
-          <h5>Click para consultar el valor del servicio *</h5>
-          <button id="btnConsultarValor" ion-button color="secondary" block  (click)="consultarPrecio()">
+        <div padding-top text-center *ngIf="servicio.Tipo.csTipoServicioId == 1 || servicio.Tipo.csTipoServicioId == 2">
+          <p>Click para consultar el valor del servicio *</p>
+          <button id="btnConsultarValor" ion-button color="secondary"   (click)="consultarPrecio()">
             <ion-icon name="logo-usd"></ion-icon>&nbsp; Consultar
           </button>
-        </ion-item>
+        </div>
     
 
         <ion-item >
@@ -273,7 +272,7 @@
           <h2 ion-text>Total Paradas * <span ion-text color="secondary" text-right> ${{subTotal | number }}</span></h2>
         </ion-item>
 
-        <ion-item>
+        <ion-item no-lines>
           <h1 ion-text>Total Servicio * <span ion-text color="primary" text-right> ${{servicio.ValorTotal | number }}</span></h1>
         </ion-item>
     

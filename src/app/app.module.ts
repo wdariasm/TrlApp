@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { ErrorHandler, NgModule } from '@angular/core';
-import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
+import { IonicApp, IonicModule } from 'ionic-angular';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Push } from '@ionic-native/push';
 
@@ -28,6 +28,7 @@ import { SesionProvider } from '../providers/sesion/sesion';
 import { UserDataProvider } from '../providers/user-data/user-data';
 import { ClienteProvider } from '../providers/cliente/cliente';
 import { ToastProvider } from '../providers/toast/toast';
+import { TokenInterceptorProvider } from '../providers/token-interceptor/token-interceptor';
 
 
 @NgModule({
@@ -72,11 +73,12 @@ import { ToastProvider } from '../providers/toast/toast';
     FuncionesComunesProvider,
     ServicioProvider, 
     Geolocation,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorProvider, multi: true},
     ZonaProvider,
     SesionProvider,
     ClienteProvider,
-    ToastProvider
+    ToastProvider,
+    TokenInterceptorProvider
   ]
 })
 export class AppModule {}
