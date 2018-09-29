@@ -26,7 +26,6 @@ export class MyApp {
   rootPage: any = InicioSesionPage;
 
   pages: Array<{title: string, component: any, icon: string}>;
-  userName : string  = "";
   idCliente : number = 0;
 
   constructor(public platform: Platform, public statusBar: StatusBar, 
@@ -53,8 +52,7 @@ export class MyApp {
       this.idCliente = 0;
       if (user){
        
-        this.userDataProvider.RecuperarDatos()
-        this.userName = this.userDataProvider.getNombre();
+        this.userDataProvider.RecuperarDatos();
         this.idCliente = this.userDataProvider.getIdCliente();
         this.configProvider.RecuperarDatos();
         this.rootPage = ListadoServicioPage;
