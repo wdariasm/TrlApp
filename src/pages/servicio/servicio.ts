@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, Platform, AlertController, 
-        ToastController } from 'ionic-angular';
+import { NavController, NavParams, Platform,  
+        ToastController, ModalController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
 
 import { NgForm } from '@angular/forms';
@@ -21,6 +21,9 @@ import { FuncionesComunesProvider } from '../../providers/funciones-comunes/func
 import { ServicioProvider } from '../../providers/servicio/servicio';
 import { ZonaProvider } from '../../providers/zona/zona';
 import { ConfiguracionProvider } from '../../providers/configuracion/configuracion';
+
+import { ConfirmacionServicioPage } from '../confirmacion-servicio/confirmacion-servicio';
+
 import * as moment from 'moment';
 
 declare var google;
@@ -70,7 +73,7 @@ export class ServicioPage {
               public toastCtrl: ToastController, public contratoProvider: ContratoProvider,
               public funcionesProvider: FuncionesComunesProvider, public platform: Platform,
               public servicioProvider : ServicioProvider, private geolocation: Geolocation, 
-              private zonaProvider: ZonaProvider, private alertCtrl: AlertController,
+              private zonaProvider: ZonaProvider, private modalCtrl: ModalController,
               private userDataProvider : UserDataProvider, private configProvider: ConfiguracionProvider
               
             ) 
@@ -126,8 +129,8 @@ export class ServicioPage {
     this.editar = false;
     this.editTipoVehiculo =true;
     this.editModoServicio = true;
-    this.servicio.FechaServicio = moment().format('L');
-    this.servicio.HoraControl = moment().format("HH:mm");
+    this.servicio.FechaServicio = "";
+    this.servicio.HoraControl = "";
     this.posicion.Latitud = this.configProvider.Latitud;
     this.posicion.Longitud = this.configProvider.Longitud;
     this.servicio.IdUsuario = this.userDataProvider.getIdUsuario();
@@ -721,13 +724,17 @@ export class ServicioPage {
   }
 
   cambiarPrecio(): void {
-    this.servicio.Valor = 0;
-    this.servicio.ValorCliente = 0;
-    this.servicio.ValorTotal= this.servicio.ValorCliente +  this.subTotal;
+    
+    if (this.servicio.Tipo.csTipoServicioId != 4){
+      this.servicio.Valor = 0;
+      this.servicio.ValorCliente = 0;
+      this.servicio.ValorTotal= this.servicio.ValorCliente +  this.subTotal;
+    }
+    
   }
 
   validarServicio(frm : NgForm): void {
-        
+
     if(frm.invalid){
       this.mostrarToast('Por favor ingrese los datos requeridos (*).');
       return;
@@ -745,6 +752,16 @@ export class ServicioPage {
     }
     if(this.tipoSelect.tvCodigo == null){
       this.mostrarToast('Seleccione el tipo de vehículo.');
+      return;
+    }
+
+    if (this.servicio.FechaServicio == ""){
+      this.mostrarToast( "Por favor ingrese la fecha del servicio.");
+      return;
+    }
+
+    if (this.servicio.Hora == ""){
+      this.mostrarToast( "Por favor ingrese la hora del servicio.");
       return;
     }
     
@@ -870,7 +887,12 @@ export class ServicioPage {
 
   convertirHora(fecha: string) : void {
     let hora = moment(fecha, "h:mm a");
-    this.servicio.Hora = hora.format("h:mm a");
+    if (hora.isValid()){
+      this.servicio.Hora = hora.format("h:mm a");
+    } else {
+      this.servicio.Hora = "";
+    }
+    
   }
   
   consultarContactos(id : number) : void {
@@ -1066,10 +1088,12 @@ export class ServicioPage {
     this.servicio.Valor = parseFloat(this.trasladoSelect.tlValor);
     this.servicio.DetallePlantillaId = this.trasladoSelect.tlCodigo;
     
+    this.servicio.ValorTotal = this.servicio.ValorCliente;
+
     this.mostrarToast("Valor del Servicio. $ "+ this.servicio.ValorCliente);
     
     var pos = this.funcionesProvider.arrayObjectIndexOf(this.contrato.TipoVehiculo, this.trasladoSelect.tlTipoVehiculo, 'tvCodigo');
-    console.log(pos);
+   
     if(pos >=0){                            
         this.tipoSelect = this.contrato.TipoVehiculo[pos];
     }  
@@ -1159,29 +1183,21 @@ export class ServicioPage {
   }
 
   mostrarConfirmacion() {
-    const confirm = this.alertCtrl.create({
-      title: 'Confirmación de Servicio.',
-      message: 'Esta seguro que desea solicitar este servicio, por valor de $ '+ this.servicio.ValorTotal
-          + ' .  Recuerde que al dar click en aceptar, acepta nuestras condiciones de servicio. ',
-      buttons: [
-        {
-          text: 'Cancelar',
-          handler: () => {
-            console.log('Disagree clicked');
-          }
-        },
-        {
-          text: 'Aceptar',
-          handler: () => {
-            this.mostrarToast("Espere por favor .. procesando información", 5000);
-            this.guardarServicio();
-          }
-        }
-      ]
-    });
-    confirm.present();
-  }
 
+    let profileModal = this.modalCtrl.create(ConfirmacionServicioPage, { 
+      responsable: this.servicio.Responsable, 
+      valor : this.servicio.ValorTotal, 
+      fecha : this.servicio.FechaServicio,
+      hora : this.servicio.Hora });
+    profileModal.present();
+
+    profileModal.onDidDismiss(data => {  
+      if (data.solicitarServicio){
+        this.mostrarToast("Espere por favor .. procesando información", 5000);
+        this.guardarServicio();
+      }
+    });
+  }
 }
 
 

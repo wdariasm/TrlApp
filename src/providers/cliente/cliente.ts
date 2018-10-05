@@ -34,4 +34,8 @@ export class ClienteProvider {
     return  this.http.get(this.uri+'/tipoDocumento');
   };  
 
+  getToken = function(){
+    return  this.http.get(this.uri + '/usuario/token');
+  };
+
 }

@@ -21,7 +21,6 @@ export class UserDataProvider {
   private _token : string;
  
   constructor() {
-    console.log("Iniciando UserDataProvider ");
     this._token = localStorage.getItem("trl_token");
   }
 
@@ -45,6 +44,12 @@ export class UserDataProvider {
           this.TipoAcceso = user.TipoAcceso;
         }
     }
+  }
+
+  public SetToken(token:string){
+    //Guardar Token
+    localStorage.setItem("trl_token", token);
+    this._token = token;
   }
 
   public getToken(){

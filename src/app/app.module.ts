@@ -15,6 +15,7 @@ import { DetalleServicioPage } from '../pages/detalle-servicio/detalle-servicio'
 import { CancelarPage  } from '../pages/cancelar/cancelar';
 import { CalificacionPage } from '../pages/calificacion/calificacion';
 import { PerfilPage } from '../pages/perfil/perfil';
+import { ConfirmacionServicioPage } from '../pages/confirmacion-servicio/confirmacion-servicio';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -42,7 +43,8 @@ import { TokenInterceptorProvider } from '../providers/token-interceptor/token-i
     DetalleServicioPage,
     CancelarPage,
     CalificacionPage,
-    PerfilPage
+    PerfilPage,
+    ConfirmacionServicioPage
   ],
   imports: [
     BrowserModule,
@@ -60,7 +62,8 @@ import { TokenInterceptorProvider } from '../providers/token-interceptor/token-i
     DetalleServicioPage,
     CancelarPage,
     CalificacionPage,
-    PerfilPage
+    PerfilPage,
+    ConfirmacionServicioPage
   ],
   providers: [
     StatusBar,

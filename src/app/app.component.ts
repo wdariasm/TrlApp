@@ -51,11 +51,24 @@ export class MyApp {
       let user = localStorage.getItem("usuario");
       this.idCliente = 0;
       if (user){
-       
-        this.userDataProvider.RecuperarDatos();
-        this.idCliente = this.userDataProvider.getIdCliente();
-        this.configProvider.RecuperarDatos();
-        this.rootPage = ListadoServicioPage;
+        this.clienteProvider.getToken().subscribe( result => {
+          this.userDataProvider.SetToken(result.token);
+          this.userDataProvider.RecuperarDatos();
+          this.idCliente = this.userDataProvider.getIdCliente();
+          this.configProvider.RecuperarDatos();
+          this.rootPage = ListadoServicioPage;
+        },
+
+        error => {
+          let data = JSON.parse(JSON.stringify(error));
+          if (data != null){
+            this.mostrarToast("Error al actualizar token.. Debe iniciar sesión nuevamente. ", 5000);
+          }
+          console.log(<any>error);
+          this.rootPage = InicioSesionPage;
+        }
+        
+        );
         
       } else {
         this.rootPage  = InicioSesionPage;
@@ -146,5 +159,4 @@ export class MyApp {
     });
     toast.present();
   }
-  
 }

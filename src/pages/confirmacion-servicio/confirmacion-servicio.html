@@ -1,0 +1,56 @@
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title>Confirmación de Servicio</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content class="cards-bg">
+  <ion-card>
+    <ion-card-header>
+      <strong text-wrap>¿ Esta seguro que desea solicitar este servicio ?</strong>
+    </ion-card-header>
+
+    <ion-card-content>
+
+      <ion-item>
+        <h2 text-wrap>{{responsable}}</h2>
+        <p>Responsable</p>
+      </ion-item>
+
+      <ion-item>
+        <h2 text-wrap>{{fecha}} {{hora }}</h2>
+        <p>Fecha y Hora</p>
+      </ion-item>
+
+      <ion-item>
+        <h2 text-wrap><strong>$ {{valor | number}}</strong></h2>
+        <p>Valor Servicio</p>
+      </ion-item>
+
+      <p  text-wrap >
+          Recuerde que al dar click en aceptar, acepta nuestras condiciones de servicio.
+      </p>
+
+      <ion-item-divider></ion-item-divider>
+
+      <ion-row>
+        <ion-col>
+          <button ion-button icon-start clear color="danger" (click)="cerrarModal(false)">
+            <ion-icon name="close"></ion-icon>
+            <div>Cancelar</div>
+          </button>
+        </ion-col>
+        <ion-col>
+          <button ion-button icon-start clear color="secondary" (click)="cerrarModal(true)">
+            <ion-icon name="send"></ion-icon>
+            <div>Aceptar</div>
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+
+  </ion-card>
+</ion-content>
