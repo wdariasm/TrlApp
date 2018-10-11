@@ -17,6 +17,9 @@ import { CalificacionPage } from '../pages/calificacion/calificacion';
 import { PerfilPage } from '../pages/perfil/perfil';
 import { ConfirmacionServicioPage } from '../pages/confirmacion-servicio/confirmacion-servicio';
 
+import { ComponentsModule } from '../components/components.module';
+import { LoadingComponent } from '../components/loading/loading';
+
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ContratoProvider } from '../providers/contrato/contrato';
@@ -30,6 +33,8 @@ import { UserDataProvider } from '../providers/user-data/user-data';
 import { ClienteProvider } from '../providers/cliente/cliente';
 import { ToastProvider } from '../providers/toast/toast';
 import { TokenInterceptorProvider } from '../providers/token-interceptor/token-interceptor';
+import { LoadingProvider } from '../providers/loading/loading';
+
 
 
 @NgModule({
@@ -49,6 +54,7 @@ import { TokenInterceptorProvider } from '../providers/token-interceptor/token-i
   imports: [
     BrowserModule,
     HttpClientModule,
+    ComponentsModule,
     IonicModule.forRoot(MyApp),
   ],
   bootstrap: [IonicApp],
@@ -63,7 +69,8 @@ import { TokenInterceptorProvider } from '../providers/token-interceptor/token-i
     CancelarPage,
     CalificacionPage,
     PerfilPage,
-    ConfirmacionServicioPage
+    ConfirmacionServicioPage,
+    LoadingComponent  
   ],
   providers: [
     StatusBar,
@@ -81,7 +88,8 @@ import { TokenInterceptorProvider } from '../providers/token-interceptor/token-i
     SesionProvider,
     ClienteProvider,
     ToastProvider,
-    TokenInterceptorProvider
+    TokenInterceptorProvider,
+    LoadingProvider
   ]
 })
 export class AppModule {}

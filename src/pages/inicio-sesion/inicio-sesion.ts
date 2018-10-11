@@ -7,6 +7,7 @@ import { Usuario } from '../../models/usuario.model';
 import { SesionProvider } from '../../providers/sesion/sesion';
 import { UserDataProvider } from '../../providers/user-data/user-data';
 import { ConfiguracionProvider } from '../../providers/configuracion/configuracion';
+import { LoadingProvider } from '../../providers/loading/loading';
 
 import { ListadoServicioPage } from '../listado-servicio/listado-servicio';
 import { ClienteProvider } from '../../providers/cliente/cliente';
@@ -24,7 +25,8 @@ export class InicioSesionPage {
     public toastCtrl: ToastController, private sessionProvider : SesionProvider,
               private userDataProvider: UserDataProvider, 
               private configuracionProvider : ConfiguracionProvider, 
-              private menu : MenuController, private clienteProvider: ClienteProvider ) {
+              private menu : MenuController, private clienteProvider: ClienteProvider,
+              private loading: LoadingProvider ) {
     this.usuario = new Usuario();
      this.menu.swipeEnable(false);
   }
@@ -55,6 +57,8 @@ export class InicioSesionPage {
       return;
     } 
 
+    this.loading.show("Iniciando sesión");
+
     var data = {
       email: this.usuario.Login,
       password: this.usuario.Clave, 
@@ -63,6 +67,7 @@ export class InicioSesionPage {
 
     this.sessionProvider.login(data).subscribe(
       result => {   
+        this.loading.hide();
         if (result.error ){
           this.mostrarToast(" Error al autenticar. "+ result.error);
           return;
@@ -76,6 +81,7 @@ export class InicioSesionPage {
 
       },
       error => {
+        this.loading.hide();
         let data = JSON.parse(JSON.stringify(error));
         if (data != null){
           this.mostrarToast(" Error al autenticar. " + data.message);
@@ -87,9 +93,11 @@ export class InicioSesionPage {
   }
 
   getUser (idUsuario : number) : void {
+    this.loading.show("Cargando datos de usuario.. ");
     this.sessionProvider.getUser(idUsuario).subscribe(
       result => {   
         if (!result){
+          this.loading.hide();
           this.mostrarToast(" Error al obtener datos del usuario. "+ result);
           return;
         }   
@@ -99,9 +107,11 @@ export class InicioSesionPage {
         if (keyPush != null || keyPush != ""){
           this.clienteProvider.putKeyNotificacion(this.userDataProvider.getIdCliente(), keyPush).subscribe(
             result => {        
+              this.loading.hide();
               console.log(result);
             },
             error => {
+              this.loading.hide();
               console.log(JSON.stringify(error));
               this.mostrarToast("Error al actualizar key de notifiación push ");
             }
@@ -110,6 +120,7 @@ export class InicioSesionPage {
         this.navCtrl.setRoot(ListadoServicioPage);
       },
       error => {
+        this.loading.hide();
         this.mostrarToast(" Error al obtener datos del usuario. " + error);
         console.log(<any>error);
       }

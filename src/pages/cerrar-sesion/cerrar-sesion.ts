@@ -13,7 +13,6 @@ export class CerrarSesionPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad CerrarSesionPage');
     localStorage.removeItem("config");
     localStorage.removeItem("usuario");
     this.navCtrl.setRoot(InicioSesionPage);

@@ -21,6 +21,7 @@ import { FuncionesComunesProvider } from '../../providers/funciones-comunes/func
 import { ServicioProvider } from '../../providers/servicio/servicio';
 import { ZonaProvider } from '../../providers/zona/zona';
 import { ConfiguracionProvider } from '../../providers/configuracion/configuracion';
+import { LoadingProvider } from '../../providers/loading/loading';
 
 import { ConfirmacionServicioPage } from '../confirmacion-servicio/confirmacion-servicio';
 
@@ -74,8 +75,8 @@ export class ServicioPage {
               public funcionesProvider: FuncionesComunesProvider, public platform: Platform,
               public servicioProvider : ServicioProvider, private geolocation: Geolocation, 
               private zonaProvider: ZonaProvider, private modalCtrl: ModalController,
-              private userDataProvider : UserDataProvider, private configProvider: ConfiguracionProvider
-              
+              private userDataProvider : UserDataProvider, private configProvider: ConfiguracionProvider,
+              private loading: LoadingProvider
             ) 
   {
     this.platform.ready().then(() => {
@@ -872,13 +873,17 @@ export class ServicioPage {
     this.servicio.PlantillaId= this.plantilla.plCodigo;        
     this.servicio.Parada = this.servicio.Paradas.length > 0 ? "SI" : "NO";                
     
+    this.loading.show("Espere por favor .. procesando información ");
+
     this.servicioProvider.post(this.servicio).subscribe(
       result => {        
         this.contratoSelect = new Contrato();
         this.initDatos();
+        this.loading.hide();
         this.mostrarToast(result.message);
       },
       error => {
+        this.loading.hide();
         this.mostrarToast('¡Error!' + error, 5000);
         console.log(JSON.stringify(error));
       }
@@ -1193,7 +1198,6 @@ export class ServicioPage {
 
     profileModal.onDidDismiss(data => {  
       if (data.solicitarServicio){
-        this.mostrarToast("Espere por favor .. procesando información", 5000);
         this.guardarServicio();
       }
     });

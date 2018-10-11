@@ -15,6 +15,7 @@ import { PerfilPage } from '../pages/perfil/perfil';
 import { UserDataProvider  } from '../providers/user-data/user-data';
 import { ConfiguracionProvider } from '../providers/configuracion/configuracion';
 import { ClienteProvider } from '../providers/cliente/cliente';
+import { LoadingComponent } from '../components/loading/loading';
 
 
 @Component({
@@ -23,7 +24,7 @@ import { ClienteProvider } from '../providers/cliente/cliente';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = InicioSesionPage;
+  rootPage: any = LoadingComponent;
 
   pages: Array<{title: string, component: any, icon: string}>;
   idCliente : number = 0;
@@ -64,7 +65,6 @@ export class MyApp {
           if (data != null){
             this.mostrarToast("Error al actualizar token.. Debe iniciar sesión nuevamente. ", 5000);
           }
-          console.log(<any>error);
           this.rootPage = InicioSesionPage;
         }
         
