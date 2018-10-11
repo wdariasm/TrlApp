@@ -22,7 +22,6 @@
     "@angular/platform-browser": "5.2.10",
     "@angular/platform-browser-dynamic": "5.2.10",
     "@ionic-native/core": "^4.11.0",
-    "@ionic-native/firebase": "^4.12.0",
     "@ionic-native/geolocation": "^4.7.0",
     "@ionic-native/push": "^4.12.0",
     "@ionic-native/splash-screen": "4.7.0",
@@ -32,7 +31,7 @@
     "cordova-android": "7.0.0",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-geolocation": "^4.0.1",
-    "cordova-plugin-googlemaps": "^2.3.6",
+    "cordova-plugin-googlemaps": "2.3.6",
     "cordova-plugin-ionic-keyboard": "^2.0.5",
     "cordova-plugin-ionic-webview": "^1.1.19",
     "cordova-plugin-splashscreen": "^5.0.2",
@@ -41,7 +40,7 @@
     "ionicons": "3.0.0",
     "minimist": "^1.2.0",
     "moment": "^2.22.2",
-    "phonegap-plugin-push": "^2.1.2",
+    "phonegap-plugin-push": "2.1.2",
     "rxjs": "5.5.11",
     "sw-toolbox": "3.6.0",
     "xml2js": "^0.4.19",
@@ -63,14 +62,14 @@
         "GEOLOCATION_USAGE_DESCRIPTION": "Mi Posición"
       },
       "cordova-plugin-googlemaps": {
-        "API_KEY_FOR_ANDROID": "AIzaSyD_EI-uEK8xKXxfgA5fkerMhAL4gIo0u6Q",
-        "API_KEY_FOR_IOS": "AIzaSyD_EI-uEK8xKXxfgA5fkerMhAL4gIo0u6Q",
+        "API_KEY_FOR_ANDROID": "AIzaSyCiuhNqd7NWA0cRy9UzqtJ7D5n72zNiSC4",
+        "API_KEY_FOR_IOS": "AIzaSyCiuhNqd7NWA0cRy9UzqtJ7D5n72zNiSC4",
         "PLAY_SERVICES_VERSION": "15.0.1",
         "ANDROID_SUPPORT_V4_VERSION": "26.1.0"
       },
       "phonegap-plugin-push": {
         "SENDER_ID": "358053439592",
-        "FCM_VERSION": "17.0.0"
+        "FCM_VERSION": "17.3.0"
       }
     },
     "platforms": [

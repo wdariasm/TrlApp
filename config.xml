@@ -21,7 +21,7 @@
     <preference name="SplashShowOnlyFirstTime" value="false" />
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="3000" />
-    <preference name="loadUrlTimeoutValue" value="500000" />
+    <preference name="loadUrlTimeoutValue" value="300000" />
     <preference name="AutoHideSplashScreen" value="false" />
     <preference name="orientation" value="portrait" />
     <platform name="android">
@@ -81,7 +81,6 @@
         <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
         <splash height="2732" src="resources/ios/splash/Default@2x~universal~anyany.png" width="2732" />
     </platform>
-    <engine name="android" spec="7.0.0" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
     <plugin name="cordova-plugin-device" spec="^2.0.2" />
     <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
@@ -90,15 +89,15 @@
     <plugin name="cordova-plugin-geolocation" spec="^4.0.1">
         <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="Mi Posición" />
     </plugin>
-    <plugin name="cordova-plugin-googlemaps" spec="^2.3.6">
-        <variable name="API_KEY_FOR_ANDROID" value="AIzaSyD_EI-uEK8xKXxfgA5fkerMhAL4gIo0u6Q" />
-        <variable name="API_KEY_FOR_IOS" value="AIzaSyD_EI-uEK8xKXxfgA5fkerMhAL4gIo0u6Q" />
-        <variable name="PLAY_SERVICES_VERSION" value="15.0.2" />
+    <plugin name="cordova-plugin-googlemaps" spec="2.3.6">
+        <variable name="API_KEY_FOR_ANDROID" value="AIzaSyCiuhNqd7NWA0cRy9UzqtJ7D5n72zNiSC4" />
+        <variable name="API_KEY_FOR_IOS" value="AIzaSyCiuhNqd7NWA0cRy9UzqtJ7D5n72zNiSC4" />
+        <variable name="PLAY_SERVICES_VERSION" value="15.0.1" />
         <variable name="ANDROID_SUPPORT_V4_VERSION" value="26.1.0" />
     </plugin>
-    <plugin name="phonegap-plugin-push" spec="^2.1.2">
+    <plugin name="phonegap-plugin-push" spec="2.1.2">
         <variable name="SENDER_ID" value="358053439592" />
-        <variable name="FCM_VERSION" value="17.0.0" />
+        <variable name="FCM_VERSION" value="17.3.0" />
     </plugin>
     <engine name="android" spec="7.0.0" />
 </widget>
