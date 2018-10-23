@@ -11,9 +11,12 @@ export class ConfiguracionProvider {
   EnviarEmail : string;
 
   constructor() {
-    //this.URL_API = 'http://localhost/TrlTaxi/public/api';
-    this.URL_API = 'http://192.168.0.15/TrlTaxi/public/api';
-    //this.URL_API = 'http://35.185.20.53/public/api';
+  
+    //Local
+    this.URL_API = 'http://192.168.0.23/TrlTaxi/public/api';
+
+    //Produccion 
+    //this.URL_API = 'http://www.app.trl.com.co/public/api';
     
   }
 

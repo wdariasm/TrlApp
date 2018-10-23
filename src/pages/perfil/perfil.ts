@@ -6,6 +6,8 @@ import { Cliente, TipoDocumento }  from '../../models/cliente.models';
 import { UserDataProvider } from '../../providers/user-data/user-data';
 import { ClienteProvider  } from '../../providers/cliente/cliente';
 import { ToastProvider } from '../../providers/toast/toast';
+
+import { LoadingProvider } from '../../providers/loading/loading';
  
 @Component({
   selector: 'page-perfil',
@@ -19,7 +21,7 @@ export class PerfilPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, 
             private userDataProvider: UserDataProvider, private clienteProvider: ClienteProvider,
-            private toastProvider: ToastProvider) {
+            private toastProvider: ToastProvider, private loading: LoadingProvider) {
     this.cliente = new Cliente();
   }
 
@@ -43,11 +45,14 @@ export class PerfilPage {
   }
 
   getCliente (){
+    this.loading.show("Consultando datos... ");
     this.clienteProvider.get(this.cliente.IdCliente).subscribe(
       result => {   
         this.cliente = result;
+        this.loading.hide();
       },
       error => {
+        this.loading.hide();
         console.log(JSON.stringify(error));
       }
     );
@@ -61,12 +66,14 @@ export class PerfilPage {
 
     this.cliente.Nombres = this.cliente.Nombres.toUpperCase();
     this.cliente.Direccion = this.cliente.Direccion.toUpperCase();
-
+    this.loading.show("Actualizando datos... ");
     this.clienteProvider.put(this.cliente.IdCliente, this.cliente).subscribe(
       result => {
+        this.loading.hide();
         this.toastProvider.mostrarToast(result.message);
       },
       error => {
+        this.loading.hide();
         this.toastProvider.mostrarToast("Error al actualizar datos");
         console.log(JSON.stringify(error));
       }
